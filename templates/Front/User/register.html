@@ -1,0 +1,135 @@
+{% load static %}
+
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css'%}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css'%}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css'%}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/fontawesome-free/css/all.min.css'%}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css'%}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css'%}" rel="stylesheet">
+{% block content %}
+<div class="page-container">
+    <div class="text-center my-5">
+        <h1 class="display-5 mb-4 text-primary">
+            <i class="fa fa-user-plus me-2"></i> Create an Account
+        </h1>
+        <p class="lead fs-4 text-muted">Choisissez votre rôle et complétez votre profil.</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-5">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        {% if form.errors or form.non_field_errors %}
+                            <div class="alert alert-danger mb-4">
+                                <i class="fa fa-exclamation-triangle me-2"></i>
+                                <strong>Erreurs :</strong>
+                                <ul>
+                                    {% for field in form %}
+                                        {% for error in field.errors %}
+                                            <li>{{ field.label }}: {{ error }}</li>
+                                        {% endfor %}
+                                    {% endfor %}
+                                    {% for error in form.non_field_errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+
+                        <!-- All form fields -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.first_name.label_tag }}
+                                {{ form.first_name }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.last_name.label_tag }}
+                                {{ form.last_name }}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.email.label_tag }}
+                            {{ form.email }}
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.password1.label_tag }}
+                                {{ form.password1 }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.password2.label_tag }}
+                                {{ form.password2 }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.role.label_tag }}
+                                {{ form.role}}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.birth_date.label_tag }}
+                                {{ form.birth_date }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.CIN.label_tag }}
+                                {{ form.CIN }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.tel.label_tag }}
+                                {{ form.tel }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            {{ form.address.label_tag }}
+                            {{ form.address }}
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-success btn-lg px-5 me-3">
+                                <i class="fa fa-user-plus me-2"></i> Register
+                            </button>
+                            <a href="{% url 'loginFront' %}" class="btn btn-secondary btn-lg px-5">
+                                <i class="fa fa-arrow-left me-2"></i> Cancel
+                            </a>
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <p>Already have an account ? <a href="{% url 'loginFront' %}" class="text-primary">Connect</a></p>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const container = document.querySelector('.page-container');
+    if (!container) return;
+
+    document.querySelectorAll('a').forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('javascript:')) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                container.style.animation = 'fadeOutPage 0.4s forwards';
+                setTimeout(() => { window.location.href = href; }, 400);
+            });
+        }
+    });
+});
+</script>
+
+{% endblock %}

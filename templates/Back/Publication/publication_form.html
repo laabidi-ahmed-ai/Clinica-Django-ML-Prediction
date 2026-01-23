@@ -1,0 +1,656 @@
+{% load static %}
+<!DOCTYPE html>
+<html dir="ltr" lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'Back/src/assets/images/favicon.png' %}">
+    <title>Clinica+ • Publication</title>
+    <link href="{% static 'Back/src/dist/css/style.min.css' %}" rel="stylesheet">
+    
+    <style>
+        /* Variables */
+        :root {
+            --primary-blue: #4A90E2;
+            --success-green: #28a745;
+            --danger-red: #dc3545;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        /* Page header moderne */
+        .page-breadcrumb {
+            background: white;
+            padding: 24px 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 24px;
+        }
+        
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin: 0;
+        }
+        
+        /* Card moderne */
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            background: white;
+        }
+        
+        .card-body {
+            padding: 30px;
+        }
+        
+        /* Form labels */
+        .form-label {
+            font-weight: 500;
+            color: #495057;
+            margin-bottom: 8px;
+            font-size: 0.875rem;
+        }
+        
+        /* Form controls */
+        .form-control,
+        .form-select {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px 14px;
+            transition: all 0.3s ease;
+            font-size: 0.875rem;
+        }
+        
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+            outline: none;
+        }
+        
+        /* Validation Success */
+        .is-valid {
+            border-color: var(--success-green) !important;
+            padding-right: calc(1.5em + 0.75rem);
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2328a745' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+        
+        .is-valid:focus {
+            border-color: var(--success-green) !important;
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1) !important;
+        }
+        
+        /* Validation Error */
+        .is-invalid {
+            border-color: var(--danger-red) !important;
+            padding-right: calc(1.5em + 0.75rem);
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+        
+        .is-invalid:focus {
+            border-color: var(--danger-red) !important;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1) !important;
+        }
+        
+        .valid-feedback {
+            display: block;
+            margin-top: 0.5rem;
+            font-size: 0.875em;
+            color: var(--success-green);
+        }
+        
+        .invalid-feedback {
+            display: block;
+            margin-top: 0.5rem;
+            font-size: 0.875em;
+            color: var(--danger-red);
+        }
+        
+        /* File input custom */
+        input[type="file"] {
+            padding: 8px 12px;
+        }
+        
+        input[type="file"]::file-selector-button {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #357ABD 100%);
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-right: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        input[type="file"]::file-selector-button:hover {
+            background: linear-gradient(135deg, #357ABD 0%, #2868A8 100%);
+            transform: translateY(-2px);
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #357ABD 100%);
+            border: none;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #357ABD 0%, #2868A8 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
+        }
+        
+        .btn-light {
+            background: white;
+            border: 1px solid #e0e0e0;
+            color: #495057;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-light:hover {
+            background: #f8f9fa;
+            border-color: #d0d0d0;
+            transform: translateY(-2px);
+        }
+        
+        .btn i {
+            width: 16px;
+            height: 16px;
+            margin-right: 6px;
+        }
+        
+        /* Required asterisk */
+        .text-danger {
+            color: var(--danger-red);
+            font-weight: 600;
+        }
+        
+        /* Textarea */
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        /* Character counter */
+        .char-counter {
+            font-size: 0.75rem;
+            color: #868e96;
+            text-align: right;
+            margin-top: 4px;
+        }
+        
+        .char-counter.text-danger {
+            color: var(--danger-red) !important;
+        }
+        
+        .char-counter.text-success {
+            color: var(--success-green) !important;
+        }
+        
+        /* Form footer */
+        .form-footer {
+            border-top: 1px solid #e9ecef;
+            padding-top: 24px;
+            margin-top: 24px;
+            display: flex;
+            gap: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+
+    <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+
+        <!-- Topbar -->
+        <header class="topbar" data-navbarbg="skin6">
+            <nav class="navbar top-navbar navbar-expand-lg">
+                <div class="navbar-header" data-logobg="skin6">
+                    <a class="nav-toggler waves-effect waves-light d-block d-lg-none" href="javascript:void(0)">
+                        <i class="ti-menu ti-close"></i>
+                    </a>
+                    <div class="navbar-brand">
+                        <a href="{% url 'donation:back_index' %}">
+                            <img src="{% static 'Front/assets/images/logo_site.png' %}" alt="logo" class="img-fluid" style="width: 120px; margin-top: 30px;">
+                        </a>
+                    </div>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="navbar-nav float-end">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-bs-toggle="dropdown">
+                                <img src="{% static 'Back/src/assets/images/users/profile-pic.jpg' %}" alt="user" class="rounded-circle" width="40">
+                                <span class="ms-2 d-none d-lg-inline-block">
+                                    <span class="text-dark">{{ user.first_name|default:"Admin" }}</span>
+                                    <i data-feather="chevron-down" class="svg-icon"></i>
+                                </span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="#">
+                                    <i data-feather="power" class="svg-icon me-2"></i>Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Sidebar -->
+<!-- Sidebar -->
+    <aside class="left-sidebar" data-sidebarbg="skin6">
+  <div class="scroll-sidebar" data-sidebarbg="skin6">
+    <nav class="sidebar-nav">
+      <ul id="sidebarnav">
+        
+
+        <li class="list-divider"></li>
+
+        <!-- USER MANAGEMENT -->
+        <li class="nav-small-cap"><span class="hide-menu">USER MANAGEMENT</span></li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'dashboard' %}">
+            <i data-feather="users" class="feather-icon"></i>
+            <span class="hide-menu">Users Management</span>
+          </a>
+        </li>
+
+        <li class="list-divider"></li>
+        <li class="nav-small-cap"><span class="hide-menu">PATIENT</span></li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'dashboard_home' %}" aria-expanded="false">
+            <i data-feather="home" class="feather-icon"></i>
+            <span class="hide-menu">Patient Dashboard</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'appointment_list' %}">
+            <i data-feather="calendar" class="feather-icon"></i>
+            <span class="hide-menu">Appointments List</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'patient_list' %}">
+            <i data-feather="users" class="feather-icon"></i>
+            <span class="hide-menu">Patients List</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'appointment_create' %}">
+            <i data-feather="plus-circle" class="feather-icon"></i>
+            <span class="hide-menu">New Appointment</span>
+            </a>
+        </li>
+         <li class="list-divider"></li>
+        <!-- PRODUCTS -->
+        <li class="nav-small-cap"><span class="hide-menu">PRODUCTS</span></li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'dashboard_products' %}">
+            <i data-feather="home" class="feather-icon"></i>
+            <span class="hide-menu">Product Dashboard</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'products_list' %}">
+            <i data-feather="package" class="feather-icon"></i>
+            <span class="hide-menu">Products List</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'orders_list' %}">
+            <i data-feather="shopping-cart" class="feather-icon"></i>
+            <span class="hide-menu">Orders List</span>
+          </a>
+        </li>
+
+        <li class="list-divider"></li>
+
+
+        <!-- DONATIONS -->
+        <li class="nav-small-cap"><span class="hide-menu">DONATIONS</span></li>
+
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'donation:back_index' %}">
+            <i data-feather="activity" class="feather-icon"></i>
+            <span class="hide-menu">Dashboard Donation</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'publication:publication_list' %}">
+            <i data-feather="file-text" class="feather-icon"></i>
+            <span class="hide-menu">Publications List</span>
+          </a>
+        </li>
+         <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'publication:publication_form' %}">
+            <i data-feather="plus-circle" class="feather-icon"></i>
+            <span class="hide-menu">New Publication</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'donation:admin_donation_list' %}">
+            <i data-feather="heart" class="feather-icon"></i>
+            <span class="hide-menu">Donations List</span>
+          </a>
+        </li>
+
+        <li class="list-divider"></li>
+
+        <li class="nav-small-cap"><span class="hide-menu">LABO</span></li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'Labapp:back_analyse_list' %}" aria-expanded="false">
+            <i data-feather="calendar" class="feather-icon"></i>
+            <span class="hide-menu">List Analyses</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'Labapp:back_recherche_list' %}">
+            <i data-feather="tag" class="feather-icon"></i>
+            <span class="hide-menu">recherche List</span>
+            </a>
+        </li>
+
+        <li class="list-divider"></li>
+        
+         <li class="nav-small-cap"><span class="hide-menu">STAGE</span></li>
+        <li class="sidebar-item">
+  <a class="sidebar-link" href="{% url 'stages:liste_stages' %}">
+    <i data-feather="award" class="feather-icon"></i>
+    <span class="hide-menu">Stages List</span>
+  </a>
+</li>
+
+        <li class="sidebar-item">
+  <a class="sidebar-link" href="{% url 'stages:ajouter_stage' %}">
+    <i data-feather="award" class="feather-icon"></i>
+    <span class="hide-menu">New Stage</span>
+  </a>
+</li>
+<li class="sidebar-item">
+  <a class="sidebar-link" href="{% url 'stagiaire:liste_stagiaires' %}">
+    <i data-feather="user-check" class="feather-icon"></i>
+    <span class="hide-menu">Stagiaires List</span>
+  </a>
+</li>
+
+        
+      </ul>
+    </nav>
+  </div>
+</aside>
+
+        <!-- Page wrapper -->
+        <div class="page-wrapper">
+            <!-- Page Header -->
+            <div class="page-breadcrumb">
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="page-title">Nouvelle publication</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <form method="post" enctype="multipart/form-data" id="publicationForm">
+                                    {% csrf_token %}
+
+                                    <div class="row">
+                                        <!-- Titre -->
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Titre <span class="text-danger">*</span></label>
+                                            <input type="text" 
+                                                   name="title" 
+                                                   id="id_title" 
+                                                   class="form-control {% if form.title.errors %}is-invalid{% elif request.method == 'POST' %}is-valid{% endif %}" 
+                                                   placeholder="Titre de la publication" 
+                                                   required 
+                                                   value="{{ form.title.value|default:'' }}">
+                                            {% if form.title.errors %}
+                                                <div class="invalid-feedback">
+                                                    <i data-feather="alert-circle" style="width: 14px; height: 14px;"></i>
+                                                    {{ form.title.errors.0 }}
+                                                </div>
+                                            {% elif request.method == 'POST' and form.title.value %}
+                                                <div class="valid-feedback">
+                                                    <i data-feather="check-circle" style="width: 14px; height: 14px;"></i>
+                                                    Parfait ! Le titre est valide.
+                                                </div>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- Adresse -->
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Adresse <span class="text-danger">*</span></label>
+                                            <input type="text" 
+                                                   name="address" 
+                                                   id="id_address" 
+                                                   class="form-control {% if form.address.errors %}is-invalid{% elif request.method == 'POST' %}is-valid{% endif %}" 
+                                                   placeholder="Adresse" 
+                                                   required 
+                                                   value="{{ form.address.value|default:'' }}">
+                                            {% if form.address.errors %}
+                                                <div class="invalid-feedback">
+                                                    <i data-feather="alert-circle" style="width: 14px; height: 14px;"></i>
+                                                    {{ form.address.errors.0 }}
+                                                </div>
+                                            {% elif request.method == 'POST' and form.address.value %}
+                                                <div class="valid-feedback">
+                                                    <i data-feather="check-circle" style="width: 14px; height: 14px;"></i>
+                                                    Adresse correcte !
+                                                </div>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- Description -->
+                                        <div class="col-12 mb-3">
+                                            <label class="form-label">Description <span class="text-danger">*</span></label>
+                                            <textarea name="description" 
+                                                      id="id_description" 
+                                                      class="form-control {% if form.description.errors %}is-invalid{% elif request.method == 'POST' %}is-valid{% endif %}" 
+                                                      rows="5" 
+                                                      placeholder="Description détaillée (minimum 30 caractères)" 
+                                                      required>{{ form.description.value|default:'' }}</textarea>
+                                            <div class="char-counter" id="charCounter">
+                                                <span id="charCount">0</span> / 30 caractères minimum
+                                            </div>
+                                            {% if form.description.errors %}
+                                                <div class="invalid-feedback">
+                                                    <i data-feather="alert-circle" style="width: 14px; height: 14px;"></i>
+                                                    {{ form.description.errors.0 }}
+                                                </div>
+                                            {% elif request.method == 'POST' and form.description.value %}
+                                                <div class="valid-feedback">
+                                                    <i data-feather="check-circle" style="width: 14px; height: 14px;"></i>
+                                                    Description valide !
+                                                </div>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- Échéance -->
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Échéance <span class="text-danger">*</span></label>
+                                            <input type="date" 
+                                                   name="deadline" 
+                                                   id="id_deadline" 
+                                                   class="form-control {% if form.deadline.errors %}is-invalid{% elif request.method == 'POST' %}is-valid{% endif %}" 
+                                                   required 
+                                                   value="{{ form.deadline.value|default:'' }}">
+                                            {% if form.deadline.errors %}
+                                                <div class="invalid-feedback">
+                                                    <i data-feather="alert-circle" style="width: 14px; height: 14px;"></i>
+                                                    {{ form.deadline.errors.0 }}
+                                                </div>
+                                            {% elif request.method == 'POST' and form.deadline.value %}
+                                                <div class="valid-feedback">
+                                                    <i data-feather="check-circle" style="width: 14px; height: 14px;"></i>
+                                                    Date valide !
+                                                </div>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- Image -->
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Image</label>
+                                            <input type="file" 
+                                                   name="pubPicture" 
+                                                   id="id_pubPicture" 
+                                                   class="form-control {% if form.pubPicture.errors %}is-invalid{% endif %}" 
+                                                   accept="image/*">
+                                            {% if form.pubPicture.errors %}
+                                                <div class="invalid-feedback">
+                                                    <i data-feather="alert-circle" style="width: 14px; height: 14px;"></i>
+                                                    {{ form.pubPicture.errors.0 }}
+                                                </div>
+                                            {% endif %}
+                                            <small class="text-muted d-block mt-2">Formats: JPG, PNG (max 5MB)</small>
+                                        </div>
+                                    </div>
+
+                                    <!-- Form Footer -->
+                                    <div class="form-footer">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i data-feather="save"></i> Enregistrer
+                                        </button>
+                                        <a href="{% url 'publication:publication_list' %}" class="btn btn-light">
+                                            <i data-feather="x"></i> Annuler
+                                        </a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="footer text-center text-muted mt-4">
+                Clinica+ Back • Freedash UI
+            </footer>
+        </div>
+    </div>
+
+    <script src="{% static 'Back/src/assets/libs/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'Back/src/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'Back/src/dist/js/feather.min.js' %}"></script>
+    <script src="{% static 'Back/src/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js' %}"></script>
+    <script src="{% static 'Back/src/dist/js/sidebarmenu.js' %}"></script>
+    <script src="{% static 'Back/src/dist/js/custom.min.js' %}"></script>
+    
+    <script>
+        // Initialize Feather icons
+        if (window.feather) feather.replace();
+        
+        $(document).ready(function() {
+            // Character counter pour description
+            const descriptionField = $('#id_description');
+            const charCount = $('#charCount');
+            const charCounter = $('#charCounter');
+            
+            function updateCharCount() {
+                const count = descriptionField.val().length;
+                charCount.text(count);
+                
+                if (count < 30) {
+                    charCounter.removeClass('text-success').addClass('text-danger');
+                } else {
+                    charCounter.removeClass('text-danger').addClass('text-success');
+                }
+            }
+            
+            descriptionField.on('input', updateCharCount);
+            updateCharCount(); // Initial count
+            
+            // Validation en temps réel
+            
+            // Titre
+            $('#id_title').on('blur keyup', function() {
+                const val = $(this).val().trim();
+                if (val.length > 0) {
+                    $(this).removeClass('is-invalid').addClass('is-valid');
+                } else {
+                    $(this).removeClass('is-valid').addClass('is-invalid');
+                }
+            });
+            
+            // Adresse
+            $('#id_address').on('blur keyup', function() {
+                const val = $(this).val().trim();
+                if (val.length > 0) {
+                    $(this).removeClass('is-invalid').addClass('is-valid');
+                } else {
+                    $(this).removeClass('is-valid').addClass('is-invalid');
+                }
+            });
+            
+            // Description (min 30 caractères)
+            descriptionField.on('blur keyup', function() {
+                const val = $(this).val().trim();
+                if (val.length >= 30) {
+                    $(this).removeClass('is-invalid').addClass('is-valid');
+                } else if (val.length > 0) {
+                    $(this).removeClass('is-valid').addClass('is-invalid');
+                }
+            });
+            
+            // Date (ne peut pas être dans le passé)
+            $('#id_deadline').on('blur change', function() {
+                const selectedDate = new Date($(this).val());
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                if (selectedDate >= today) {
+                    $(this).removeClass('is-invalid').addClass('is-valid');
+                } else if ($(this).val()) {
+                    $(this).removeClass('is-valid').addClass('is-invalid');
+                }
+            });
+            
+            // Preview image
+            $('#id_pubPicture').on('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    // Vérifier la taille (5MB max)
+                    if (file.size > 10 * 1024 * 1024) {
+                        $(this).addClass('is-invalid');
+                        alert('L\'image ne doit pas dépasser 5MB');
+                        $(this).val('');
+                    } else {
+                        $(this).removeClass('is-invalid');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

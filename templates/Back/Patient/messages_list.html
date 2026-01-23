@@ -1,0 +1,74 @@
+{% extends "Back/Patient/base.html" %}
+
+{% block title %}Patient Messages - Clinica{% endblock %}
+{% block page_title %}Patient Messages{% endblock %}
+
+{% block breadcrumb_actions %}
+<div class="d-flex align-items-center gap-2">
+  {% if total_unread > 0 %}
+  <span class="badge bg-danger">{{ total_unread }} unread</span>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title mb-4">
+          <i data-feather="message-square" class="me-2"></i>
+          Conversations with Patients
+        </h4>
+        
+        {% if messages %}
+        <div class="list-group">
+          {% for conversation in messages %}
+          <a href="{% url 'message_conversation' conversation.patient.id %}" 
+             class="list-group-item list-group-item-action {% if conversation.unread_count > 0 %}list-group-item-primary{% endif %}">
+            <div class="d-flex w-100 justify-content-between align-items-start">
+              <div class="flex-grow-1">
+                <h5 class="mb-1">
+                  {{ conversation.patient.first_name }} {{ conversation.patient.last_name }}
+                  {% if conversation.unread_count > 0 %}
+                  <span class="badge bg-danger ms-2">{{ conversation.unread_count }} new</span>
+                  {% endif %}
+                </h5>
+                {% if conversation.latest_message %}
+                <p class="mb-1 text-muted">
+                  <strong>{% if conversation.latest_message.sender_type == 'patient' %}Patient{% else %}You{% endif %}:</strong>
+                  {{ conversation.latest_message.message|truncatewords:15 }}
+                </p>
+                <small class="text-muted">
+                  <i data-feather="clock" style="width:14px;height:14px;"></i>
+                  {{ conversation.latest_message.created_at|timesince }} ago
+                </small>
+                {% else %}
+                <p class="mb-0 text-muted">No messages yet</p>
+                {% endif %}
+              </div>
+              <div class="text-end">
+                <small class="text-muted">
+                  <i data-feather="mail" style="width:14px;height:14px;"></i>
+                  {{ conversation.patient.email }}
+                </small>
+              </div>
+            </div>
+          </a>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+          <i data-feather="info" class="me-2"></i>
+          No patient messages yet. Patients can send you messages from their portal.
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  feather.replace();
+</script>
+{% endblock %}

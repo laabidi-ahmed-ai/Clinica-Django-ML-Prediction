@@ -1,0 +1,1261 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Index - Clinica Bootstrap Template</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/apple-touch-icon.png % '}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css '%}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/css/labo.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Clinica+
+  * Template URL: https://bootstrapmade.com/Clinica+-free-bootstrap-theme/
+  * Updated: Aug 07 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+  
+</head>
+
+<body class="index-page">
+
+  <header id="header" class="header sticky-top">
+    <div class="topbar d-flex align-items-center">
+        <div class="container d-flex justify-content-center justify-content-md-between">
+            <div class="d-none d-md-flex align-items-center">
+                <i class="bi bi-clock me-1"></i> Monday - Saturday, 8AM to 10PM
+            </div>
+            <div class="d-flex align-items-center">
+                <i class="bi bi-phone me-1"></i> Call us now +1 5589 55488 55
+            </div>
+        </div>
+    </div>
+
+    <div class="branding d-flex align-items-center">
+        <div class="container position-relative d-flex align-items-center justify-content-end">
+            <a href="{% url 'front_index' %}" class="logo d-flex align-items-center me-auto">
+                <img src="{% static 'Front/assets/img/logo.png' %}" alt="">
+            </a>
+
+            <nav id="navmenu" class="navmenu">
+                <ul style="display: flex; align-items: center; list-style: none; margin: 0; padding: 0; gap: 30px;">
+                    <li><a href="{% url 'front_index' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">HOME</a></li>
+                    <li><a href="#" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">ABOUT</a></li>
+                    <li><a href="{% url 'index' %}" style="text-decoration: none; color: #333; font-weight: 500;">PRODUCTS</a></li>
+                    <li><a href="{% url 'donation:front_publication_list' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">DONATION</a></li>
+                    <li><a href="{% url 'stages:liste_stages_front' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">STAGE</a></li>
+                    <li><a href="{% url 'Labapp:home' %}" class="active" style="text-decoration: none; color: #3fbbc0; font-weight: 600;">LABO</a></li>
+                    <li><a href="{% url 'my_patient_portal' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">PATIENT</a></li>
+                </ul>
+                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+            </nav>
+
+            <a class="cta-btn" href="{% url 'public_appointment' %}">Make an Appointment</a>
+            <ul class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user-circle fa-lg" style="font-size: 34px;"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{% url 'donation:user_donation_list' %}">
+                            <i class="fas fa-heart" style="color: #13547a;"></i> My Donations
+                        </a></li>
+                        <li><a class="dropdown-item" href="#">
+                            <i class="fas fa-sign-out-alt" style="color: #13547a;"></i> Logout
+                        </a></li>
+                    </ul>
+                </li>
+                {% else %}
+                <li><a href="{% url 'loginFront' %}" class="nav-auth-btn nav-login-btn" style="text-decoration: none; background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%); color: white; font-weight: 600; padding: 8px 20px; border-radius: 25px; display: inline-block; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(63, 187, 192, 0.3);"><i class="bi bi-box-arrow-in-right"></i> LOGIN</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</header>
+
+  <main class="main">
+
+    
+
+    
+        <a class="carousel-control-prev" href="#hero-carousel" role="button" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
+        </a>
+
+        <a class="carousel-control-next" href="#hero-carousel" role="button" data-bs-slide="next">
+          <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
+        </a>
+
+        <ol class="carousel-indicators"></ol>
+
+      </div>
+
+    </section><!-- /Hero Section -->
+
+    <!-- Featured Services Section -->
+    <section id="featured-services" class="section" style="padding: 60px 0;">
+  <div class="container">
+      <div class="cards-grid">
+
+          <!-- CARD 1 -->
+          <a href="{% url 'Labapp:recherche_create' %}" class="card">
+              <div class="lab-decoration">
+                  <!-- ICON SVG SAME AS YOUR VERSION -->
+              </div>
+              <div class="card-content">
+                  <div class="icon-container">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" viewBox="0 0 24 24">
+                        <path d="M6 22v-2h5v-2.126c-1.742-.245-3.318-1.16-4.424-2.574A5.963 5.963 0 0 1 5 12c0-1.933.92-3.792 2.576-5.3L6.293 5.414l1.414-1.414 2.293 2.293A5.96 5.96 0 0 1 15 6c1.933 0 3.792.92 5.3 2.576L18.586 10l1.414 1.414-2.293 2.293A5.96 5.96 0 0 1 15 18a5.958 5.958 0 0 1-3 .803V21h5v2H6zm9-6a4 4 0 1 0-8 0 4 4 0 0 0 8 0z"/>
+                      </svg>               </div>
+                  <h3>Create Research</h3>
+                  <p>Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
+              </div>
+          </a>
+
+          <!-- CARD 2 -->
+          <a href="{% url 'Labapp:analyse_list' %}" class="card">
+              <div class="lab-decoration">
+                  <!-- SVG -->
+              </div>
+              <div class="card-content">
+                  <div class="icon-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" viewBox="0 0 24 24">
+                      <path d="M14 2H6v2h1v13a5 5 0 0 0 10 0V4h1V2h-4zm2 15a3 3 0 0 1-6 0V4h6v13z"/>
+                      <path d="M10 9h6v2h-6z"/>
+                    </svg>                  </div>
+                  <h3>Show my Analyses</h3>
+                  <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore</p>
+              </div>
+          </a>
+
+          <!-- CARD 3 -->
+          <a href="{% url 'Labapp:analyse_create' %}" class="card">
+              <div class="lab-decoration"></div>
+              <div class="card-content">
+                  <div class="icon-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" viewBox="0 0 24 24">
+                      <path d="M21.71 6.29l-4-4a1 1 0 0 0-1.41 1.41l1.29 1.29-4.24 4.24-1.29-1.29a1 1 0 0 0-1.41 1.41l1.29 1.29-8.17 8.17a3 3 0 0 0 4.24 4.24l8.17-8.17 1.29 1.29a1 1 0 1 0 1.41-1.41l-1.29-1.29 4.24-4.24 1.29 1.29a1 1 0 0 0 1.41-1.41zM6.71 20.71a1 1 0 0 1-1.41-1.41l8.17-8.17 1.41 1.41-8.17 8.17z"/>
+                    </svg>
+                  </div>
+                  <h3>Create Analyses</h3>
+                  <p>Excepteur sint occaecat cupidatat non proident</p>
+              </div>
+          </a>
+
+          <!-- CARD 4 -->
+          <a href="{% url 'Labapp:recherche_list' %}" class="card">
+              <div class="lab-decoration"></div>
+              <div class="card-content">
+                  <div class="icon-container">
+                    <div class="icon-container">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" viewBox="0 0 24 24">
+                         <path d="M12 21s-6.2-4.35-9.33-7.48C.94 11.8.5 9.95 1.14 8.28 1.95 6.17 4 5 6.16 5c1.54 0 3.04.73 3.99 1.91C11.8 5.73 13.3 5 14.84 5 17 5 19.05 6.17 19.86 8.28c.64 1.67.2 3.52-1.53 5.24C18.2 16.65 12 21 12 21z"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <h3>Show my Research</h3>
+                  <p>At vero eos et accusamus et iusto odio dignissimos ducimus</p>
+              </div>
+          </a>
+
+      </div>
+  </div>
+  
+</section>
+    <!-- Redirection directe vers la room -->
+{% if doctors %}
+    {% for doctor in doctors %}
+        <a href="{% url 'Labapp:start_private_chat' doctor.pk %}" 
+           class="chat-bubble-btn" 
+           title="Open Chat">
+           💬
+        </a>
+    {% endfor %}
+{% else %}
+    <p style="position:fixed;bottom:100px;right:20px;z-index:9999;color:red;">
+        No other doctors found
+    </p>
+{% endif %}
+
+
+
+    <section id="about" class="about section">
+
+     
+
+      <div class="container">
+
+        <div class="row gy-4">
+          <div class="col-lg-6 position-relative align-self-start" data-aos="fade-up" data-aos-delay="100">
+            <img src="{% static 'assets/img/about.jpg' %}" class="img-fluid" alt="">
+            <a href="https://www.youtube.com/watch?v=Y7f98aduVJ8" class="glightbox pulsating-play-btn"></a>
+          </div>
+          <div class="col-lg-6 content" data-aos="fade-up" data-aos-delay="200">
+            <h3>Voluptatem dignissimos provident quasi corporis voluptates sit assumenda.</h3>
+            <p class="fst-italic">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+              dolore magna aliqua.
+            </p>
+            <ul>
+              <li><i class="bi bi-check2-all"></i> <span>Ullamco laboris nisi ut aliquip ex ea commodo consequat.</span>
+              </li>
+              <li><i class="bi bi-check2-all"></i> <span>Duis aute irure dolor in reprehenderit in voluptate
+                  velit.</span></li>
+              <li><i class="bi bi-check2-all"></i> <span>Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis
+                  aute irure dolor in reprehenderit in voluptate trideta storacalaperda mastiro dolore eu fugiat nulla
+                  pariatur.</span></li>
+            </ul>
+            <p>
+              Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+              voluptate
+              velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident
+            </p>
+            <!-- Publication Button -->
+            <button id="publishBtn" class="btn btn-primary mt-3" style="background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%); border: none; padding: 10px 24px; border-radius: 25px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(63, 187, 192, 0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(63, 187, 192, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(63, 187, 192, 0.3)'">
+              <i class="bi bi-plus-circle"></i> Créer une Publication
+            </button>
+          </div>
+        </div>
+
+        <!-- Publications Feed -->
+        <div id="publicationsFeed" style="margin-top: 40px; max-width: 800px; margin-left: auto; margin-right: auto;"></div>
+
+        <!-- Publication Modal -->
+        <div id="publicationModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+          <div style="background: white; border-radius: 12px; width: 90%; max-width: 500px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); overflow: hidden; animation: slideIn 0.3s ease;">
+            <!-- Modal Header -->
+            <div style="background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%); color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center;">
+              <h2 style="margin: 0; font-size: 18px; font-weight: 600;">✍️ Créer une Publication</h2>
+              <button onclick="closePublicationModal()" style="background: none; border: none; color: white; font-size: 24px; cursor: pointer; opacity: 0.7;">&times;</button>
+            </div>
+            
+            <!-- Modal Body -->
+            <div style="padding: 24px;">
+              <textarea id="publicationText" placeholder="Écrivez votre publication ici..." style="width: 100%; height: 150px; padding: 12px; border: 1px solid #e5e5e5; border-radius: 8px; font-family: Arial, sans-serif; font-size: 14px; resize: vertical; box-sizing: border-box;" onfocus="this.style.borderColor='#3fbbc0'" onblur="this.style.borderColor='#e5e5e5'"></textarea>
+              
+              <div style="margin-top: 16px; display: flex; gap: 10px;">
+                <input type="text" id="publicationAuthor" placeholder="Votre nom (optionnel)" style="flex: 1; padding: 10px; border: 1px solid #e5e5e5; border-radius: 6px; font-size: 13px;" />
+              </div>
+
+              <div style="margin-top: 20px; display: flex; gap: 10px;">
+                <button onclick="closePublicationModal()" style="flex: 1; padding: 12px; background: #f0f0f0; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; color: #333; transition: all 0.2s;">Annuler</button>
+                <button onclick="publishPost()" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%); border: none; border-radius: 6px; cursor: pointer; font-weight: 600; color: white; transition: all 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">Publier</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CSS Animation -->
+        <style>
+          @keyframes slideIn {
+            from {
+              transform: translateY(-50px);
+              opacity: 0;
+            }
+            to {
+              transform: translateY(0);
+              opacity: 1;
+            }
+          }
+
+          .publication-card {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 4px solid #3fbbc0;
+            transition: all 0.3s ease;
+          }
+
+          .publication-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+          }
+
+          .publication-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+          }
+
+          .publication-author {
+            font-weight: 600;
+            color: #3fbbc0;
+            font-size: 14px;
+          }
+
+          .publication-time {
+            font-size: 12px;
+            color: #999;
+          }
+
+          .publication-content {
+            color: #555;
+            line-height: 1.6;
+            font-size: 14px;
+            margin-bottom: 12px;
+            word-wrap: break-word;
+          }
+
+          .publication-actions {
+            display: flex;
+            gap: 10px;
+            padding-top: 12px;
+            border-top: 1px solid #f0f0f0;
+          }
+
+          .publication-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 4px;
+            background: #f5f5f5;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+            color: #666;
+            font-weight: 500;
+          }
+
+          .publication-btn:hover {
+            background: #3fbbc0;
+            color: white;
+          }
+
+          .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+          }
+
+          .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+          }
+        </style>
+
+      </div>
+
+    </section><!-- /About Section -->
+
+    <!-- Stats Section -->
+    <section id="stats" class="stats section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row gy-4">
+
+          <div class="col-lg-3 col-md-6">
+            <div class="stats-item d-flex align-items-center w-100 h-100">
+              <i class="fas fa-user-md flex-shrink-0"></i>
+              <div>
+                <span data-purecounter-start="0" data-purecounter-end="25" data-purecounter-duration="1"
+                  class="purecounter"></span>
+                <p>Doctors</p>
+              </div>
+            </div>
+          </div><!-- End Stats Item -->
+
+          <div class="col-lg-3 col-md-6">
+            <div class="stats-item d-flex align-items-center w-100 h-100">
+              <i class="far fa-hospital flex-shrink-0"></i>
+              <div>
+                <span data-purecounter-start="0" data-purecounter-end="15" data-purecounter-duration="1"
+                  class="purecounter"></span>
+                <p>Departments</p>
+              </div>
+            </div>
+          </div><!-- End Stats Item -->
+
+          <div class="col-lg-3 col-md-6">
+            <div class="stats-item d-flex align-items-center w-100 h-100">
+              <i class="fas fa-flask flex-shrink-0"></i>
+              <div>
+                <span data-purecounter-start="0" data-purecounter-end="8" data-purecounter-duration="1"
+                  class="purecounter"></span>
+                <p>Research Labs</p>
+              </div>
+            </div>
+          </div><!-- End Stats Item -->
+
+          <div class="col-lg-3 col-md-6">
+            <div class="stats-item d-flex align-items-center w-100 h-100">
+              <i class="fas fa-award flex-shrink-0"></i>
+              <div>
+                <span data-purecounter-start="0" data-purecounter-end="150" data-purecounter-duration="1"
+                  class="purecounter"></span>
+                <p>Awards</p>
+              </div>
+            </div>
+          </div><!-- End Stats Item -->
+
+        </div>
+
+      </div>
+
+    </section><!-- /Stats Section -->
+
+    <!-- Features Section -->
+    <section id="features" class="features section">
+
+      <div class="container">
+
+        <div class="row justify-content-around gy-4">
+          <div class="features-image col-lg-6" data-aos="fade-up" data-aos-delay="100"><img
+              src="{% static 'assets/img/pip.gif' %}" alt=""></div>
+
+          <div class="col-lg-5 d-flex flex-column justify-content-center" data-aos="fade-up" data-aos-delay="200">
+            <h3>Enim quis est voluptatibus aliquid consequatur fugiat</h3>
+            <p>Esse voluptas cumque vel exercitationem. Reiciendis est hic accusamus. Non ipsam et sed minima temporibus
+              laudantium. Soluta voluptate sed facere corporis dolores excepturi</p>
+
+            <div class="icon-box d-flex position-relative" data-aos="fade-up" data-aos-delay="300">
+              <i class="fa-solid fa-hand-holding-medical flex-shrink-0"></i>
+              <div>
+                <h4><a href="" class="stretched-link">Lorem Ipsum</a></h4>
+                <p>Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate
+                  non provident</p>
+              </div>
+            </div><!-- End Icon Box -->
+
+            <div class="icon-box d-flex position-relative" data-aos="fade-up" data-aos-delay="400">
+              <i class="fa-solid fa-suitcase-medical flex-shrink-0"></i>
+              <div>
+                <h4><a href="" class="stretched-link">Nemo Enim</a></h4>
+                <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
+                  deleniti atque</p>
+              </div>
+            </div><!-- End Icon Box -->
+
+            <div class="icon-box d-flex position-relative" data-aos="fade-up" data-aos-delay="500">
+              <i class="fa-solid fa-staff-snake flex-shrink-0"></i>
+              <div>
+                <h4><a href="" class="stretched-link">Dine Pad</a></h4>
+                <p>Explicabo est voluptatum asperiores consequatur magnam. Et veritatis odit. Sunt aut deserunt minus
+                  aut eligendi omnis</p>
+              </div>
+            </div><!-- End Icon Box -->
+
+            <div class="icon-box d-flex position-relative" data-aos="fade-up" data-aos-delay="600">
+              <i class="fa-solid fa-lungs flex-shrink-0"></i>
+              <div>
+                <h4><a href="" class="stretched-link">Tride clov</a></h4>
+                <p>Est voluptatem labore deleniti quis a delectus et. Saepe dolorem libero sit non aspernatur odit amet.
+                  Et eligendi</p>
+              </div>
+            </div><!-- End Icon Box -->
+
+          </div>
+        </div>
+
+      </div>
+
+    </section><!-- /Features Section -->
+
+    <!-- Services Section -->
+    <section id="services" class="services section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Services</h2>
+      </div>
+
+      <!-- Research Centres Map (placed under Services title) -->
+      <div class="container" data-aos="fade-up" style="margin-top:20px;">
+        <div class="section-title">
+          <h3>Research Centres in Tunisia</h3>
+          <p>Localisation de quelques centres de recherche et laboratoires en Tunisie.</p>
+        </div>
+        <div style="margin-top:12px; position: relative; width: 100%; max-width: 100%; margin-left: auto; margin-right: auto; border-radius: 8px; overflow: hidden; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.15);">
+          <canvas id="mapCanvas" style="display: block; width: 100%; height: auto; cursor: grab;"></canvas>
+          
+          <!-- Zoom Controls (Google Maps style) -->
+          <div style="position: absolute; top: 15px; right: 15px; display: flex; flex-direction: column; gap: 8px; z-index: 50;">
+            <button onclick="zoomIn()" style="width: 40px; height: 40px; background: white; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: all 0.2s;" onmouseover="this.boxShadow='0 2px 8px rgba(0,0,0,0.2)'" onmouseout="this.boxShadow='0 2px 6px rgba(0,0,0,0.1)'">+</button>
+            <button onclick="zoomOut()" style="width: 40px; height: 40px; background: white; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: all 0.2s;" onmouseover="this.boxShadow='0 2px 8px rgba(0,0,0,0.2)'" onmouseout="this.boxShadow='0 2px 6px rgba(0,0,0,0.1)'">−</button>
+            <button onclick="resetZoom()" style="width: 40px; height: 40px; background: white; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: all 0.2s; font-weight: bold; color: #1f2937;" onmouseover="this.boxShadow='0 2px 8px rgba(0,0,0,0.2)'" onmouseout="this.boxShadow='0 2px 6px rgba(0,0,0,0.1)'">⊙</button>
+          </div>
+          
+          <!-- Search/Info Box (Google Maps style) -->
+          <div style="position: absolute; top: 15px; left: 15px; background: white; padding: 12px 16px; border-radius: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-size: 13px; z-index: 40; max-width: 250px; border: 1px solid #e5e5e5;">
+            <div style="font-weight: 600; color: #1f2937; margin-bottom: 5px;">🔍 Localisation</div>
+            <div style="color: #666; font-size: 12px; line-height: 1.4;"><span id="hover-info" style="font-weight: 500;">Hovez sur une zone</span></div>
+          </div>
+          
+          <!-- Legend Box (Google Maps style) -->
+          <div style="position: absolute; bottom: 15px; left: 15px; background: white; padding: 16px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-size: 12px; z-index: 40; border: 1px solid #e5e5e5;">
+            <div style="font-weight: 600; color: #1f2937; margin-bottom: 10px; font-size: 13px;">Légende</div>
+            <div style="line-height: 2; color: #555;">
+              <div style="margin: 6px 0; display: flex; align-items: center; gap: 8px;">
+                <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: linear-gradient(135deg, #ff8585 0%, #dd3333 100%); border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.2);"></span>
+                <span>Centre de recherche</span>
+              </div>
+              <div style="margin: 6px 0; display: flex; align-items: center; gap: 8px;">
+                <span style="display: inline-block; width: 12px; height: 12px; background: #d4c9a8; border: 1px solid #6b5d4f;"></span>
+                <span>Gouvernorat</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Info Popup (Google Maps style) -->
+          <div id="popup" style="position: absolute; background: white; border-radius: 8px; padding: 0; font-size: 13px; max-width: 280px; box-shadow: 0 3px 12px rgba(0,0,0,0.25); z-index: 30; display: none; border: 1px solid #e5e5e5; overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%); color: white; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center;">
+              <b id="popup-name" style="font-size: 14px;">Centre de recherche</b>
+              <span style="cursor: pointer; font-weight: bold; font-size: 20px; line-height: 1; opacity: 0.7;" onclick="closePopup()">×</span>
+            </div>
+            <div style="padding: 12px 14px; color: #555; font-size: 12px; line-height: 1.6;">
+              <span id="popup-desc">Description du centre</span>
+            </div>
+          </div>
+          
+          <!-- Attribution (Google Maps style) -->
+          <div style="position: absolute; bottom: 5px; right: 10px; font-size: 11px; color: #999; z-index: 10; background: rgba(255,255,255,0.7); padding: 4px 8px; border-radius: 4px;">Carte interactive</div>
+        </div>
+      </div>
+
+    <!-- Tabs Section -->
+    <section id="tabs" class="tabs section">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Departments</h2>
+        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+      </div><!-- End Section Title -->
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+        <div class="row">
+          <div class="col-lg-3">
+            <ul class="nav nav-tabs flex-column">
+              <li class="nav-item">
+                <a class="nav-link active show" data-bs-toggle="tab" href="#tabs-tab-1">Cardiology</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#tabs-tab-2">Neurology</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#tabs-tab-3">Hepatology</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#tabs-tab-4">Pediatrics</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#tabs-tab-5">Ophthalmologists</a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-lg-9 mt-4 mt-lg-0">
+            <div class="tab-content">
+
+              <div class="tab-pane active show" id="tabs-tab-1">
+                <div class="row">
+                  <div class="col-lg-8 details order-2 order-lg-1">
+                    <h3>Cardiology</h3>
+                    <p class="fst-italic">Qui laudantium consequatur laborum sit qui ad sapiente dila parde sonata raqer
+                      a videna mareta paulona marka</p>
+                    <p>Et nobis maiores eius. Voluptatibus ut enim blanditiis atque harum sint. Laborum eos ipsum ipsa
+                      odit magni. Incidunt hic ut molestiae aut qui. Est repellat minima eveniet eius et quis magni
+                      nihil. Consequatur dolorem quaerat quos qui similique accusamus nostrum rem vero</p>
+                  </div>
+                  <div class="col-lg-4 text-center order-1 order-lg-2">
+                    <img src="{% static 'assets/img/departments-1.jpg' %}" alt="" class="img-fluid">
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane" id="tabs-tab-2">
+                <div class="row">
+                  <div class="col-lg-8 details order-2 order-lg-1">
+                    <h3>Neurology</h3>
+                    <p class="fst-italic">Qui laudantium consequatur laborum sit qui ad sapiente dila parde sonata raqer
+                      a videna mareta paulona marka</p>
+                    <p>Ea ipsum voluptatem consequatur quis est. Illum error ullam omnis quia et reiciendis sunt sunt
+                      est. Non aliquid repellendus itaque accusamus eius et velit ipsa voluptates. Optio nesciunt eaque
+                      beatae accusamus lerode pakto madirna desera vafle de nideran pal</p>
+                  </div>
+                  <div class="col-lg-4 text-center order-1 order-lg-2">
+                    <img src="{% static 'assets/img/departments-2.jpg' %}" alt="" class="img-fluid">
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane" id="tabs-tab-3">
+                <div class="row">
+                  <div class="col-lg-8 details order-2 order-lg-1">
+                    <h3>Hepatology</h3>
+                    <p class="fst-italic">Eos voluptatibus quo. Odio similique illum id quidem non enim fuga. Qui natus
+                      non sunt dicta dolor et. In asperiores velit quaerat perferendis aut</p>
+                    <p>Iure officiis odit rerum. Harum sequi eum illum corrupti culpa veritatis quisquam. Neque
+                      necessitatibus illo rerum eum ut. Commodi ipsam minima molestiae sed laboriosam a iste odio. Earum
+                      odit nesciunt fugiat sit ullam. Soluta et harum voluptatem optio quae</p>
+                  </div>
+                  <div class="col-lg-4 text-center order-1 order-lg-2">
+                    <img src="{% static 'assets/img/departments-3.jpg' %}" alt="" class="img-fluid">
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane" id="tabs-tab-4">
+                <div class="row">
+                  <div class="col-lg-8 details order-2 order-lg-1">
+                    <h3>Pediatrics</h3>
+                    <p class="fst-italic">Totam aperiam accusamus. Repellat consequuntur iure voluptas iure porro quis
+                      delectus</p>
+                    <p>Eaque consequuntur consequuntur libero expedita in voluptas. Nostrum ipsam necessitatibus aliquam
+                      fugiat debitis quis velit. Eum ex maxime error in consequatur corporis atque. Eligendi asperiores
+                      sed qui veritatis aperiam quia a laborum inventore</p>
+                  </div>
+                  <div class="col-lg-4 text-center order-1 order-lg-2">
+                    <img src="{% static 'assets/img/departments-4.jpg' %}" alt="" class="img-fluid">
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane" id="tabs-tab-5">
+                <div class="row">
+                  <div class="col-lg-8 details order-2 order-lg-1">
+                    <h3>Ophthalmologists</h3>
+                    <p class="fst-italic">Omnis blanditiis saepe eos autem qui sunt debitis porro quia.</p>
+                    <p>Exercitationem nostrum omnis. Ut reiciendis repudiandae minus. Omnis recusandae ut non quam ut
+                      quod eius qui. Ipsum quia odit vero atque qui quibusdam amet. Occaecati sed est sint aut vitae
+                      molestiae voluptate vel</p>
+                  </div>
+                  <div class="col-lg-4 text-center order-1 order-lg-2">
+                    <img src="{% static 'assets/img/departments-5.jpg' %}" alt="" class="img-fluid">
+                  </div>
+
+    </section>
+
+    <!-- Doctors Section -->
+    <section id="doctors" class="doctors section light-background">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">     
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  {% load static %}
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+
+  <!-- Main JS File -->
+  <script src="{% static 'assets/js/main.js' %}"></script>
+  <script src="{% static 'assets/js/labo.js' %}"></script>
+
+  <!-- Offline Canvas Map for Tunisia Research Centres (Google Maps Style) -->
+  <script>
+    let mapState = {
+      zoom: 1,
+      panX: 0,
+      panY: 0,
+      isDragging: false,
+      dragStart: {x: 0, y: 0},
+      dragStart2D: {x: 0, y: 0}
+    };
+    
+    function zoomIn() {
+      mapState.zoom = Math.min(mapState.zoom + 0.2, 2.5);
+      drawMap();
+    }
+    
+    function zoomOut() {
+      mapState.zoom = Math.max(mapState.zoom - 0.2, 0.5);
+      drawMap();
+    }
+    
+    function resetZoom() {
+      mapState.zoom = 1;
+      mapState.panX = 0;
+      mapState.panY = 0;
+      drawMap();
+    }
+    
+    function closePopup() {
+      document.getElementById('popup').style.display = 'none';
+    }
+    
+    document.addEventListener('DOMContentLoaded', function(){
+      const canvas = document.getElementById('mapCanvas');
+      const ctx = canvas.getContext('2d');
+      const popup = document.getElementById('popup');
+      
+      // Set canvas dimensions (aspect ratio ~2:1 for full width)
+      function resizeCanvas() {
+        const container = canvas.parentElement;
+        const width = container.offsetWidth;
+        canvas.width = width;
+        canvas.height = Math.max(500, width * 0.5);
+      }
+      resizeCanvas();
+      window.addEventListener('resize', () => {
+        resizeCanvas();
+        drawMap();
+      });
+      
+      // Governorats of Tunisia
+      const governorats = [
+        {name: 'Tunis', lat: 36.8, lon: 10.18, fontSize: 11},
+        {name: 'Sfax', lat: 34.74, lon: 10.76, fontSize: 11},
+        {name: 'Sousse', lat: 35.83, lon: 10.64, fontSize: 10},
+        {name: 'Monastir', lat: 35.78, lon: 10.83, fontSize: 10},
+        {name: 'Kairouan', lat: 35.67, lon: 9.92, fontSize: 10},
+        {name: 'Bizerte', lat: 37.27, lon: 9.87, fontSize: 10},
+        {name: 'Nabeul', lat: 36.45, lon: 10.74, fontSize: 10},
+        {name: 'Gabes', lat: 33.88, lon: 10.10, fontSize: 10},
+        {name: 'Djerba', lat: 33.81, lon: 10.95, fontSize: 9},
+        {name: 'Tozeur', lat: 33.92, lon: 8.14, fontSize: 9},
+        {name: 'Kasserine', lat: 35.17, lon: 8.83, fontSize: 9},
+        {name: 'Gafsa', lat: 34.43, lon: 8.78, fontSize: 9}
+      ];
+      
+      // Research centres (latitude/longitude normalized to canvas coordinates)
+      const centres = [
+        {
+          name: 'Institut Pasteur de Tunis',
+          desc: 'Recherche biomédicale - Tunis',
+          lat: 36.8028,
+          lon: 10.1797,
+          canvasX: 0,
+          canvasY: 0
+        },
+        {
+          name: 'Centre de Biotechnologie de Sfax',
+          desc: 'Biotechnologies et recherche - Sfax',
+          lat: 34.7406,
+          lon: 10.7603,
+          canvasX: 0,
+          canvasY: 0
+        },
+        {
+          name: 'Université de Sousse',
+          desc: 'Laboratoires de recherche - Sousse',
+          lat: 35.8256,
+          lon: 10.6369,
+          canvasX: 0,
+          canvasY: 0
+        },
+        {
+          name: 'Université de Monastir',
+          desc: 'Centre de recherche - Monastir',
+          lat: 35.7778,
+          lon: 10.8264,
+          canvasX: 0,
+          canvasY: 0
+        },
+        {
+          name: 'Université de la Manouba',
+          desc: 'Laboratoires universitaires - Ariana',
+          lat: 36.8358,
+          lon: 10.0924,
+          canvasX: 0,
+          canvasY: 0
+        }
+      ];
+      
+      // Calculate bounds
+      const minLat = Math.min(...centres.map(c => c.lat));
+      const maxLat = Math.max(...centres.map(c => c.lat));
+      const minLon = Math.min(...centres.map(c => c.lon));
+      const maxLon = Math.max(...centres.map(c => c.lon));
+      
+      // Convert lat/lon to canvas coordinates with zoom and pan
+      function latLonToCanvas(lat, lon) {
+        const padding = 0.15;
+        const latRange = maxLat - minLat;
+        const lonRange = maxLon - minLon;
+        
+        let x = canvas.width * (padding + (lon - minLon) / lonRange * (1 - 2 * padding));
+        let y = canvas.height * (padding + (maxLat - lat) / latRange * (1 - 2 * padding));
+        
+        // Apply zoom (zoom center)
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        x = centerX + (x - centerX) * mapState.zoom + mapState.panX;
+        y = centerY + (y - centerY) * mapState.zoom + mapState.panY;
+        
+        return {x, y};
+      }
+      
+      // Update canvas coordinates
+      function updateCentresCoordinates() {
+        centres.forEach(centre => {
+          const pos = latLonToCanvas(centre.lat, centre.lon);
+          centre.canvasX = pos.x;
+          centre.canvasY = pos.y;
+        });
+      }
+      
+      function drawMap() {
+        updateCentresCoordinates();
+        
+        // Clear canvas with neutral background
+        ctx.fillStyle = '#e8eaed';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw water (ocean blue)
+        const waterGradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        waterGradient.addColorStop(0, '#c5d9f1');
+        waterGradient.addColorStop(1, '#a0c4e8');
+        ctx.fillStyle = waterGradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw Tunisia shape with Google Maps style
+        ctx.fillStyle = '#f3f3f3';
+        ctx.strokeStyle = '#999';
+        ctx.lineWidth = 1.5 / mapState.zoom;
+        
+        // Tunisia polygon
+        ctx.beginPath();
+        const tunisiaOutline = [
+          {lat: 37.35, lon: 8.2},
+          {lat: 37.4, lon: 8.8},
+          {lat: 37.3, lon: 9.5},
+          {lat: 37.15, lon: 10.2},
+          {lat: 37.0, lon: 10.8},
+          {lat: 36.8, lon: 11.2},
+          {lat: 36.5, lon: 11.5},
+          {lat: 36.0, lon: 11.3},
+          {lat: 35.5, lon: 11.0},
+          {lat: 35.0, lon: 10.5},
+          {lat: 34.5, lon: 10.2},
+          {lat: 34.3, lon: 9.8},
+          {lat: 34.1, lon: 9.2},
+          {lat: 34.0, lon: 8.5},
+          {lat: 34.2, lon: 8.0},
+          {lat: 34.6, lon: 7.5},
+          {lat: 35.0, lon: 7.6},
+          {lat: 35.5, lon: 8.0},
+          {lat: 36.0, lon: 8.2},
+          {lat: 36.5, lon: 8.3}
+        ];
+        
+        tunisiaOutline.forEach((point, idx) => {
+          const pos = latLonToCanvas(point.lat, point.lon);
+          if(idx === 0) ctx.moveTo(pos.x, pos.y);
+          else ctx.lineTo(pos.x, pos.y);
+        });
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        
+        // Draw subtle grid
+        ctx.strokeStyle = 'rgba(200, 200, 200, 0.3)';
+        ctx.lineWidth = 0.5;
+        const gridSpacing = 50 * mapState.zoom;
+        for(let x = mapState.panX % gridSpacing; x < canvas.width; x += gridSpacing) {
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, canvas.height);
+          ctx.stroke();
+        }
+        for(let y = mapState.panY % gridSpacing; y < canvas.height; y += gridSpacing) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(canvas.width, y);
+          ctx.stroke();
+        }
+        
+        // Draw governorate labels
+        ctx.fillStyle = 'rgba(100, 100, 100, 0.6)';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        governorats.forEach(gov => {
+          const pos = latLonToCanvas(gov.lat, gov.lon);
+          if(pos.x > 0 && pos.x < canvas.width && pos.y > 0 && pos.y < canvas.height) {
+            ctx.font = `${Math.max(8, gov.fontSize * mapState.zoom * 0.9)}px Arial`;
+            ctx.fillText(gov.name, pos.x, pos.y);
+          }
+        });
+        
+        // Draw markers with Google Maps style
+        centres.forEach((centre, idx) => {
+          const isOnScreen = centre.canvasX > -20 && centre.canvasX < canvas.width + 20 && 
+                            centre.canvasY > -20 && centre.canvasY < canvas.height + 20;
+          
+          if(!isOnScreen) return;
+          
+          const markerSize = 11 * mapState.zoom;
+          
+          // Glow effect
+          ctx.fillStyle = 'rgba(255, 107, 107, 0.15)';
+          ctx.beginPath();
+          ctx.arc(centre.canvasX, centre.canvasY, markerSize * 1.6, 0, Math.PI * 2);
+          ctx.fill();
+          
+          // Shadow
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+          ctx.beginPath();
+          ctx.arc(centre.canvasX + 1, centre.canvasY + 2, markerSize * 1.1, 0, Math.PI * 2);
+          ctx.fill();
+          
+          // Main marker
+          const markerGradient = ctx.createRadialGradient(
+            centre.canvasX - markerSize * 0.3, centre.canvasY - markerSize * 0.3, 0,
+            centre.canvasX, centre.canvasY, markerSize
+          );
+          markerGradient.addColorStop(0, '#ff8585');
+          markerGradient.addColorStop(1, '#dd3333');
+          ctx.fillStyle = markerGradient;
+          ctx.beginPath();
+          ctx.arc(centre.canvasX, centre.canvasY, markerSize, 0, Math.PI * 2);
+          ctx.fill();
+          
+          // Marker border
+          ctx.strokeStyle = '#fff';
+          ctx.lineWidth = 2.5;
+          ctx.stroke();
+          
+          // Number label
+          ctx.fillStyle = '#fff';
+          ctx.font = `bold ${Math.max(10, 12 * mapState.zoom)}px Arial`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(idx + 1, centre.canvasX, centre.canvasY);
+        });
+        
+        // Add title and zoom level
+        ctx.fillStyle = '#333';
+        ctx.font = 'bold 16px Arial';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        ctx.fillText('TUNISIE', 20, 12);
+        
+        ctx.font = '11px Arial';
+        ctx.fillStyle = '#999';
+        ctx.fillText(`Zoom: ${mapState.zoom.toFixed(1)}x`, 20, 32);
+      }
+      
+      // Draw initial map
+      drawMap();
+      
+      // Mouse events for dragging (pan)
+      canvas.addEventListener('mousedown', (e) => {
+        mapState.isDragging = true;
+        mapState.dragStart = {x: e.clientX, y: e.clientY};
+        mapState.dragStart2D = {x: mapState.panX, y: mapState.panY};
+        canvas.style.cursor = 'grabbing';
+      });
+      
+      canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const canvasX = (e.clientX - rect.left) * (canvas.width / rect.width);
+        const canvasY = (e.clientY - rect.top) * (canvas.height / rect.height);
+        
+        if(mapState.isDragging) {
+          const deltaX = e.clientX - mapState.dragStart.x;
+          const deltaY = e.clientY - mapState.dragStart.y;
+          mapState.panX = mapState.dragStart2D.x + deltaX * (canvas.width / rect.width);
+          mapState.panY = mapState.dragStart2D.y + deltaY * (canvas.height / rect.height);
+          drawMap();
+        } else {
+          // Hover detection
+          let hoveredCentre = null;
+          centres.forEach(centre => {
+            const dist = Math.sqrt((canvasX - centre.canvasX) ** 2 + (canvasY - centre.canvasY) ** 2);
+            if(dist < 15 * mapState.zoom) {
+              hoveredCentre = centre;
+            }
+          });
+          
+          if(hoveredCentre) {
+            document.getElementById('hover-info').textContent = hoveredCentre.name;
+            canvas.style.cursor = 'pointer';
+          } else {
+            document.getElementById('hover-info').textContent = 'Hovez sur une zone';
+            canvas.style.cursor = 'grab';
+          }
+        }
+      });
+      
+      canvas.addEventListener('mouseup', () => {
+        mapState.isDragging = false;
+        canvas.style.cursor = 'grab';
+      });
+      
+      canvas.addEventListener('mouseleave', () => {
+        mapState.isDragging = false;
+        canvas.style.cursor = 'grab';
+      });
+      
+      // Click handler for markers
+      canvas.addEventListener('click', (e) => {
+        if(mapState.isDragging) return;
+        
+        const rect = canvas.getBoundingClientRect();
+        const canvasX = (e.clientX - rect.left) * (canvas.width / rect.width);
+        const canvasY = (e.clientY - rect.top) * (canvas.height / rect.height);
+        
+        let clicked = false;
+        centres.forEach(centre => {
+          const dist = Math.sqrt((canvasX - centre.canvasX) ** 2 + (canvasY - centre.canvasY) ** 2);
+          if(dist < 15 * mapState.zoom) {
+            document.getElementById('popup-name').textContent = centre.name;
+            document.getElementById('popup-desc').textContent = centre.desc;
+            popup.style.left = (rect.left + centre.canvasX + 15) + 'px';
+            popup.style.top = (rect.top + centre.canvasY - 100) + 'px';
+            popup.style.display = 'block';
+            clicked = true;
+          }
+        });
+        
+        if(!clicked) {
+          popup.style.display = 'none';
+        }
+      });
+      
+      // Close popup when clicking outside
+      document.addEventListener('click', (e) => {
+        if(e.target !== canvas && !popup.contains(e.target)) {
+          popup.style.display = 'none';
+        }
+      });
+      
+      // Wheel zoom
+      canvas.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const delta = e.deltaY > 0 ? -0.15 : 0.15;
+        mapState.zoom = Math.max(0.5, Math.min(2.5, mapState.zoom + delta));
+        drawMap();
+      });
+    });
+  </script>
+
+  <!-- Publication Management -->
+  <script>
+    let publications = JSON.parse(localStorage.getItem('publications')) || [];
+
+    function openPublicationModal() {
+      document.getElementById('publicationModal').style.display = 'flex';
+      document.getElementById('publicationText').focus();
+    }
+
+    function closePublicationModal() {
+      document.getElementById('publicationModal').style.display = 'none';
+      document.getElementById('publicationText').value = '';
+      document.getElementById('publicationAuthor').value = '';
+    }
+
+    function publishPost() {
+      const text = document.getElementById('publicationText').value.trim();
+      const author = document.getElementById('publicationAuthor').value.trim() || 'Anonyme';
+
+      if (!text) {
+        alert('Veuillez écrire quelque chose!');
+        return;
+      }
+
+      const publication = {
+        id: Date.now(),
+        author: author,
+        content: text,
+        timestamp: new Date().toLocaleString('fr-FR', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }),
+        likes: 0
+      };
+
+      publications.unshift(publication);
+      localStorage.setItem('publications', JSON.stringify(publications));
+      
+      closePublicationModal();
+      displayPublications();
+    }
+
+    function displayPublications() {
+      const feed = document.getElementById('publicationsFeed');
+      
+      if (publications.length === 0) {
+        feed.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📝</div>
+            <p>Aucune publication pour le moment.</p>
+            <p style="font-size: 12px; margin-top: 8px;">Cliquez sur le bouton pour créer la première!</p>
+          </div>
+        `;
+        return;
+      }
+
+      feed.innerHTML = publications.map(pub => `
+        <div class="publication-card">
+          <div class="publication-header">
+            <div>
+              <div class="publication-author">👤 ${pub.author}</div>
+              <div class="publication-time">${pub.timestamp}</div>
+            </div>
+            <button onclick="deletePublication(${pub.id})" style="background: none; border: none; color: #999; cursor: pointer; font-size: 16px; padding: 4px 8px; border-radius: 4px; transition: all 0.2s;" onmouseover="this.style.background='#f5f5f5'; this.style.color='#d9534f'" onmouseout="this.style.background='none'; this.style.color='#999'">🗑️</button>
+          </div>
+          <div class="publication-content">${pub.content.replace(/\n/g, '<br>')}</div>
+          <div class="publication-actions">
+            <button class="publication-btn" onclick="likePublication(${pub.id})">👍 J'aime (${pub.likes})</button>
+            <button class="publication-btn" onclick="sharePublication(${pub.id})">🔗 Partager</button>
+            <button class="publication-btn" onclick="copyPublication(${pub.id})">📋 Copier</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function deletePublication(id) {
+      if (confirm('Êtes-vous sûr de vouloir supprimer cette publication?')) {
+        publications = publications.filter(pub => pub.id !== id);
+        localStorage.setItem('publications', JSON.stringify(publications));
+        displayPublications();
+      }
+    }
+
+    function likePublication(id) {
+      const pub = publications.find(p => p.id === id);
+      if (pub) {
+        pub.likes++;
+        localStorage.setItem('publications', JSON.stringify(publications));
+        displayPublications();
+      }
+    }
+
+    function sharePublication(id) {
+      const pub = publications.find(p => p.id === id);
+      if (pub) {
+        const text = `"${pub.content}" - ${pub.author}`;
+        if (navigator.share) {
+          navigator.share({
+            title: 'Publication partagée',
+            text: text
+          });
+        } else {
+          copyToClipboard(text);
+        }
+      }
+    }
+
+    function copyPublication(id) {
+      const pub = publications.find(p => p.id === id);
+      if (pub) {
+        copyToClipboard(`"${pub.content}" - ${pub.author}`);
+      }
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Publication copiée!');
+      }).catch(() => {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        alert('Publication copiée!');
+      });
+    }
+
+    document.getElementById('publishBtn').addEventListener('click', openPublicationModal);
+    document.getElementById('publicationModal').addEventListener('click', (e) => {
+      if (e.target.id === 'publicationModal') {
+        closePublicationModal();
+      }
+    });
+
+    // Display publications on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      displayPublications();
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.key === 'Enter' && document.getElementById('publicationModal').style.display === 'flex') {
+        publishPost();
+      }
+    });
+  </script>
+
+  <!-- Chat Bubble Button -->
+  <style>
+    .chat-bubble-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%);
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(63, 187, 192, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      transition: all 0.3s ease;
+      z-index: 999;
+      text-decoration: none;
+      color: white;
+    }
+
+    .chat-bubble-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(63, 187, 192, 0.6);
+    }
+
+    .chat-bubble-btn:active {
+      transform: scale(0.95);
+    }
+
+    @media (max-width: 768px) {
+      .chat-bubble-btn {
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+      }
+    }
+  </style>
+
+  <!-- NOTE: removed an extra conflicting chat-bubble click handler script that attempted to fetch /labo/chat/get_or_create/1/
+       and that caused double-handling. The anchor now has id="chat-bubble-btn" and when `room` is present it points to
+       the correct Labapp:chat_room URL. When room is not present the link redirects to login with a next=... to create/get a room. -->
+
+</body>
+
+</html>

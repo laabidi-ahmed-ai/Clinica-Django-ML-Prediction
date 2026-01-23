@@ -1,0 +1,433 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <link rel="icon" type="image/x-icon" href="{% static 'Front/assets/images/logo_site.ico' %}" />
+    <title>{{ publication.title }} - Clinica+</title>
+    
+    <!-- CSS FILES -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans&display=swap" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="{% static 'Front/assets/img/favicon.png' %}" rel="icon">
+    <link href="{% static 'Front/assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'Front/assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'Front/assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'Front/assets/vendor/aos/aos.css' %}" rel="stylesheet">
+    <link href="{% static 'Front/assets/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+    <link href="{% static 'Front/assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+    <link href="{% static 'Front/assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+    <link href="{% static 'Front/assets/css/main.css' %}" rel="stylesheet">
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #f7f9fc 100%);
+            font-family: 'Open Sans', sans-serif;
+        }
+        
+        .navbar {
+            position: fixed !important;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            background-color: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card {
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(252, 251, 251, 0.1);
+            border: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Horizontal Progress Bar */
+        .progress-container {
+            background: linear-gradient(135deg, #bdeca1 0%, #8c8f37 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .progress-bar-wrapper {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            height: 35px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 15px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00b894, #01d6a3, #55efc4);
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 15px;
+            transition: width 2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 10px rgba(1, 214, 163, 0.5);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .progress-percentage {
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .stat-item i {
+            font-size: 18px;
+        }
+        
+        .custom-wow-button {
+            background: linear-gradient(135deg, #01d6a3, #00b894);
+            border: none;
+            padding: 14px 28px;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            border-radius: 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .custom-wow-button:hover {
+            background: linear-gradient(135deg, #00b894, #01d6a3);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #80d0c7 0%, #13547a 100%);
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 15px 30px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            width: 100%;
+            border: none;
+            box-shadow: 0 8px 20px rgba(19, 84, 122, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #13547a 0%, #0a3a52 100%);
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(19, 84, 122, 0.5);
+        }
+        
+        .event-detail-item {
+            background: linear-gradient(135deg, #bac8be 0%, #f0eaeb 100%);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            color: white;
+            box-shadow: 0 5px 15px rgba(240, 147, 251, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .event-detail-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .amount-badge {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            color: #2d3436;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 20px;
+            box-shadow: 0 8px 20px rgba(253, 203, 110, 0.3);
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        
+        .organizing-card {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border: none;
+            transition: transform 0.3s ease;
+        }
+        
+        .organizing-card:hover {
+            transform: scale(1.02);
+        }
+        
+        .image-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px 20px 0 0;
+        }
+        
+        .image-container img {
+            transition: transform 0.5s ease;
+        }
+        
+        .image-container:hover img {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<header id="header" class="header sticky-top">
+    <div class="topbar d-flex align-items-center">
+        <div class="container d-flex justify-content-center justify-content-md-between">
+            <div class="d-none d-md-flex align-items-center">
+                <i class="bi bi-clock me-1"></i> Monday - Saturday, 8AM to 10PM
+            </div>
+            <div class="d-flex align-items-center">
+                <i class="bi bi-phone me-1"></i> Call us now +1 5589 55488 55
+            </div>
+        </div>
+    </div>
+
+    <div class="branding d-flex align-items-center">
+        <div class="container position-relative d-flex align-items-center justify-content-end">
+            <a href="{% url 'front_index' %}" class="logo d-flex align-items-center me-auto">
+                <img src="{% static 'Front/assets/images/logo_site.png' %}" alt="" style="width: 120px; height: 90px;">
+            </a>
+
+            <nav id="navmenu" class="navmenu">
+                <ul style="display: flex; align-items: center; list-style: none; margin: 0; padding: 0; gap: 30px;">
+                    <li><a href="{% url 'front_index' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">HOME</a></li>
+                    <li><a href="#" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">ABOUT</a></li>
+                    <li><a href="{% url 'index' %}" style="text-decoration: none; color: #333; font-weight: 500;">PRODUCTS</a></li>
+                    <li><a href="{% url 'donation:front_publication_list' %}" class="active" style="text-decoration: none; color: #3fbbc0; font-weight: 600;">DONATION</a></li>
+                    <li><a href="{% url 'stages:liste_stages_front' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">STAGE</a></li>
+                    <li><a href="{% url 'Labapp:home' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">LABO</a></li>
+                    <li><a href="{% url 'my_patient_portal' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">PATIENT</a></li>
+                </ul>
+                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+            </nav>
+
+            <a class="cta-btn" href="{% url 'public_appointment' %}">Make an Appointment</a>
+            <ul class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user-circle fa-lg" style="font-size: 34px;"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{% url 'donation:user_donation_list' %}">
+                            <i class="fas fa-heart" style="color: #13547a;"></i> My Donations
+                        </a></li>
+                        <li><a class="dropdown-item" href="#">
+                            <i class="fas fa-sign-out-alt" style="color: #13547a;"></i> Logout
+                        </a></li>
+                    </ul>
+                </li>
+                {% else %}
+                <li><a href="{% url 'loginFront' %}" class="nav-auth-btn nav-login-btn" style="text-decoration: none; background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%); color: white; font-weight: 600; padding: 8px 20px; border-radius: 25px; display: inline-block; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(63, 187, 192, 0.3);"><i class="bi bi-box-arrow-in-right"></i> LOGIN</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</header>
+
+<body>
+    <main style="margin-top: 120px; margin-bottom: 100px;">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-12 text-center mb-4">
+                    <h2 class="display-5 fw-bold" style="background: linear-gradient(135deg, #80d0c7 0%, #2e5787 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        {{ publication.title }}
+                    </h2>
+                </div>
+                
+                <!-- Left column: Image and description -->
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="image-container">
+                            {% if publication.pubPicture %}
+                            <img src="{{ publication.pubPicture.url }}" class="img-fluid w-100" 
+                                 style="height: 450px; object-fit: cover;" 
+                                 alt="{{ publication.title }}">
+                            {% else %}
+                            <img src="{% static 'Front/assets/images/default.jpg' %}" class="img-fluid w-100" 
+                                 style="height: 450px; object-fit: cover;" 
+                                 alt="No image">
+                            {% endif %}
+                        </div>
+                        
+                        <div class="card-body p-4">
+                            <h5 class="mb-3 fw-bold" style="color: #2d3436;">
+                               📑 Description 📑
+                            </h5>
+                            <p class="text-muted" style="white-space: pre-wrap; line-height: 1.8;">{{ publication.description }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right column: Details box -->
+                <div class="col-lg-4">
+                    <div class="card shadow-lg p-4">
+                        <h5 class="mb-4 fw-bold text-center" style="color: #2d3436;">
+                           📅 Event Details 📅
+                        </h5>
+                        
+                        <div class="event-detail-item">
+                            <i class="fas fa-calendar-day me-2"></i>
+                            <strong>Date:</strong> {{ publication.deadline|date:"d M Y" }}
+                        </div>
+                        
+                        <div class="event-detail-item" style="background: linear-gradient(135deg, #9ebdd7 0%, #00f2fe 100%);">
+                            <i class="fas fa-map-marker-alt me-2"></i>
+                            <strong>Address:</strong> {{ publication.address }}
+                        </div>
+                        
+                        <!-- Horizontal Progress Bar -->
+                        <div class="progress-container">
+                            <div class="progress-bar-wrapper">
+                                <div class="progress-bar-fill" id="progressBar" style="width: 0%;">
+                                    <span class="progress-percentage" id="percentText">0%</span>
+                                </div>
+                            </div>
+                            
+                            <div class="progress-stats">
+                                <div class="stat-item">
+                                    <i class="bi bi-people-fill"></i>
+                                    <span><strong>{{ nb_participants }}</strong> participant(s)</span>
+                                </div>
+                                <div class="stat-item">
+                                    <i class="far fa-clock"></i>
+                                    <span><strong>{{ days_remaining }}</strong> jour(s) restant(s)</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="amount-badge">
+                            <i class="fas fa-donate me-2"></i>{{ total_amount|floatformat:2 }} TND collectés
+                        </div>
+                        
+                        <hr class="my-4">
+                        
+                        <!-- Donate Button -->
+                        <div class="d-grid gap-2">
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'donation:donation_create' %}?publication={{ publication.id }}" class="btn btn-secondary">
+                                <i class="fas fa-hand-holding-heart me-2"></i>DONATE NOW
+                            </a>
+                            {% else %}
+                            <a href="{% url 'loginFront' %}?next={% url 'donation:front_publication_detail' publication.pk %}" class="btn btn-secondary">
+                                <i class="fas fa-hand-holding-heart me-2"></i>LOGIN TO DONATE
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+            
+            <div class="text-center mt-5">
+                <a href="{% url 'donation:front_publication_list' %}" class="btn custom-wow-button">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Donation Page
+                </a>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="site-footer section-padding bg-dark text-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-4 col-6 mb-4">
+                    <h6 class="mb-3">Information</h6>
+                    <p class="d-flex mb-1">
+                        <a href="tel:+21699654322" class="text-white">+216 99 654 322</a>
+                    </p>
+                    <p class="d-flex">
+                        <a href="mailto:clinica@gmail.com" class="text-white">clinica@gmail.com</a>
+                    </p>
+                </div>
+                
+                <div class="col-lg-2 col-12 ms-auto">
+                    <ul class="list-unstyled d-flex mt-lg-5 mt-3">
+                        <li class="me-3"><a href="#" class="text-white"><i class="bi bi-instagram"></i></a></li>
+                        <li class="me-3"><a href="#" class="text-white"><i class="bi bi-twitter"></i></a></li>
+                        <li><a href="#" class="text-white"><i class="bi bi-whatsapp"></i></a></li>
+                    </ul>
+                </div>
+                
+                <p class="text-center">Copyright © 2025 Clinica+. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const percent = Math.min(100, {{ nb_participants }} * 3);
+            const progressBar = document.getElementById("progressBar");
+            const percentText = document.getElementById("percentText");
+            
+            // Animate percentage counter
+            let current = 0;
+            const duration = 2000; // 2 seconds
+            const increment = percent / (duration / 16); // 60fps
+            
+            const animateCounter = () => {
+                if (current < percent) {
+                    current = Math.min(current + increment, percent);
+                    percentText.textContent = Math.round(current) + "%";
+                    requestAnimationFrame(animateCounter);
+                } else {
+                    percentText.textContent = percent + "%";
+                }
+            };
+            
+            // Start animations
+            setTimeout(() => {
+                progressBar.style.width = percent + "%";
+                animateCounter();
+            }, 300);
+        });
+    </script>
+</body>
+</html>

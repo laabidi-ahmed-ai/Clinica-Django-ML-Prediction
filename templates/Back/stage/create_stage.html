@@ -1,0 +1,959 @@
+{% load static %}
+<!DOCTYPE html>
+<html dir="ltr" lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'Back/src/assets/images/favicon.png' %}">
+    <title>Clinique+ • Ajouter un Stage</title>
+    <link href="{% static 'Back/src/dist/css/style.min.css' %}" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --background: hsl(210, 20%, 98%);
+            --foreground: hsl(215, 25%, 27%);
+            --card: hsl(0, 0%, 100%);
+            --card-foreground: hsl(215, 25%, 27%);
+            --primary: hsl(210, 100%, 45%);
+            --primary-foreground: hsl(0, 0%, 100%);
+            --secondary: hsl(210, 40%, 96%);
+            --secondary-foreground: hsl(215, 25%, 27%);
+            --muted: hsl(210, 30%, 95%);
+            --muted-foreground: hsl(215, 15%, 50%);
+            --accent: hsl(158, 64%, 52%);
+            --accent-foreground: hsl(0, 0%, 100%);
+            --destructive: hsl(0, 84%, 60%);
+            --border: hsl(214, 25%, 88%);
+            --input: hsl(214, 25%, 88%);
+            --ring: hsl(210, 100%, 45%);
+            --radius: 0.75rem;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(180deg, var(--background) 0%, hsl(210, 30%, 96%) 100%);
+            color: var(--foreground);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--card);
+            box-shadow: 0 4px 6px -1px hsla(210, 100%, 45%, 0.08), 0 2px 4px -2px hsla(210, 100%, 45%, 0.05);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo {
+            padding: 0.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, hsl(210, 100%, 60%) 100%);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo svg {
+            width: 24px;
+            height: 24px;
+            color: white;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--foreground);
+        }
+
+        .subtitle {
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .max-w-4xl {
+            max-width: 56rem;
+            margin: 0 auto;
+        }
+
+        /* Info Cards */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .info-card {
+            background-color: var(--card);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px hsla(210, 100%, 45%, 0.08), 0 2px 4px -2px hsla(210, 100%, 45%, 0.05);
+            border: 1px solid var(--border);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px hsla(210, 100%, 45%, 0.12), 0 4px 6px -4px hsla(210, 100%, 45%, 0.08);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-icon {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            display: flex;
+        }
+
+        .card-icon.primary {
+            background-color: hsla(210, 100%, 45%, 0.1);
+        }
+
+        .card-icon.accent {
+            background-color: hsla(158, 64%, 52%, 0.1);
+        }
+
+        .card-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .card-icon.primary svg {
+            color: var(--primary);
+        }
+
+        .card-icon.accent svg {
+            color: var(--accent);
+        }
+
+        .card-title {
+            font-weight: 600;
+            color: var(--foreground);
+        }
+
+        .card-text {
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+        }
+
+        /* Form Section */
+        .form-section {
+            background-color: var(--card);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px hsla(210, 100%, 45%, 0.08), 0 4px 6px -4px hsla(210, 100%, 45%, 0.05);
+            border: 1px solid var(--border);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .form-header {
+            margin-bottom: 2rem;
+        }
+
+        .form-title {
+            font-size: 1.875rem;
+            font-weight: bold;
+            color: var(--foreground);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-description {
+            color: var(--muted-foreground);
+        }
+
+        /* Form Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+            color: var(--foreground);
+        }
+
+        .form-label svg {
+            width: 16px;
+            height: 16px;
+            color: var(--primary);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--input);
+            border-radius: calc(var(--radius) - 2px);
+            font-size: 0.875rem;
+            background-color: var(--card);
+            color: var(--foreground);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--ring);
+            box-shadow: 0 0 0 2px hsla(210, 100%, 45%, 0.2);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .error-message {
+            color: var(--destructive);
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .form-input.error,
+        .form-select.error,
+        .form-textarea.error {
+            border-color: var(--destructive);
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .submit-button {
+            flex: 1;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, hsl(210, 100%, 60%) 100%);
+            color: var(--primary-foreground);
+            border: none;
+            border-radius: calc(var(--radius) - 2px);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .cancel-button {
+            flex: 1;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--secondary);
+            color: var(--secondary-foreground);
+            border: 1px solid var(--border);
+            border-radius: calc(var(--radius) - 2px);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px hsla(210, 100%, 45%, 0.4);
+        }
+
+        .cancel-button:hover {
+            background-color: var(--muted);
+            transform: translateY(-2px);
+        }
+
+        .submit-button:active,
+        .cancel-button:active {
+            transform: translateY(0);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem 1.5rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+            display: none;
+            animation: slideIn 0.3s ease-out;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--accent);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--destructive);
+        }
+
+        .toast-title {
+            font-weight: 600;
+            color: var(--foreground);
+            margin-bottom: 0.25rem;
+        }
+
+        .toast-description {
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-title {
+                font-size: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.25rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+
+    <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+        
+        <!-- Header -->
+        <header class="topbar" data-navbarbg="skin6">
+            <nav class="navbar top-navbar navbar-expand-lg">
+                <div class="navbar-header" data-logobg="skin6">
+                    <a class="nav-toggler waves-effect waves-light d-block d-lg-none" href="javascript:void(0)"><i
+                            class="ti-menu ti-close"></i></a>
+                    <div class="navbar-brand">
+                        <a href="{% url 'stages:liste_stages' %}">
+                            <b class="logo-icon">
+                                🏥 Clinique
+                            </b>
+                        </a>
+                    </div>
+                    <a class="topbartoggler d-block d-lg-none waves-effect waves-light" href="javascript:void(0)"
+                        data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i
+                            class="ti-more"></i></a>
+                </div>
+                <div class="navbar-collapse collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav float-end">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-bs-toggle="dropdown">
+                                <img src="{% static 'Back/src/assets/images/users/profile-pic.jpg' %}" alt="user" class="rounded-circle" width="40">
+                                <span class="ms-2 d-none d-lg-inline-block">
+                                    <span class="text-dark">Admin</span>
+                                    <i data-feather="chevron-down" class="svg-icon"></i>
+                                </span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end dropdown-menu-right user-dd animated flipInY">
+                                <a class="dropdown-item" href="javascript:void(0)"><i data-feather="user"
+                                        class="svg-icon me-2 ms-1"></i>Mon Profil</a>
+                                <a class="dropdown-item" href="javascript:void(0)"><i data-feather="settings"
+                                        class="svg-icon me-2 ms-1"></i>Paramètres</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="javascript:void(0)"><i data-feather="power"
+                                        class="svg-icon me-2 ms-1"></i>Déconnexion</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="left-sidebar" data-sidebarbg="skin6">
+            <div class="scroll-sidebar" data-sidebarbg="skin6">
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li class="sidebar-item">
+                            <a class="sidebar-link sidebar-link" href="#">
+                                <i data-feather="home" class="feather-icon"></i><span class="hide-menu">Dashboard</span>
+                            </a>
+                        </li>
+
+                        <li class="list-divider"></li>
+                        <li class="nav-small-cap"><span class="hide-menu">GESTION DES STAGES</span></li>
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{% url 'stages:liste_stages' %}">
+                                <i data-feather="file-text" class="feather-icon"></i><span class="hide-menu">Liste des stages</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link active" href="{% url 'stages:ajouter_stage' %}">
+                                <i data-feather="plus-circle" class="feather-icon"></i><span class="hide-menu">Nouveau stage</span>
+                            </a>
+                        </li>
+
+                        <li class="list-divider"></li>
+                        <li class="nav-small-cap"><span class="hide-menu">GESTION DES STAGIAIRES</span></li>
+                        
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="#">
+                                <i data-feather="users" class="feather-icon"></i><span class="hide-menu">Liste des stagiaires</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Page wrapper -->
+        <div class="page-wrapper">
+            <div class="page-breadcrumb">
+                <div class="row">
+                    <div class="col-7 align-self-center">
+                        <h3 class="page-title text-truncate text-dark font-weight-medium mb-1">Ajouter un Stage</h3>
+                        <div class="d-flex align-items-center">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb m-0 p-0">
+                                    <li class="breadcrumb-item"><a href="{% url 'stages:liste_stages' %}">Stages</a></li>
+                                    <li class="breadcrumb-item active">Nouveau stage</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="max-w-4xl">
+                    <!-- Messages -->
+                    {% if messages %}
+                    <div class="row">
+                        <div class="col-12">
+                            {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Info Cards -->
+                    <div class="cards-grid">
+                        <div class="info-card">
+                            <div class="card-header">
+                                <div class="card-icon primary">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="card-title">Informations Générales</h3>
+                            </div>
+                            <p class="card-text">Renseignez les détails principaux du stage</p>
+                        </div>
+
+                        <div class="info-card">
+                            <div class="card-header">
+                                <div class="card-icon accent">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="9" cy="7" r="4"></circle>
+                                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="card-title">Affectation</h3>
+                            </div>
+                            <p class="card-text">Assignez le stagiaire et l'encadrant</p>
+                        </div>
+
+                        <div class="info-card">
+                            <div class="card-header">
+                                <div class="card-icon primary">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                                        <line x1="16" x2="16" y1="2" y2="6"></line>
+                                        <line x1="8" x2="8" y1="2" y2="6"></line>
+                                        <line x1="3" x2="21" y1="10" y2="10"></line>
+                                    </svg>
+                                </div>
+                                <h3 class="card-title">Planning</h3>
+                            </div>
+                            <p class="card-text">Définissez la période et la durée</p>
+                        </div>
+                    </div>
+
+                    <!-- Form Section -->
+                    <div class="form-section">
+                        <div class="form-header">
+                            <h2 class="form-title">Nouveau Stage Médical</h2>
+                            <p class="form-description">Remplissez ce formulaire pour créer un nouveau stage. Tous les champs sont obligatoires.</p>
+                        </div>
+
+                        <form method="post" id="stageForm">
+                            {% csrf_token %}
+                            
+                            <div class="form-grid">
+                                <!-- Intitulé -->
+                                <div class="form-group">
+                                    <label class="form-label" for="intitule">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+                                            <polyline points="14 2 14 8 20 8"></polyline>
+                                        </svg>
+                                        Intitulé du stage
+                                    </label>
+                                    <input type="text" id="intitule" name="intitule" class="form-input" placeholder="Stage en Cardiologie Interventionnelle" required value="{{ form.intitule.value|default:'' }}">
+                                    <span class="error-message" id="intitule-error"></span>
+                                </div>
+
+                                <!-- Type de stage -->
+                                <div class="form-group">
+                                    <label class="form-label" for="type_stage">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect width="16" height="20" x="4" y="2" rx="2" ry="2"></rect>
+                                            <path d="M9 22v-4h6v4"></path>
+                                            <path d="M8 6h.01"></path>
+                                            <path d="M16 6h.01"></path>
+                                            <path d="M12 6h.01"></path>
+                                            <path d="M12 10h.01"></path>
+                                            <path d="M12 14h.01"></path>
+                                            <path d="M16 10h.01"></path>
+                                            <path d="M16 14h.01"></path>
+                                            <path d="M8 10h.01"></path>
+                                            <path d="M8 14h.01"></path>
+                                        </svg>
+                                        Type de stage
+                                    </label>
+                                    <select id="type_stage" name="type_stage" class="form-select" required>
+                                        <option value="">Sélectionner un type...</option>
+                                        <option value="observation" {% if form.type_stage.value == 'observation' %}selected{% endif %}>Stage d'Observation</option>
+                                        <option value="clinique" {% if form.type_stage.value == 'clinique' %}selected{% endif %}>Stage Clinique</option>
+                                        <option value="chirurgical" {% if form.type_stage.value == 'chirurgical' %}selected{% endif %}>Stage Chirurgical</option>
+                                        <option value="urgence" {% if form.type_stage.value == 'urgence' %}selected{% endif %}>Stage aux Urgences</option>
+                                        <option value="specialise" {% if form.type_stage.value == 'specialise' %}selected{% endif %}>Stage Spécialisé</option>
+                                        <option value="recherche" {% if form.type_stage.value == 'recherche' %}selected{% endif %}>Stage de Recherche</option>
+                                        <option value="infirmier" {% if form.type_stage.value == 'infirmier' %}selected{% endif %}>Stage Infirmier</option>
+                                    </select>
+                                    <span class="error-message" id="type_stage-error"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-grid">
+                                <!-- Service -->
+                                <div class="form-group">
+                                    <label class="form-label" for="service">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M12 2a10 10 0 1 0 10 10H12V2Z"></path>
+                                            <path d="M12 2a10 10 0 0 0-10 10h10V2Z"></path>
+                                        </svg>
+                                        Service
+                                    </label>
+                                    <select id="service" name="service" class="form-select" required>
+                                        <option value="">Sélectionner un service...</option>
+                                        <option value="consultation" {% if form.service.value == 'consultation' %}selected{% endif %}>Consultation Externe</option>
+                                        <option value="hospitalisation" {% if form.service.value == 'hospitalisation' %}selected{% endif %}>Hospitalisation</option>
+                                        <option value="urgence" {% if form.service.value == 'urgence' %}selected{% endif %}>Urgences</option>
+                                        <option value="chirurgie" {% if form.service.value == 'chirurgie' %}selected{% endif %}>Bloc Chirurgical</option>
+                                        <option value="maternite" {% if form.service.value == 'maternite' %}selected{% endif %}>Maternité</option>
+                                        <option value="pediatrie" {% if form.service.value == 'pediatrie' %}selected{% endif %}>Pédiatrie</option>
+                                        <option value="cardiologie" {% if form.service.value == 'cardiologie' %}selected{% endif %}>Cardiologie</option>
+                                        <option value="radiologie" {% if form.service.value == 'radiologie' %}selected{% endif %}>Radiologie</option>
+                                        <option value="laboratoire" {% if form.service.value == 'laboratoire' %}selected{% endif %}>Laboratoire d'Analyses</option>
+                                        <option value="pharmacie" {% if form.service.value == 'pharmacie' %}selected{% endif %}>Pharmacie</option>
+                                        <option value="administration" {% if form.service.value == 'administration' %}selected{% endif %}>Administration</option>
+                                    </select>
+                                    <span class="error-message" id="service-error"></span>
+                                </div>
+
+                                <!-- Statut -->
+                                <div class="form-group">
+                                    <label class="form-label" for="statut">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                        </svg>
+                                        Statut
+                                    </label>
+                                    <select id="statut" name="statut" class="form-select" required>
+                                        <option value="propose" {% if form.statut.value == 'propose' %}selected{% endif %}>Proposé</option>
+                                        <option value="valide" {% if form.statut.value == 'valide' %}selected{% endif %}>Validé</option>
+                                        <option value="en_cours" {% if form.statut.value == 'en_cours' %}selected{% endif %}>En Cours</option>
+                                        <option value="termine" {% if form.statut.value == 'termine' %}selected{% endif %}>Terminé</option>
+                                        <option value="annule" {% if form.statut.value == 'annule' %}selected{% endif %}>Annulé</option>
+                                        <option value="interrompu" {% if form.statut.value == 'interrompu' %}selected{% endif %}>Interrompu</option>
+                                    </select>
+                                    <span class="error-message" id="statut-error"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-grid">
+                                <!-- Date de début -->
+                                <div class="form-group">
+                                    <label class="form-label" for="date_debut">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                                            <line x1="16" x2="16" y1="2" y2="6"></line>
+                                            <line x1="8" x2="8" y1="2" y2="6"></line>
+                                            <line x1="3" x2="21" y1="10" y2="10"></line>
+                                        </svg>
+                                        Date de début
+                                    </label>
+                                    <input type="date" id="date_debut" name="date_debut" class="form-input" required value="{{ form.date_debut.value|default:'' }}">
+                                    <span class="error-message" id="date_debut-error"></span>
+                                </div>
+
+                                <!-- Date de fin -->
+                                <div class="form-group">
+                                    <label class="form-label" for="date_fin">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                        </svg>
+                                        Date de fin
+                                    </label>
+                                    <input type="date" id="date_fin" name="date_fin" class="form-input" required value="{{ form.date_fin.value|default:'' }}">
+                                    <span class="error-message" id="date_fin-error"></span>
+                                </div>
+
+                                <!-- Durée en semaines -->
+                                <div class="form-group">
+                                    <label class="form-label" for="duree_semaines">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                        </svg>
+                                        Durée (semaines)
+                                    </label>
+                                    <input type="number" id="duree_semaines" name="duree_semaines" class="form-input" placeholder="4" min="1" max="52" required value="{{ form.duree_semaines.value|default:'' }}">
+                                    <span class="error-message" id="duree_semaines-error"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-grid">
+                                
+                               
+
+                                <!-- Encadrant -->
+                                <div class="form-group">
+                                    <label class="form-label" for="encadrant">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                            <circle cx="9" cy="7" r="4"></circle>
+                                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                        </svg>
+                                        Encadrant
+                                    </label>
+                                    <select id="encadrant" name="encadrant" class="form-select">
+                                        <option value="">Aucun encadrant (optionnel)</option>
+                                            {% for encadrant in encadrants %}
+                                                    <option value="{{ encadrant.pk }}">
+                                                    {{ encadrant.first_name }} {{ encadrant.last_name }}
+                                                    </option>
+                                                    {% endfor %}
+                                    </select>
+
+                                    <span class="error-message" id="encadrant-error"></span>
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="form-group">
+                                <label class="form-label" for="description">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                    </svg>
+                                    Description
+                                </label>
+                                <textarea id="description" name="description" class="form-textarea" placeholder="Décrivez les objectifs et activités du stage..." required>{{ form.description.value|default:'' }}</textarea>
+                                <span class="error-message" id="description-error"></span>
+                            </div>
+
+                            <!-- Objectifs -->
+                            <div class="form-group">
+                                <label class="form-label" for="objectifs">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="m3 17 2 2 4-4"></path>
+                                        <path d="m3 7 2 2 4-4"></path>
+                                        <path d="M13 6h8"></path>
+                                        <path d="M13 12h8"></path>
+                                        <path d="M13 18h8"></path>
+                                    </svg>
+                                    Objectifs pédagogiques
+                                </label>
+                                <textarea id="objectifs" name="objectifs" class="form-textarea" placeholder="Listez les objectifs d'apprentissage...">{{ form.objectifs.value|default:'' }}</textarea>
+                                <span class="error-message" id="objectifs-error"></span>
+                            </div>
+
+                            <div class="form-grid">
+                                <!-- Horaires de travail -->
+                                <div class="form-group">
+                                    <label class="form-label" for="horaires_travail">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                        </svg>
+                                        Horaires de travail
+                                    </label>
+                                    <input type="text" id="horaires_travail" name="horaires_travail" class="form-input" placeholder="Ex: 8h-16h" value="{{ form.horaires_travail.value|default:'' }}">
+                                    <span class="error-message" id="horaires_travail-error"></span>
+                                </div>
+
+                                <!-- Accès logiciel médical -->
+                                <div class="form-group">
+                                    <label class="form-label" for="acces_logiciel_medical">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect width="20" height="14" x="2" y="3" rx="2"></rect>
+                                            <line x1="8" x2="16" y1="21" y2="21"></line>
+                                            <line x1="12" x2="12" y1="17" y2="21"></line>
+                                        </svg>
+                                        Accès logiciel médical
+                                    </label>
+                                    <select id="acces_logiciel_medical" name="acces_logiciel_medical" class="form-select">
+                                        <option value="false" {% if not form.acces_logiciel_medical.value %}selected{% endif %}>Non</option>
+                                        <option value="true" {% if form.acces_logiciel_medical.value %}selected{% endif %}>Oui</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="button-group">
+                                <a href="{% url 'stages:liste_stages' %}" class="cancel-button">
+                                    Annuler
+                                </a>
+                                <button type="submit" class="submit-button">
+                                    Créer le Stage
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="footer text-center text-muted">
+                Clinique+ • Gestion des Stages © 2024
+            </footer>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <div class="toast-title" id="toast-title"></div>
+        <div class="toast-description" id="toast-description"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{% static 'Back/src/assets/libs/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'Back/src/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'Back/src/dist/js/app-style-switcher.js' %}"></script>
+    <script src="{% static 'Back/src/dist/js/feather.min.js' %}"></script>
+    <script src="{% static 'Back/src/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js' %}"></script>
+    <script src="{% static 'Back/src/dist/js/sidebarmenu.js' %}"></script>
+    <script src="{% static 'Back/src/dist/js/custom.min.js' %}"></script>
+    
+    <script>
+        // Initialiser Feather Icons
+        feather.replace();
+
+        // Validation du formulaire
+        document.getElementById('stageForm').addEventListener('submit', function(e) {
+            let isValid = true;
+
+            // Clear previous errors
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.classList.remove('show');
+                el.textContent = '';
+            });
+            document.querySelectorAll('.form-input, .form-select, .form-textarea').forEach(el => {
+                el.classList.remove('error');
+            });
+
+            // Validation rules
+            const validators = {
+                intitule: {
+                    validate: (value) => value.length >= 5 && value.length <= 200,
+                    message: 'L\'intitulé doit contenir entre 5 et 200 caractères'
+                },
+                type_stage: {
+                    validate: (value) => value !== '',
+                    message: 'Veuillez sélectionner un type de stage'
+                },
+                service: {
+                    validate: (value) => value !== '',
+                    message: 'Veuillez sélectionner un service'
+                },
+                statut: {
+                    validate: (value) => value !== '',
+                    message: 'Veuillez sélectionner un statut'
+                },
+                date_debut: {
+                    validate: (value) => value !== '',
+                    message: 'Date de début requise'
+                },
+                date_fin: {
+                    validate: (value) => value !== '',
+                    message: 'Date de fin requise'
+                },
+                duree_semaines: {
+                    validate: (value) => value >= 1 && value <= 52,
+                    message: 'La durée doit être entre 1 et 52 semaines'
+                },
+               
+                description: {
+                    validate: (value) => value.length >= 10 && value.length <= 1000,
+                    message: 'La description doit contenir entre 10 et 1000 caractères'
+                }
+            };
+
+            // Validate each field
+            for (const [field, rules] of Object.entries(validators)) {
+                const input = document.getElementById(field);
+                const value = input.value.trim();
+
+                if (!rules.validate(value)) {
+                    isValid = false;
+                    input.classList.add('error');
+                    const errorEl = document.getElementById(`${field}-error`);
+                    errorEl.textContent = rules.message;
+                    errorEl.classList.add('show');
+                }
+            }
+
+            // Additional validation: end date should be after start date
+            const startDate = new Date(document.getElementById('date_debut').value);
+            const endDate = new Date(document.getElementById('date_fin').value);
+            
+            if (endDate <= startDate) {
+                isValid = false;
+                const endDateInput = document.getElementById('date_fin');
+                endDateInput.classList.add('error');
+                const errorEl = document.getElementById('date_fin-error');
+                errorEl.textContent = 'La date de fin doit être après la date de début';
+                errorEl.classList.add('show');
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+                showToast('Erreur de validation', 'Veuillez corriger les erreurs dans le formulaire', 'error');
+            }
+        });
+
+        function showToast(title, description, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastTitle = document.getElementById('toast-title');
+            const toastDescription = document.getElementById('toast-description');
+            
+            toastTitle.textContent = title;
+            toastDescription.textContent = description;
+            toast.className = `toast ${type}`;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 5000);
+        }
+
+        // Auto-calculate duration based on dates
+        const startDateInput = document.getElementById('date_debut');
+        const endDateInput = document.getElementById('date_fin');
+        const durationInput = document.getElementById('duree_semaines');
+
+        function calculateDuration() {
+            if (startDateInput.value && endDateInput.value) {
+                const start = new Date(startDateInput.value);
+                const end = new Date(endDateInput.value);
+                const diffTime = Math.abs(end - start);
+                const diffWeeks = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 7));
+                durationInput.value = diffWeeks;
+            }
+        }
+
+        startDateInput.addEventListener('change', calculateDuration);
+        endDateInput.addEventListener('change', calculateDuration);
+    </script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Clinica+ • Faire une donation</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-lg-8 mx-auto">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h3>Faire une donation</h3>
+          </div>
+          <div class="card-body">
+            <form method="post" id="donationForm">
+              {% csrf_token %}
+              
+              <div class="mb-3">
+                <label class="form-label">Publication</label>
+                {{ form.id_publication }}
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label">Type de donation</label>
+                {{ form.type_donation }}
+              </div>
+              
+              <div class="mb-3" id="description_container" style="display:none;">
+                <label class="form-label">Description du volontariat</label>
+                {{ form.description }}
+              </div>
+              
+              <div class="mb-3" id="montant_container" style="display:none;">
+                <label class="form-label">Montant (€)</label>
+                {{ form.montant }}
+              </div>
+              
+              <div class="mb-3" id="methode_container" style="display:none;">
+                <label class="form-label">Méthode de paiement</label>
+                {{ form.methode_paiement }}
+              </div>
+              
+              {% if form.errors %}
+                <div class="alert alert-danger">
+                  {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                      <p>{{ field }}: {{ error }}</p>
+                    {% endfor %}
+                  {% endfor %}
+                </div>
+              {% endif %}
+              
+              <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Soumettre la donation</button>
+                <a href="{% url 'donation:user_donation_list' %}" class="btn btn-outline-secondary">Annuler</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const typeDonation = document.getElementById('type_donation');
+      const descriptionContainer = document.getElementById('description_container');
+      const montantContainer = document.getElementById('montant_container');
+      const methodeContainer = document.getElementById('methode_container');
+      
+      function toggleFields() {
+        const selectedType = typeDonation.value;
+        
+        if (selectedType === 'volontariat') {
+          descriptionContainer.style.display = 'block';
+          montantContainer.style.display = 'none';
+          methodeContainer.style.display = 'none';
+        } else if (selectedType === 'argent') {
+          descriptionContainer.style.display = 'none';
+          montantContainer.style.display = 'block';
+          methodeContainer.style.display = 'block';
+        } else {
+          descriptionContainer.style.display = 'none';
+          montantContainer.style.display = 'none';
+          methodeContainer.style.display = 'none';
+        }
+      }
+      
+      typeDonation.addEventListener('change', toggleFields);
+      toggleFields();
+    });
+  </script>
+</body>
+</html>

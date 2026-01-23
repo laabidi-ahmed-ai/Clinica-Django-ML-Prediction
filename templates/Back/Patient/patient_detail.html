@@ -1,0 +1,152 @@
+{% extends "Back/Patient/base.html" %}
+
+{% block title %}Patient - {{ patient.first_name }} {{ patient.last_name }}{% endblock %}
+{% block page_title %}Patient profile{% endblock %}
+
+{% block breadcrumb_actions %}
+<div class="btn-group">
+  <a href="{% url 'patient_medical_history' patient.id %}" class="btn btn-outline-info">
+    <i data-feather="clock" class="me-1" style="width:16px;height:16px;"></i>Medical History
+  </a>
+  <a href="{% url 'patient_export_pdf' patient.id %}" class="btn btn-outline-success">
+    <i data-feather="download" class="me-1" style="width:16px;height:16px;"></i>Export PDF
+  </a>
+  <a href="{% url 'patient_edit' patient.id %}" class="btn btn-outline-secondary">
+    <i data-feather="edit-3" class="me-1" style="width:16px;height:16px;"></i>Edit
+  </a>
+  <a href="{% url 'patient_delete' patient.id %}" class="btn btn-outline-danger">
+    <i data-feather="trash-2" class="me-1" style="width:16px;height:16px;"></i>Delete
+  </a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title mb-4">General information</h4>
+        <dl class="row mb-0">
+          <dt class="col-sm-4">Name</dt>
+          <dd class="col-sm-8">{{ patient.first_name }} {{ patient.last_name }}</dd>
+
+          <dt class="col-sm-4">CIN</dt>
+          <dd class="col-sm-8">{{ patient.cin|default:"?" }}</dd>
+
+          <dt class="col-sm-4">Date of birth</dt>
+          <dd class="col-sm-8">{{ patient.date_of_birth }}</dd>
+
+          <dt class="col-sm-4">Phone</dt>
+          <dd class="col-sm-8">{{ patient.phone }}</dd>
+
+          <dt class="col-sm-4">Email</dt>
+          <dd class="col-sm-8">{{ patient.email }}</dd>
+
+          <dt class="col-sm-4">Address</dt>
+          <dd class="col-sm-8">{{ patient.address }}</dd>
+
+          <dt class="col-sm-4">Medical history</dt>
+          <dd class="col-sm-8">{{ patient.medical_history|default:"?" }}</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title mb-4">Hospitalisation</h4>
+        <dl class="row mb-0">
+          <dt class="col-sm-5">Status</dt>
+          <dd class="col-sm-7">
+            <span class="badge {% if patient.hospitalisation == 'oui' %}bg-danger-subtle text-danger{% else %}bg-success-subtle text-success{% endif %}">
+              {{ patient.get_hospitalisation_display }}
+            </span>
+          </dd>
+
+          <dt class="col-sm-5">Type</dt>
+          <dd class="col-sm-7">{{ patient.get_type_hosp_display|default:"?" }}</dd>
+
+          <dt class="col-sm-5">Entry date</dt>
+          <dd class="col-sm-7">{{ patient.date_entree_hosp|default:"?" }}</dd>
+
+          <dt class="col-sm-5">Exit date</dt>
+          <dd class="col-sm-7">{{ patient.date_sortie_hosp|default:"?" }}</dd>
+
+          <dt class="col-sm-5">Responsible doctor</dt>
+          <dd class="col-sm-7">{{ patient.medecin_responsable|default:"?" }}</dd>
+
+          <dt class="col-sm-5">Medical file</dt>
+          <dd class="col-sm-7">{{ patient.dossier_medical|default:"?" }}</dd>
+
+          <dt class="col-sm-5">Last update</dt>
+          <dd class="col-sm-7">{{ patient.date_derniere_mise_a_jour|date:"Y-m-d H:i" }}</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex align-items-center mb-3">
+          <h4 class="card-title mb-0">Linked appointments ({{ all_appointments.count }})</h4>
+          <a href="{% url 'appointment_list' %}?linked={{ patient.id }}" class="btn btn-sm btn-outline-secondary ms-auto">All appointments</a>
+        </div>
+        {% if all_appointments %}
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Department</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for appointment in all_appointments %}
+              <tr>
+                <td>{{ appointment.requested_date }}</td>
+                <td>{{ appointment.requested_time|time:"H:i" }}</td>
+                <td>{{ appointment.get_department_display }}</td>
+                <td>
+                  <span class="badge bg-{% if appointment.status == 'pending' %}warning{% elif appointment.status == 'confirmed' %}success{% elif appointment.status == 'cancelled' %}danger{% else %}secondary{% endif %}">
+                    {{ appointment.get_status_display }}
+                  </span>
+                </td>
+                <td>
+                  <a href="{% url 'appointment_detail' appointment.id %}" class="btn btn-sm btn-outline-primary">
+                    View
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="text-center py-4 text-muted">
+          <p class="mb-0">No appointments linked.</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="d-flex gap-2">
+  <a href="{% url 'patient_list' %}" class="btn btn-outline-primary">
+    <i data-feather="arrow-left" class="me-1" style="width:16px;height:16px;"></i>
+    Back to list
+  </a>
+  <a href="{% url 'patient_edit' patient.id %}" class="btn btn-primary">
+    <i data-feather="edit-3" class="me-1" style="width:16px;height:16px;"></i>Edit patient
+  </a>
+</div>
+{% endblock %}
+
+

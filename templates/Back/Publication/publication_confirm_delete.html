@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html dir="ltr" lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'Back/src/assets/images/favicon.png' %}">
+    <title>Supprimer - {{ object.title }}</title>
+    <link href="{% static 'Back/src/dist/css/style.min.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+
+        <!-- Topbar & Sidebar (même structure que publication_detail.html) -->
+        <header class="topbar" data-navbarbg="skin6">
+            <nav class="navbar top-navbar navbar-expand-lg">
+                <div class="navbar-header" data-logobg="skin6">
+                    <div class="navbar-brand">
+                        <a href="{% url 'back_index' %}">
+                            <span class="logo-text">
+                                <img src="{% static 'Back/src/assets/images/freedash-text.png' %}" alt="Clinica+" />
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <aside class="left-sidebar" data-sidebarbg="skin6">
+            <div class="scroll-sidebar">
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{% url 'back_index' %}">
+                                <i data-feather="home" class="feather-icon"></i>
+                                <span class="hide-menu">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="list-divider"></li>
+                        <li class="nav-small-cap"><span class="hide-menu">Publications</span></li>
+                        <li class="sidebar-item selected">
+                            <a class="sidebar-link active" href="{% url 'publication:publication_list' %}">
+                                <i data-feather="file-text" class="feather-icon"></i>
+                                <span class="hide-menu">Liste</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <div class="page-wrapper">
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6 col-md-8">
+                        <div class="card mt-5">
+                            <div class="card-body text-center">
+                                <div class="mb-4">
+                                    <i data-feather="alert-triangle" class="feather-icon text-danger" style="width: 80px; height: 80px;"></i>
+                                </div>
+                                
+                                <h3 class="card-title text-danger">Confirmer la suppression</h3>
+                                <p class="text-muted mb-4">Êtes-vous sûr de vouloir supprimer la publication suivante ?</p>
+                                
+                                <div class="alert alert-warning text-left">
+                                    <h5><strong>{{ object.title }}</strong></h5>
+                                    <p class="mb-0"><small>Adresse : {{ object.address }}</small></p>
+                                    <p class="mb-0"><small>Échéance : {{ object.deadline|date:"d M Y" }}</small></p>
+                                </div>
+                                
+                                <p class="text-danger"><small><strong>⚠️ Cette action est irréversible !</strong></small></p>
+                                
+                                <form method="post" class="mt-4">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-lg me-2">
+                                        <i data-feather="trash-2" class="feather-icon"></i> Oui, supprimer
+                                    </button>
+                                    <a href="{% url 'publication:publication_list' %}" class="btn btn-light btn-lg">
+                                        <i data-feather="x" class="feather-icon"></i> Non, annuler
+                                    </a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'Back/src/assets/libs/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'Back/src/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'Back/src/dist/js/feather.min.js' %}"></script>
+    <script src="{% static 'Back/src/dist/js/custom.min.js' %}"></script>
+    <script>feather.replace();</script>
+</body>
+</html>

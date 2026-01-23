@@ -1,0 +1,910 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Cart - Medicio</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+  
+  <style>
+    /* Force navbar visibility on desktop */
+    @media (min-width: 1200px) {
+      .navmenu ul {
+        display: flex !important;
+      }
+    }
+    /* Ensure header is visible */
+    .header {
+      position: relative !important;
+      background-color: #ffffff !important;
+      display: block !important;
+    }
+    .header .branding {
+      display: flex !important;
+      align-items: center !important;
+    }
+    .header .topbar {
+      display: flex !important;
+    }
+    .panier-container {
+      padding: 40px 0;
+    }
+    .panier-item {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      background: white;
+    }
+    .panier-item img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+    /* Styles pour harmoniser les formulaires avec le template */
+    .card .form-control {
+      color: var(--default-color, #444444);
+      background-color: var(--surface-color, #ffffff);
+      border-color: rgba(68, 68, 68, 0.2);
+      border-radius: 0;
+      box-shadow: none;
+      font-size: 14px;
+      padding: 10px 15px;
+      transition: border-color 0.15s ease-in-out;
+    }
+    .card .form-control:focus {
+      border-color: #3fbbc0;
+      outline: 0;
+      box-shadow: 0 0 0 0.25rem rgba(63, 187, 192, 0.25);
+      background-color: var(--surface-color, #ffffff);
+    }
+    .card .form-label {
+      color: var(--heading-color, #555555);
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .card .form-control::placeholder {
+      color: rgba(68, 68, 68, 0.5);
+    }
+    
+    /* Beautiful Modal Styles */
+    .modal-content {
+      border: none;
+      border-radius: 16px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+    }
+    
+    .delete-header {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+      border-bottom: none;
+      padding: 1.25rem 1.5rem;
+    }
+    
+    .delete-header .modal-title {
+      color: white;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+    }
+    
+    .delete-header .btn-close {
+      filter: brightness(0) invert(1);
+      opacity: 0.8;
+    }
+    
+    .delete-header .btn-close:hover {
+      opacity: 1;
+    }
+    
+    .delete-modal-body {
+      text-align: center;
+      padding: 2rem 1.5rem;
+    }
+    
+    .icon-wrapper {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      animation: pulse 2s infinite;
+    }
+    
+    .delete-icon {
+      background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+      color: #e53e3e;
+    }
+    
+    .warning-icon {
+      background: linear-gradient(135deg, #fffaf0 0%, #feebc8 100%);
+      color: #dd6b20;
+    }
+    
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(229, 62, 62, 0.4);
+      }
+      70% {
+        box-shadow: 0 0 0 15px rgba(229, 62, 62, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(229, 62, 62, 0);
+      }
+    }
+    
+    .modal-footer {
+      border-top: 1px solid #e2e8f0;
+      padding: 1rem 1.5rem;
+      gap: 0.75rem;
+    }
+    
+    .modal-footer .btn {
+      padding: 0.6rem 1.5rem;
+      font-weight: 500;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+    
+    .modal-footer .btn-secondary {
+      background-color: #e2e8f0;
+      border: none;
+      color: #4a5568;
+    }
+    
+    .modal-footer .btn-secondary:hover {
+      background-color: #cbd5e0;
+      color: #2d3748;
+    }
+    
+    .modal-footer .btn-danger {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+      border: none;
+      box-shadow: 0 4px 14px 0 rgba(239, 68, 68, 0.39);
+    }
+    
+    .modal-footer .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
+    }
+    
+    .product-preview {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .product-preview img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    
+    .product-preview-info {
+      text-align: left;
+    }
+    
+    .product-preview-info h6 {
+      margin: 0;
+      color: #2d3748;
+      font-weight: 600;
+    }
+    
+    .product-preview-info p {
+      margin: 0;
+      color: #718096;
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+
+<body class="index-page">
+
+  <header id="header" class="header sticky-top">
+
+    <div class="topbar d-flex align-items-center">
+      <div class="container d-flex justify-content-center justify-content-md-between">
+        <div class="d-none d-md-flex align-items-center">
+          <i class="bi bi-clock me-1"></i> Monday - Saturday, 8AM to 10PM
+        </div>
+        <div class="d-flex align-items-center">
+          <i class="bi bi-phone me-1"></i> Call us now +1 5589 55488 55
+        </div>
+      </div>
+    </div><!-- End Top Bar -->
+
+    <div class="branding d-flex align-items-center">
+
+      <div class="container position-relative d-flex align-items-center justify-content-end">
+        <a href="{% url 'index' %}" class="logo d-flex align-items-center me-auto">
+          <img src="{% static 'assets/img/logo.png' %}" alt="">
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+          <ul>
+            <li><a href="{% url 'index' %}">Products</a></li>
+            <li><a href="{% url 'panier' %}" class="active">Cart 
+              {% if nombre_articles_panier > 0 %}
+                <span class="badge bg-danger">{{ nombre_articles_panier }}</span>
+              {% endif %}
+            </a></li>
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+
+      </div>
+
+    </div>
+
+  </header>
+
+  <main class="main">
+    
+    <!-- Messages Django -->
+    {% if messages %}
+      <div class="container mt-3">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Panier Section -->
+    <section class="panier-container section light-background">
+      <div class="container">
+        
+        <div class="row">
+          <div class="col-12 mb-4">
+            <h2>My Cart</h2>
+            {% if articles %}
+              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#emptyCartModal">
+                <i class="bi bi-trash"></i> Empty cart
+              </button>
+            {% endif %}
+          </div>
+        </div>
+
+        {% if articles %}
+        <div class="row">
+          <!-- Liste des articles -->
+          <div class="col-lg-8">
+            {% for article in articles %}
+            <div class="panier-item">
+              <div class="row align-items-center">
+                <div class="col-md-2">
+                  {% if article.image %}
+                    <img src="{{ article.image }}" alt="{{ article.produit.nom }}" class="img-fluid">
+                  {% else %}
+                    <div style="width: 100px; height: 100px; background-color: #e9ecef; display: flex; align-items: center; justify-content: center; border-radius: 5px;">
+                      <span style="color: #999;">No image</span>
+                    </div>
+                  {% endif %}
+                </div>
+                <div class="col-md-6">
+                  <h5>{{ article.produit.nom }}</h5>
+                  <p class="text-muted mb-0">{{ article.produit.description|truncatewords:10 }}</p>
+                  <p class="mt-2 mb-0"><strong>Unit price:</strong> {{ article.prix }} DT</p>
+                </div>
+                <div class="col-md-2 text-center">
+                  <form method="post" action="{% url 'modifier_quantite_panier' article.produit.id %}" class="d-inline">
+                    {% csrf_token %}
+                    <label for="quantite{{ article.produit.id }}" class="form-label d-block mb-2"><strong>Quantity:</strong></label>
+                    <div style="max-width: 150px; margin: 0 auto;">
+                      <input type="number" class="form-control text-center" id="quantite{{ article.produit.id }}" name="quantite" 
+                             value="{{ article.quantite }}" min="1" max="{{ article.produit.quantite }}" 
+                             onchange="this.form.submit()" style="width: 100px; margin: 0 auto;">
+                    </div>
+                    <small class="text-muted d-block mt-1">Stock: {{ article.produit.quantite }}</small>
+                  </form>
+                </div>
+                <div class="col-md-2 text-end">
+                  <p class="mb-2"><strong>Subtotal:</strong> <span id="sousTotal{{ article.produit.id }}">{{ article.sous_total }}</span> DT</p>
+                  <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#removeItemModal{{ article.produit.id }}">
+                    <i class="bi bi-trash"></i> Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+
+          <!-- Remove Item Modals -->
+          {% for article in articles %}
+          <div class="modal fade" id="removeItemModal{{ article.produit.id }}" tabindex="-1" aria-labelledby="removeItemModalLabel{{ article.produit.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header delete-header">
+                  <h5 class="modal-title" id="removeItemModalLabel{{ article.produit.id }}">
+                    <i class="bi bi-exclamation-triangle" style="margin-right: 8px;"></i>
+                    Remove Item
+                  </h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body delete-modal-body">
+                  <div class="icon-wrapper delete-icon">
+                    <i class="bi bi-cart-x" style="font-size: 2rem;"></i>
+                  </div>
+                  <h4 class="mb-3">Remove this item from cart?</h4>
+                  <div class="product-preview">
+                    {% if article.image %}
+                      <img src="{{ article.image }}" alt="{{ article.produit.nom }}">
+                    {% else %}
+                      <div style="width: 60px; height: 60px; background-color: #e9ecef; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+                        <i class="bi bi-image" style="color: #999;"></i>
+                      </div>
+                    {% endif %}
+                    <div class="product-preview-info">
+                      <h6>{{ article.produit.nom }}</h6>
+                      <p>{{ article.quantite }} × {{ article.prix }} DT</p>
+                    </div>
+                  </div>
+                  <p class="text-muted small mt-2">
+                    This item will be removed from your shopping cart.
+                  </p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg me-1"></i> Cancel
+                  </button>
+                  <a href="{% url 'retirer_du_panier' article.produit.id %}" class="btn btn-danger">
+                    <i class="bi bi-trash me-1"></i> Remove Item
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+
+          <!-- Formulaire de commande -->
+          <div class="col-lg-4">
+            <div class="card">
+              <div class="card-header text-white" style="background-color: #3fbbc0;">
+                <h5 class="mb-0">Order Summary</h5>
+              </div>
+              <div class="card-body">
+                <div class="mb-3">
+                  {% if discount > 0 %}
+                    <!-- Display total with discount directly -->
+                    <div class="mb-2">
+                      <p class="text-muted mb-1" style="font-size: 0.9rem;">Subtotal: <span>{{ total }} DT</span></p>
+                      <p class="mb-1" style="color: #28a745; font-size: 0.9rem;">
+                        <strong>Discount ({{ coupon_code }}): -{{ discount }} DT</strong>
+                      </p>
+                    </div>
+                    <hr class="my-2">
+                    <h4>Total: <span style="color: #3fbbc0;">{{ total_after_discount }} DT</span></h4>
+                  {% else %}
+                    <h4>Total: <span style="color: #3fbbc0;">{{ total }} DT</span></h4>
+                  {% endif %}
+                  <p class="text-muted">Number of items: {{ nombre_articles }}</p>
+                </div>
+
+                <!-- Section Quiz Santé et Coupon (DANS Order Summary) -->
+                <div class="mb-4" style="border: 2px dashed #3fbbc0; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-radius: 10px; padding: 20px;">
+                  <h5 class="mb-2" style="color: #3fbbc0;">
+                    <i class="bi bi-trophy-fill"></i> Win 5% Discount!
+                  </h5>
+                  <p class="text-muted mb-3" style="font-size: 0.9rem;">
+                    Answer all 3 health questions correctly and get a 5% coupon code!
+                  </p>
+                  <a href="{% url 'health_quiz' %}" class="btn btn-lg mb-3" style="background-color: #3fbbc0; border: none; color: white; font-weight: bold; width: 100%;">
+                    <i class="bi bi-question-circle"></i> Take Health Quiz
+                  </a>
+                  
+                  <!-- Coupon Application -->
+                  <div class="coupon-section mt-3">
+                    <h6 class="mb-2" style="font-size: 0.95rem;">Coupon Code</h6>
+                    <form method="post" class="d-flex gap-2">
+                      {% csrf_token %}
+                      <input type="text" name="coupon_code" class="form-control" 
+                             placeholder="Enter your code" 
+                             value="{% if session_coupon_code %}{{ session_coupon_code }}{% elif coupon_code %}{{ coupon_code }}{% endif %}"
+                             style="text-transform: uppercase; font-size: 0.9rem;">
+                      <button type="submit" name="apply_coupon" class="btn" 
+                              style="background-color: #28a745; border: none; color: white; font-weight: bold; font-size: 0.9rem;">
+                        Apply
+                      </button>
+                    </form>
+                    {% if coupon_code %}
+                      <div class="alert alert-success mt-2 mb-0" style="font-size: 0.85rem; padding: 8px 12px;">
+                        <i class="bi bi-check-circle"></i> Coupon applied: <strong>{{ coupon_code }}</strong>
+                        <br><small>Discount: {{ discount }} DT</small>
+                      </div>
+                    {% elif coupon_error %}
+                      <div class="alert alert-danger mt-2 mb-0" style="font-size: 0.85rem; padding: 8px 12px;">
+                        <i class="bi bi-x-circle"></i> {{ coupon_error }}
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <form method="post" action="{% url 'passer_commande' %}">
+                  {% csrf_token %}
+                  <h5 class="mb-3">Delivery Information</h5>
+                  
+                  <div class="mb-3">
+                    <label for="nom_client" class="form-label">Last Name *</label>
+                    <input type="text" class="form-control" id="nom_client" name="nom_client" required 
+                           pattern="^[a-zA-ZÀ-ÿ\s'-]+$" 
+                           title="Last name cannot contain numbers or special characters">
+                    <small class="text-danger" id="nom_client_error" style="display: none;"></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="prenom_client" class="form-label">First Name *</label>
+                    <input type="text" class="form-control" id="prenom_client" name="prenom_client" required 
+                           pattern="^[a-zA-ZÀ-ÿ\s'-]+$" 
+                           title="First name cannot contain numbers or special characters">
+                    <small class="text-danger" id="prenom_client_error" style="display: none;"></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="email_client" class="form-label">Email *</label>
+                    <input type="email" class="form-control" id="email_client" name="email_client" required 
+                           pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" 
+                           title="Please enter a valid email address">
+                    <small class="text-danger" id="email_client_error" style="display: none;"></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="telephone_client" class="form-label">Phone *</label>
+                    <input type="tel" class="form-control" id="telephone_client" name="telephone_client" required 
+                           pattern="^[0-9]{8}$" 
+                           maxlength="8" 
+                           title="Phone number must contain exactly 8 digits">
+                    <small class="text-danger" id="telephone_client_error" style="display: none;"></small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="adresse_client" class="form-label">Address *</label>
+                    <textarea class="form-control" id="adresse_client" name="adresse_client" rows="3" required 
+                              minlength="5" 
+                              title="Address must contain at least 5 characters"></textarea>
+                    <small class="text-danger" id="adresse_client_error" style="display: none;"></small>
+                  </div>
+
+                  <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-lg" style="background-color: #3fbbc0; border: none; color: white; font-weight: bold;">
+                      <i class="bi bi-check-circle"></i> Place Order
+                    </button>
+                    <a href="{% url 'index' %}" class="btn btn-outline-secondary">
+                      <i class="bi bi-arrow-left"></i> Continue Shopping
+                    </a>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div class="row">
+          <div class="col-12 text-center py-5">
+            <i class="bi bi-cart-x" style="font-size: 64px; color: #ccc;"></i>
+            <h3 class="mt-3">Your cart is empty</h3>
+            <p class="text-muted">Add products to your cart to start shopping.</p>
+            <a href="{% url 'index' %}" class="btn" style="background-color: #3fbbc0; border: none; color: white; font-weight: bold;">
+              <i class="bi bi-arrow-left"></i> Back to products
+            </a>
+          </div>
+        </div>
+        {% endif %}
+
+      </div>
+    </section>
+
+    <!-- Empty Cart Modal -->
+    {% if articles %}
+    <div class="modal fade" id="emptyCartModal" tabindex="-1" aria-labelledby="emptyCartModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header delete-header">
+            <h5 class="modal-title" id="emptyCartModalLabel">
+              <i class="bi bi-exclamation-triangle" style="margin-right: 8px;"></i>
+              Empty Cart
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body delete-modal-body">
+            <div class="icon-wrapper warning-icon">
+              <i class="bi bi-cart-x" style="font-size: 2rem;"></i>
+            </div>
+            <h4 class="mb-3">Empty your entire cart?</h4>
+            <div class="mb-3">
+              <p class="text-muted mb-2">
+                <strong>{{ nombre_articles }} item(s)</strong> will be removed<br>
+                <strong>Total value:</strong> <span style="color: #e53e3e;">{{ total }} DT</span>
+              </p>
+            </div>
+            <p class="text-danger small mt-3">
+              <i class="bi bi-info-circle me-1"></i>
+              This action cannot be undone. All items will be permanently removed from your cart.
+            </p>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              <i class="bi bi-x-lg me-1"></i> Cancel
+            </button>
+            <a href="{% url 'vider_panier' %}" class="btn btn-danger">
+              <i class="bi bi-trash me-1"></i> Empty Cart
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+  </main>
+
+  <footer id="footer" class="footer light-background">
+    <div class="container footer-top">
+      <div class="row gy-4">
+        <div class="col-lg-4 col-md-6 footer-about">
+          <a href="{% url 'index' %}" class="logo d-flex align-items-center">
+            <span class="sitename">Medicio</span>
+          </a>
+          <div class="footer-contact pt-3">
+            <p>A108 Adam Street</p>
+            <p>New York, NY 535022</p>
+            <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
+            <p><strong>Email:</strong> <span>info@example.com</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container copyright text-center mt-4">
+      <p>© <span>Copyright</span> <strong class="px-1 sitename">Medicio</strong> <span>All Rights Reserved</span></p>
+    </div>
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+
+  <!-- Main JS File -->
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+  <script>
+
+    // Mettre à jour le sous-total quand la quantité change (avant soumission)
+    document.addEventListener('DOMContentLoaded', function() {
+      {% for article in articles %}
+      const input{{ article.produit.id }} = document.getElementById('quantite{{ article.produit.id }}');
+      const prixUnitaire{{ article.produit.id }} = {{ article.prix }};
+      const sousTotal{{ article.produit.id }} = document.getElementById('sousTotal{{ article.produit.id }}');
+      
+      if (input{{ article.produit.id }}) {
+        input{{ article.produit.id }}.addEventListener('input', function() {
+          const quantite = parseInt(this.value) || 1;
+          const total = (quantite * prixUnitaire{{ article.produit.id }}).toFixed(2);
+          if (sousTotal{{ article.produit.id }}) {
+            sousTotal{{ article.produit.id }}.textContent = total;
+          }
+        });
+      }
+      {% endfor %}
+
+      // Validations des champs du formulaire
+      const nomClient = document.getElementById('nom_client');
+      const prenomClient = document.getElementById('prenom_client');
+      const emailClient = document.getElementById('email_client');
+      const telephoneClient = document.getElementById('telephone_client');
+      const adresseClient = document.getElementById('adresse_client');
+      const form = document.querySelector('form[action="{% url 'passer_commande' %}"]');
+
+      // Fonction pour valider le nom (pas de nombres ni caractères spéciaux)
+      function validateName(name, fieldName, errorElement) {
+        const namePattern = /^[a-zA-ZÀ-ÿ\s'-]+$/;
+        if (!namePattern.test(name)) {
+          errorElement.textContent = fieldName + ' cannot contain numbers or special characters';
+          errorElement.style.display = 'block';
+          return false;
+        }
+        errorElement.style.display = 'none';
+        return true;
+      }
+
+      // Fonction pour valider l'email (pas de caractères spéciaux sauf @ et .)
+      function validateEmail(email, errorElement) {
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailPattern.test(email)) {
+          errorElement.textContent = 'Please enter a valid email address';
+          errorElement.style.display = 'block';
+          return false;
+        }
+        errorElement.style.display = 'none';
+        return true;
+      }
+
+      // Fonction pour valider le téléphone (uniquement des nombres, exactement 8 chiffres)
+      function validatePhone(phone, errorElement) {
+        const phonePattern = /^[0-9]{8}$/;
+        if (!phonePattern.test(phone)) {
+          errorElement.textContent = 'Phone number must contain exactly 8 digits';
+          errorElement.style.display = 'block';
+          return false;
+        }
+        errorElement.style.display = 'none';
+        return true;
+      }
+
+      // Fonction pour valider l'adresse (minimum 5 caractères)
+      function validateAddress(address, errorElement) {
+        if (address.length < 5) {
+          errorElement.textContent = 'Address must contain at least 5 characters';
+          errorElement.style.display = 'block';
+          return false;
+        }
+        errorElement.style.display = 'none';
+        return true;
+      }
+
+      // Validation en temps réel pour Last Name
+      if (nomClient) {
+        nomClient.addEventListener('input', function() {
+          validateName(this.value, 'Last name', document.getElementById('nom_client_error'));
+        });
+        nomClient.addEventListener('blur', function() {
+          validateName(this.value, 'Last name', document.getElementById('nom_client_error'));
+        });
+      }
+
+      // Validation en temps réel pour First Name
+      if (prenomClient) {
+        prenomClient.addEventListener('input', function() {
+          validateName(this.value, 'First name', document.getElementById('prenom_client_error'));
+        });
+        prenomClient.addEventListener('blur', function() {
+          validateName(this.value, 'First name', document.getElementById('prenom_client_error'));
+        });
+      }
+
+      // Validation en temps réel pour Email
+      if (emailClient) {
+        emailClient.addEventListener('input', function() {
+          validateEmail(this.value, document.getElementById('email_client_error'));
+        });
+        emailClient.addEventListener('blur', function() {
+          validateEmail(this.value, document.getElementById('email_client_error'));
+        });
+      }
+
+      // Validation en temps réel pour Phone (uniquement des nombres)
+      if (telephoneClient) {
+        telephoneClient.addEventListener('input', function() {
+          // Ne permettre que les nombres
+          this.value = this.value.replace(/[^0-9]/g, '');
+          validatePhone(this.value, document.getElementById('telephone_client_error'));
+        });
+        telephoneClient.addEventListener('blur', function() {
+          validatePhone(this.value, document.getElementById('telephone_client_error'));
+        });
+      }
+
+      // Validation en temps réel pour Address
+      if (adresseClient) {
+        adresseClient.addEventListener('input', function() {
+          validateAddress(this.value, document.getElementById('adresse_client_error'));
+        });
+        adresseClient.addEventListener('blur', function() {
+          validateAddress(this.value, document.getElementById('adresse_client_error'));
+        });
+      }
+
+      // Validation avant soumission du formulaire
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          let isValid = true;
+
+          if (nomClient) {
+            if (!validateName(nomClient.value, 'Last name', document.getElementById('nom_client_error'))) {
+              isValid = false;
+            }
+          }
+
+          if (prenomClient) {
+            if (!validateName(prenomClient.value, 'First name', document.getElementById('prenom_client_error'))) {
+              isValid = false;
+            }
+          }
+
+          if (emailClient) {
+            if (!validateEmail(emailClient.value, document.getElementById('email_client_error'))) {
+              isValid = false;
+            }
+          }
+
+          if (telephoneClient) {
+            if (!validatePhone(telephoneClient.value, document.getElementById('telephone_client_error'))) {
+              isValid = false;
+            }
+          }
+
+          if (adresseClient) {
+            if (!validateAddress(adresseClient.value, document.getElementById('adresse_client_error'))) {
+              isValid = false;
+            }
+          }
+
+          if (!isValid) {
+            e.preventDefault();
+            return false;
+          }
+        });
+      }
+    });
+  </script>
+
+  <!-- Popup pour les résultats du quiz -->
+  {% if quiz_result %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      {% if quiz_result == 'success' %}
+      // Popup de succès avec le code coupon
+      const modal = document.createElement('div');
+      modal.className = 'modal fade show';
+      modal.style.display = 'block';
+      modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+      modal.innerHTML = `
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+            <div class="modal-header" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; border-radius: 20px 20px 0 0; border: none;">
+              <h5 class="modal-title" style="font-weight: bold; font-size: 1.5rem;">
+                <i class="bi bi-trophy-fill"></i> Congratulations!
+              </h5>
+              <button type="button" class="btn-close btn-close-white" onclick="this.closest('.modal').remove()"></button>
+            </div>
+            <div class="modal-body text-center" style="padding: 40px;">
+              <div style="font-size: 80px; color: #28a745; margin-bottom: 20px;">
+                <i class="bi bi-check-circle-fill"></i>
+              </div>
+              <h3 style="color: #28a745; margin-bottom: 20px; font-weight: bold;">You Won!</h3>
+              <p style="font-size: 1.1rem; color: #666; margin-bottom: 30px;">
+                You answered all <strong>3/3 questions</strong> correctly!
+              </p>
+              <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding: 25px; border-radius: 15px; margin-bottom: 20px; border: 2px dashed #3fbbc0;">
+                <p style="margin: 0; font-size: 1rem; color: #666; margin-bottom: 10px;">Your coupon code:</p>
+                <h2 style="color: #3fbbc0; font-weight: bold; font-size: 2rem; letter-spacing: 3px; margin: 0;">
+                  {{ quiz_coupon_code }}
+                </h2>
+                <p style="margin: 10px 0 0 0; color: #28a745; font-weight: bold; font-size: 1.2rem;">
+                  <i class="bi bi-percent"></i> 5% discount
+                </p>
+              </div>
+              <button type="button" class="btn btn-lg" onclick="this.closest('.modal').remove()" 
+                      style="background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%); border: none; color: white; font-weight: bold; padding: 12px 40px; border-radius: 50px;">
+                <i class="bi bi-check-circle"></i> Perfect!
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      {% elif quiz_result == 'failed' %}
+      // Popup d'échec avec le score
+      const modal = document.createElement('div');
+      modal.className = 'modal fade show';
+      modal.style.display = 'block';
+      modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+      modal.innerHTML = `
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+            <div class="modal-header" style="background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%); color: white; border-radius: 20px 20px 0 0; border: none;">
+              <h5 class="modal-title" style="font-weight: bold; font-size: 1.5rem;">
+                <i class="bi bi-exclamation-triangle-fill"></i> Almost There!
+              </h5>
+              <button type="button" class="btn-close btn-close-white" onclick="this.closest('.modal').remove()"></button>
+            </div>
+            <div class="modal-body text-center" style="padding: 40px;">
+              <div style="font-size: 80px; color: #ffc107; margin-bottom: 20px;">
+                <i class="bi bi-x-circle-fill"></i>
+              </div>
+              <h3 style="color: #ff9800; margin-bottom: 20px; font-weight: bold;">You Didn't Win</h3>
+              <div style="background: #fff3cd; padding: 25px; border-radius: 15px; margin-bottom: 20px; border: 2px solid #ffc107;">
+                <p style="font-size: 1.1rem; color: #856404; margin: 0;">
+                  Your score: <strong style="font-size: 1.5rem; color: #ff9800;">{{ quiz_score }}/3</strong>
+                </p>
+                <p style="margin: 15px 0 0 0; color: #856404;">
+                  You need <strong>3/3</strong> correct answers to win the coupon!
+                </p>
+              </div>
+              <div style="display: flex; gap: 10px; justify-content: center;">
+                <a href="{% url 'health_quiz' %}" class="btn btn-lg" 
+                   style="background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%); border: none; color: white; font-weight: bold; padding: 12px 30px; border-radius: 50px;">
+                  <i class="bi bi-arrow-clockwise"></i> Try Again
+                </a>
+                <button type="button" class="btn btn-lg btn-outline-secondary" onclick="this.closest('.modal').remove()" 
+                        style="padding: 12px 30px; border-radius: 50px;">
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      {% elif quiz_result == 'error' %}
+      // Popup d'erreur
+      const modal = document.createElement('div');
+      modal.className = 'modal fade show';
+      modal.style.display = 'block';
+      modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+      modal.innerHTML = `
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+            <div class="modal-header" style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); color: white; border-radius: 20px 20px 0 0; border: none;">
+              <h5 class="modal-title" style="font-weight: bold; font-size: 1.5rem;">
+                <i class="bi bi-exclamation-circle-fill"></i> Error
+              </h5>
+              <button type="button" class="btn-close btn-close-white" onclick="this.closest('.modal').remove()"></button>
+            </div>
+            <div class="modal-body text-center" style="padding: 40px;">
+              <div style="font-size: 80px; color: #dc3545; margin-bottom: 20px;">
+                <i class="bi bi-x-octagon-fill"></i>
+              </div>
+              <h3 style="color: #dc3545; margin-bottom: 20px; font-weight: bold;">An Error Occurred</h3>
+              <p style="font-size: 1.1rem; color: #666; margin-bottom: 30px;">
+                Unable to process your quiz. Please try again later.
+              </p>
+              <button type="button" class="btn btn-lg" onclick="this.closest('.modal').remove()" 
+                      style="background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%); border: none; color: white; font-weight: bold; padding: 12px 40px; border-radius: 50px;">
+                <i class="bi bi-check-circle"></i> OK
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      {% endif %}
+    });
+  </script>
+  {% endif %}
+
+</body>
+
+</html>
+

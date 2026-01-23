@@ -1,0 +1,622 @@
+{% load static %}
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Clinica+ • Back Office{% endblock %}</title>
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'Back/src/assets/images/favicon.png' %}">
+  <!-- Freedash core CSS -->
+  <link href="{% static 'Back/src/dist/css/style.min.css' %}" rel="stylesheet">
+  
+  <style>
+    /* Modern clean design */
+    :root {
+      --primary-blue: #4A90E2;
+      --success-green: #28a745;
+      --danger-red: #dc3545;
+      --warning-orange: #FF8C00;
+      --secondary-gray: #6c757d;
+      --purple: #667eea;
+    }
+    
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    
+    /* Page header */
+    .page-header {
+      background: white;
+      padding: 24px 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      margin-bottom: 24px;
+    }
+    
+    .page-title {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin: 0;
+    }
+    
+    /* Add button - Blue gradient */
+    .btn-add {
+      background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+      border: none;
+      color: white;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+    }
+    .btn-add:hover {
+      background: linear-gradient(135deg, #357ABD 0%, #2868A8 100%);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
+    }
+    .btn-add i {
+      margin-right: 6px;
+    }
+    
+    /* Filter section */
+    .filter-section {
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      margin-bottom: 20px;
+    }
+    
+    .filter-section label {
+      font-weight: 500;
+      color: #495057;
+      margin-bottom: 8px;
+      font-size: 0.875rem;
+    }
+    
+    .filter-section .form-control,
+    .filter-section .form-select {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      transition: all 0.3s ease;
+      font-size: 0.875rem;
+    }
+    
+    .filter-section .form-control:focus,
+    .filter-section .form-select:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+      outline: none;
+    }
+    
+    /* Card container */
+    .card {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      background: white;
+    }
+    
+    .card-body {
+      padding: 30px;
+    }
+    
+    /* Table */
+    .table-container {
+      overflow-x: auto;
+    }
+    
+    .table {
+      margin-bottom: 0;
+      font-size: 0.875rem;
+    }
+    
+    .table thead th {
+      background-color: #f8f9fa;
+      border-bottom: 2px solid #e9ecef;
+      color: #495057;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+      padding: 16px 20px;
+      border-top: none;
+    }
+    
+    .table tbody tr {
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .table tbody tr:hover {
+      background-color: #f8f9fa;
+      transform: scale(1.005);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .table tbody tr:last-child {
+      border-bottom: none;
+    }
+    
+    .table tbody td {
+      padding: 16px 20px;
+      vertical-align: middle;
+      color: #495057;
+    }
+    
+    /* Publication image */
+    .publication-image {
+      width: 56px;
+      height: 56px;
+      object-fit: cover;
+      border-radius: 8px;
+      transition: transform 0.3s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    
+    .table tbody tr:hover .publication-image {
+      transform: scale(1.15);
+    }
+    
+    /* Title column */
+    .publication-title {
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+      font-size: 0.95rem;
+    }
+    
+    .publication-description {
+      color: #868e96;
+      font-size: 0.8rem;
+      max-width: 400px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    /* Badges */
+    .badge-deadline {
+      background: linear-gradient(135deg, #FF8C00 0%, #FF6347 100%);
+      color: white;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      display: inline-block;
+      box-shadow: 0 2px 6px rgba(255, 140, 0, 0.3);
+    }
+    
+    .badge-type {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      display: inline-block;
+    }
+    
+    .badge-argent {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      color: white;
+      box-shadow: 0 2px 6px rgba(40, 167, 69, 0.3);
+    }
+    
+    .badge-volontariat {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);
+    }
+    
+    .badge-status {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+    
+    .badge-en-attente {
+      background: linear-gradient(135deg, #FF8C00 0%, #FF6347 100%);
+      color: white;
+    }
+    
+    .badge-valide {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      color: white;
+    }
+    
+    .badge-echec {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      color: white;
+    }
+    
+    /* Action buttons */
+    .btn-action-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .btn-detail,
+    .btn-edit,
+    .btn-delete,
+    .btn-approve,
+    .btn-danger-custom {
+      border: none;
+      color: white;
+      padding: 5px 13px;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 0.8rem;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+    
+    .btn-detail {
+      background: #17a2b8;
+      box-shadow: 0 2px 6px rgba(23, 162, 184, 0.25);
+    }
+    
+    .btn-detail:hover {
+      background: #138496;
+      color: white;
+      transform: translateY(-2px);
+    }
+    
+    .btn-edit {
+      background: var(--success-green);
+      box-shadow: 0 2px 6px rgba(40, 167, 69, 0.25);
+    }
+    
+    .btn-edit:hover {
+      background: #218838;
+      color: white;
+      transform: translateY(-2px);
+    }
+    
+    .btn-delete,
+    .btn-danger-custom {
+      background: var(--danger-red);
+      box-shadow: 0 2px 6px rgba(220, 53, 69, 0.25);
+    }
+    
+    .btn-delete:hover,
+    .btn-danger-custom:hover {
+      background: #c82333;
+      color: white;
+      transform: translateY(-2px);
+    }
+    
+    .btn-approve {
+      background: #28a745;
+      box-shadow: 0 2px 6px rgba(40, 167, 69, 0.25);
+    }
+    
+    .btn-approve:hover {
+      background: #218838;
+      color: white;
+      transform: translateY(-2px);
+    }
+    
+    .btn-detail i,
+    .btn-edit i,
+    .btn-delete i,
+    .btn-approve i,
+    .btn-danger-custom i {
+      width: 14px;
+      height: 14px;
+      margin-right: 4px;
+    }
+    
+    /* Stats cards */
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      transition: all 0.3s ease;
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+    
+    .stat-card .stat-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+    
+    .stat-card .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin: 0;
+    }
+    
+    .stat-card .stat-label {
+      color: #868e96;
+      font-size: 0.875rem;
+      margin: 0;
+    }
+    
+    /* Modal */
+    .modal-content {
+      border-radius: 16px;
+      border: none;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    
+    .modal-header {
+      border-radius: 16px 16px 0 0;
+      padding: 24px 30px;
+      background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+      color: white;
+      border-bottom: none;
+    }
+    
+    .modal-header.delete-header {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    }
+    
+    .modal-header .modal-title {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    
+    .modal-header .btn-close {
+      filter: brightness(0) invert(1);
+      opacity: 0.8;
+    }
+    
+    .modal-header .btn-close:hover {
+      opacity: 1;
+    }
+    
+    .modal-body {
+      padding: 30px;
+    }
+    
+    .modal-body.delete-modal-body {
+      text-align: center;
+      padding: 40px 30px;
+    }
+    
+    .modal-body .icon-wrapper {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-body .icon-wrapper.delete-icon {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      color: white;
+      box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
+    }
+    
+    .modal-footer {
+      border-top: 1px solid #e9ecef;
+      padding: 20px 30px;
+      justify-content: center;
+      gap: 12px;
+    }
+    
+    .modal-footer .btn {
+      min-width: 120px;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-weight: 500;
+    }
+    
+    /* Info badge */
+    .info-badge {
+      background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+      color: white;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: inline-block;
+      box-shadow: 0 2px 6px rgba(23, 162, 184, 0.3);
+    }
+    
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #868e96;
+    }
+    
+    .empty-state i {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .btn-action-group {
+        flex-direction: column;
+        gap: 6px;
+      }
+      
+      .btn-edit, 
+      .btn-danger-custom,
+      .btn-detail,
+      .btn-delete {
+        width: 100%;
+        font-size: 0.75rem;
+        padding: 6px 12px;
+      }
+      
+      .page-header {
+        padding: 16px 20px;
+      }
+      
+      .page-title {
+        font-size: 1.4rem;
+      }
+    }
+    
+    {% block extra_css %}{% endblock %}
+  </style>
+</head>
+
+<body>
+  <!-- Preloader -->
+  <div class="preloader">
+    <div class="lds-ripple"><div class="lds-pos"></div><div class="lds-pos"></div></div>
+  </div>
+
+  <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6"
+       data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed"
+       data-boxed-layout="full">
+
+    <!-- Topbar -->
+    <header class="topbar" data-navbarbg="skin6">
+      <nav class="navbar top-navbar navbar-expand-lg">
+        <div class="navbar-header" data-logobg="skin6">
+          <a class="nav-toggler d-block d-lg-none" href="javascript:void(0)">
+            <i class="ti-menu ti-close"></i>
+          </a>
+          <div class="navbar-brand">
+            <a href="{% url 'back_index' %}">
+              <img src="{% static 'Front/assets/images/logo_site.png' %}" alt="logo" class="img-fluid" style="width: 120px; margin-top: 30px;">
+            </a>
+          </div>
+          <a class="topbartoggler d-block d-lg-none" href="javascript:void(0)"
+             data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+             <i class="ti-more"></i>
+          </a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="navbar-nav float-end">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-bs-toggle="dropdown">
+                <img src="{% static 'Back/src/assets/images/users/profile-pic.jpg' %}" alt="user" class="rounded-circle" width="40">
+                <span class="ms-2 d-none d-lg-inline-block">
+                  <span class="text-dark">{{ user.first_name|default:"Admin" }}</span>
+                  <i data-feather="chevron-down" class="svg-icon"></i>
+                </span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-end">
+                <a class="dropdown-item" href="{% url 'logout' %}">
+                  <i data-feather="power" class="svg-icon me-2"></i>Logout
+                </a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="left-sidebar" data-sidebarbg="skin6">
+      <div class="scroll-sidebar" data-sidebarbg="skin6">
+        <nav class="sidebar-nav">
+          <ul id="sidebarnav">
+            <!-- Dashboard -->
+            <li class="sidebar-item {% if request.resolver_match.url_name == 'back_index' %}selected{% endif %}">
+              <a class="sidebar-link {% if request.resolver_match.url_name == 'back_index' %}active{% endif %}" 
+                 href="{% url 'back_index' %}">
+                <i data-feather="home" class="feather-icon"></i>
+                <span class="hide-menu">Dashboard</span>
+              </a>
+            </li>
+
+            <!-- Publications Section -->
+            <li class="list-divider"></li>
+            <li class="nav-small-cap"><span class="hide-menu">PUBLICATION</span></li>
+            
+            <li class="sidebar-item {% if request.resolver_match.url_name == 'publication_list' %}selected{% endif %}">
+              <a class="sidebar-link {% if request.resolver_match.url_name == 'publication_list' %}active{% endif %}" 
+                 href="{% url 'publication:publication_list' %}">
+                <i data-feather="file-text" class="feather-icon"></i>
+                <span class="hide-menu">Publications List</span>
+              </a>
+            </li>
+            
+            <li class="sidebar-item {% if request.resolver_match.url_name == 'publication_form' or request.resolver_match.url_name == 'publication_update' %}selected{% endif %}">
+              <a class="sidebar-link {% if request.resolver_match.url_name == 'publication_form' or request.resolver_match.url_name == 'publication_update' %}active{% endif %}" 
+                 href="{% url 'publication:publication_form' %}">
+                <i data-feather="plus-circle" class="feather-icon"></i>
+                <span class="hide-menu">New Publication</span>
+              </a>
+            </li>
+
+            <!-- Donations Section -->
+            <li class="list-divider"></li>
+            <li class="nav-small-cap"><span class="hide-menu">DONATIONS</span></li>
+            
+            <li class="sidebar-item {% if request.resolver_match.url_name == 'admin_donation_list' %}selected{% endif %}">
+              <a class="sidebar-link {% if request.resolver_match.url_name == 'admin_donation_list' %}active{% endif %}" 
+                 href="{% url 'donation:admin_donation_list' %}">
+                <i data-feather="heart" class="feather-icon"></i>
+                <span class="hide-menu">Donations List</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Page wrapper -->
+    <div class="page-wrapper">
+      <!-- Content -->
+      {% block content %}
+      {% endblock %}
+
+      <!-- Footer -->
+      <footer class="footer text-center text-muted mt-4">
+        Clinica+ Back • Freedash UI
+      </footer>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="{% static 'Back/src/assets/libs/jquery/dist/jquery.min.js' %}"></script>
+  <script src="{% static 'Back/src/assets/libs/popper.js/dist/umd/popper.min.js' %}"></script>
+  <script src="{% static 'Back/src/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'Back/src/dist/js/app-style-switcher.js' %}"></script>
+  <script src="{% static 'Back/src/dist/js/feather.min.js' %}"></script>
+  <script src="{% static 'Back/src/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js' %}"></script>
+  <script src="{% static 'Back/src/dist/js/sidebarmenu.js' %}"></script>
+  <script src="{% static 'Back/src/dist/js/custom.min.js' %}"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize Feather icons
+      if (window.feather) feather.replace();
+      
+      // Reinitialize icons in modals
+      var modals = document.querySelectorAll('.modal');
+      modals.forEach(function(modal) {
+        modal.addEventListener('shown.bs.modal', function() {
+          if (window.feather) feather.replace();
+        });
+      });
+    });
+  </script>
+  
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

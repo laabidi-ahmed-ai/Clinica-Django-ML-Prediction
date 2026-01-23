@@ -1,0 +1,437 @@
+{% extends "Front/labo/recherche/base.html" %}
+
+{% load static %}
+
+{% block title %}Mes Recherches{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* --- COULEURS THÈME --- */
+    :root {
+        --teal-main: #1AB2B8; /* Couleur dominante (Header/Boutons) */
+        --teal-light: #d1eff3; /* Fond clair pour le glassmorphism */
+        --success-light: #e6f7e8; /* Fond vert très clair pour les cartes terminées */
+        --primary-light: #e8f5ff; /* Fond bleu très clair pour les cartes en cours */
+        --text-dark: #333;
+        --border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    /* --- EFFET GLASSMORPHISM GÉNÉRAL --- */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--border-color);
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        transition: box-shadow 0.3s, transform 0.3s;
+    }
+    .glass-card:hover {
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+    }
+
+    /* --- STATS CARDS (EN HAUT) --- */
+    .stat-card {
+        text-align: center;
+    }
+    .stat-number {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+        color: var(--text-dark); /* Peut être coloré pour plus de style */
+    }
+    .stat-label {
+        font-size: 1rem;
+        color: #777;
+        font-weight: 500;
+    }
+
+    /* --- RECHERCHE CARDS (GRILLE PRINCIPALE) --- */
+    .recherche-card {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .recherche-card .card-code {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
+    }
+
+    /* --- PASTILLES (BADGES) --- */
+    .badge-status {
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        line-height: 1;
+    }
+
+    .status-terminee {
+        background-color: #d4edda; /* Vert clair */
+        color: #155724; /* Vert foncé */
+        border: 1px solid #c3e6cb;
+    }
+
+    .status-en-cours {
+        background-color: #cce5ff; /* Bleu clair */
+        color: #004085; /* Bleu foncé */
+        border: 1px solid #b8daff;
+    }
+    
+    .badge-type {
+        background-color: var(--teal-light);
+        color: var(--teal-main);
+        border: 1px solid var(--teal-main);
+        margin-top: 5px;
+    }
+
+    /* --- INFOS DÉTAILS --- */
+    .detail-item {
+        margin-top: 10px;
+        font-size: 0.95rem;
+        color: #555;
+    }
+    .detail-item i {
+        color: var(--teal-main);
+        margin-right: 5px;
+        font-size: 1.1em;
+    }
+
+    .card-footer-info {
+        margin-top: auto;
+        padding-top: 15px;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+
+    /* --- BUTTONS --- */
+    .card-actions .btn {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+    }
+    .card-actions {
+        margin-top: 15px;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        padding-top: 15px;
+    }
+    
+    /* Boutons pour les modales */
+    .btn-view {
+        background-color: var(--teal-main);
+        border-color: var(--teal-main);
+        color: white;
+    }
+    .btn-view:hover {
+        background-color: var(--bleu-vert-dark);
+        border-color: var(--bleu-vert-dark);
+        color: white;
+    }
+    /* === ANIMATION DES TUBES === */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes wave {
+    0%, 100% { border-radius: 0; }
+    50% { border-radius: 50% 50% 0 0; }
+}
+
+.tube-container {
+    position: relative;
+    margin-right: 20px;
+    flex-shrink: 0;
+    animation: float 3s ease-in-out infinite;
+}
+
+.tube-body {
+    width: 40px;
+    height: 120px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    position: relative;
+    background: linear-gradient(180deg, #FF000020 0%, #FF0000 70%);
+}
+
+.tube-liquid {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 70%;
+    background-color: #FF0000;
+    animation: wave 3s ease-in-out infinite;
+}
+
+.tube-cap {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 48px;
+    height: 14px;
+    background-color: #DC143C;
+    border-radius: 6px 6px 0 0;
+    box-shadow: 0 -2px 10px rgba(220, 20, 60, 0.5);
+}
+
+.tube-cap div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100%;
+}
+
+.tube-cap div span {
+    height: 2px;
+    background: rgba(0,0,0,0.2);
+    display: block;
+}
+
+.highlight-updated {
+    animation: highlightFade 2s ease-out;
+    box-shadow: 0 0 25px rgba(48, 204, 225, 0.7);
+    border: 2px solid rgba(0, 234, 255, 0.94) !important;
+}
+
+@keyframes highlightFade {
+    0% {
+        box-shadow: 0 0 25px rgba(0, 255, 170, 0.9);
+        border-color: rgba(0, 255, 0, 1);
+        transform: scale(1.02);
+    }
+    100% {
+        box-shadow: none;
+        border-color: rgba(0, 255, 0, 0);
+        transform: scale(1);
+    }
+}
+
+
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Popup for sorting -->
+<div class="modal fade" id="sortModal" tabindex="-1" aria-labelledby="sortModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="get">
+        <div class="modal-header">
+          <h5 class="modal-title" id="sortModalLabel">Trier les recherches</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <select name="sort" class="form-select">
+            <option value="id" {% if sort == "id" %}selected{% endif %}>Tri par défaut</option>
+            <option value="nom_recherche" {% if sort == "nom_recherche" %}selected{% endif %}>Nom A→Z</option>
+            <option value="-nom_recherche" {% if sort == "-nom_recherche" %}selected{% endif %}>Nom Z→A</option>
+            <option value="date_deb" {% if sort == "date_deb" %}selected{% endif %}>Date début ↑</option>
+            <option value="-date_deb" {% if sort == "-date_deb" %}selected{% endif %}>Date début ↓</option>
+            <option value="etat" {% if sort == "etat" %}selected{% endif %}>État A→Z</option>
+            <option value="-etat" {% if sort == "-etat" %}selected{% endif %}>État Z→A</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Appliquer</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Button to open sort popup -->
+<button type="button" class="btn btn-outline-secondary mb-3" data-bs-toggle="modal" data-bs-target="#sortModal">
+  Trier
+</button>
+
+<!-- Search bar -->
+<form method="get" class="mb-4 d-flex gap-2">
+  <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Rechercher...">
+  <input type="hidden" name="sort" value="{{ sort }}">
+  <button type="submit" class="btn btn-primary">Rechercher</button>
+</form>
+
+<!-- List of recherches -->
+<div class="row g-4">
+  {% for recherche in recherches %}
+  <div class="col-lg-4 col-md-6">
+    <div class="glass-card recherche-card h-100 {% if updated_id == recherche.id %}highlight-updated{% endif %}">
+      <div class="card-code">
+        <span>{{ recherche.nom_recherche }}</span>
+        <span class="badge-status {% if recherche.etat == 'Terminée' %}status-terminee{% elif recherche.etat == 'En cours' %}status-en-cours{% endif %}">
+          {{ recherche.etat }}
+        </span>
+      </div>
+      <!-- other card details... -->
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12">
+    <div class="alert alert-info text-center glass-card">Aucune recherche n'a été trouvée.</div>
+  </div>
+  {% endfor %}
+</div>
+
+
+
+<div class="container py-4">
+    <h2 class="mb-5 text-center" style="color: var(--text-dark);">Tableau de Bord des Recherches</h2>
+    
+    <div class="row g-4 mb-5">
+        
+        <div class="col-md-4">
+            <div class="glass-card stat-card">
+                <div class="stat-number" style="color: #2c93b6;">10</div>
+                <div class="stat-label">Total des Recherches</div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="glass-card stat-card">
+                <div class="stat-number" style="color: #5cb85c;">5</div>
+                <div class="stat-label">Recherches En cours</div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="glass-card stat-card">
+                <div class="stat-number" style="color: #4CAF50;">4</div>
+                <div class="stat-label">Recherches Terminées</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row g-4">
+        {% for recherche in recherches %}
+        <div class="col-lg-4 col-md-6">
+           <div class="glass-card recherche-card h-100 
+                 {% if updated_id == recherche.id %}highlight-updated{% endif %}">
+             
+                <div class="card-code">
+                    <span class="text-uppercase">{{ recherche.nom_recherche|default:'RCH-XXXX-000' }}</span>
+                    {% if recherche.etat == 'Terminée' %}
+                        <span class="badge-status status-terminee">Terminée</span>
+                    {% elif recherche.etat == 'En cours' %}
+                        <span class="badge-status status-en-cours">En cours</span>
+                    {% else %}
+                        <span class="badge-status">{{ recherche.get_etat_display }}</span>
+                    {% endif %}
+                    <div class="d-flex align-items-start">
+                    <div class="tube-container">
+                     <div class="tube-body" style="background: linear-gradient(180deg, {{ recherche.tube_color|default:'#FF000020' }} 0%, {{ recherche.tube_color|default:'#FF0000' }} 70%);">
+                        <div class="tube-liquid" style="background-color: {{ recherche.tube_color|default:'#FF0000' }}"></div>
+                         </div>
+                        <div class="tube-cap">
+                            <div>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                     </div>
+
+    <div class="flex-grow-1">
+        <!-- Ici ton contenu déjà existant de la carte -->
+    </div>
+</div>
+
+                </div>
+                
+                <span class="badge-status badge-type mb-3">
+                    <i class="fas fa-microscope me-1"></i> {{ recherche.get_type_recherche_display }}
+                </span>
+                
+                <div class="detail-item">
+                    <i class="fas fa-virus"></i> Maladie: <strong>{{ recherche.maladie|default:'N/A' }}</strong>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-calendar-alt"></i> Début: {{ recherche.date_deb|date:"d/m/Y"|default:'N/A' }}
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-user-tie"></i> Responsable: {{ recherche.responsable.get_full_name|default:'Non assigné' }}
+                </div>
+
+                <div class="card-actions mt-auto d-flex justify-content-between">
+                    <button type="button" class="btn btn-sm btn-view" data-bs-toggle="modal" data-bs-target="#rechercheModal{{ recherche.id }}">
+                        <i class="fas fa-eye me-1"></i> Voir Détails
+                    </button>
+                    <a href="{% url 'Labapp:recherche_update' recherche.id %}" class="btn btn-sm btn-view">
+                        <i class="fas fa-edit me-1"></i> Modifier
+                    </a>
+                    <button type="button" class="btn btn-sm btn-view" data-bs-toggle="modal" data-bs-target="#deleteModal{{ recherche.id }}">
+                        <i class="fas fa-trash-alt me-1"></i> Supprimer
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="rechercheModal{{ recherche.id }}" tabindex="-1" aria-labelledby="rechercheModalLabel{{ recherche.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: var(--teal-main); color: white;">
+                        <h5 class="modal-title">{{ recherche.nom_recherche }}</h5>
+                        <button type="button" class="btn btn-sm btn-view" data-bs-dismiss="modal" aria-label="Close" style="filter: invert(1);"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Maladie:</strong> {{ recherche.maladie }}</p>
+                        <p><strong>Objectif:</strong> {{ recherche.objectif }}</p>
+                        <p><strong>Date de début:</strong> {{ recherche.date_deb }}</p>
+                        {% if recherche.date_fin %}
+                        <p><strong>Date de fin:</strong> {{ recherche.date_fin }}</p>
+                        {% endif %}
+                        <p><strong>Type:</strong> {{ recherche.get_type_recherche_display }}</p>
+                        <p><strong>Budget:</strong> {{ recherche.budget }}</p>
+                        <p><strong>Etat:</strong> {{ recherche.get_etat_display }}</p>
+                        <p><strong>Publication:</strong> <a href="{{ recherche.publication_associee }}" target="_blank">{{ recherche.publication_associee }}</a></p>
+                        <p><strong>Resultats obtenus:</strong> {{ recherche.resultats_obtenus }}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="deleteModal{{ recherche.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ recherche.id }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" action="{% url 'Labapp:recherche_delete' recherche.id %}">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h5 class="modal-title">Supprimer "{{ recherche.nom_recherche }}" ?</h5>
+                            <button type="button" class="btn btn-sm btn-view" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Cette action est irréversible. Êtes-vous sûr de vouloir supprimer cette recherche ?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-danger">Oui, supprimer</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center glass-card">
+                Aucune recherche n'a été trouvée.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

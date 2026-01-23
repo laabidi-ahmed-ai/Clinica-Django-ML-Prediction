@@ -1,0 +1,198 @@
+{% extends 'Back/User/base.html' %}
+{% load static %}
+
+{% block title %}Users Management - Admin Panel{% endblock %}
+
+{% block page_title %}
+<div class="mb-4">
+    <h3 class="mb-1">Users Management</h3>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-lg-12 col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div style="width: 250px; margin: auto; margin-bottom: 20px;">
+    <canvas id="userPieChart"></canvas>
+</div>
+                <h4 class="card-title mb-3">Users List</h4>
+                <a href="{% url 'add_user' %}" class="btn btn-sm btn-success mb-2">Add New User</a>
+                <input type="text" id="tableSearch" class="form-control mb-3" placeholder="Search users...">
+                <select id="groupBy" class="form-control mb-3" style="max-width: 250px;">
+                    <option value="">Group by...</option>
+                    <option value="role">Role</option>
+                    <option value="first_name">First Name</option>
+                    <option value="CIN">CIN</option>
+                </select>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Birth Date</th>
+                                <th>CIN</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Role</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td data-field="user_id">{{ user.user_id }}</td>
+                                <td data-field="first_name">{{ user.first_name }}</td>
+                                <td data-field="last_name">{{ user.last_name }}</td>
+                                <td data-field="birth_date">{{ user.birth_date }}</td>
+                                <td data-field="CIN">{{ user.CIN }}</td>
+                                <td data-field="email">{{ user.email }}</td>
+                                <td data-field="tel">{{ user.tel }}</td>
+                                <td data-field="role">{{ user.role }}</td>
+                                <td>
+                                    <a href="{% url 'edit_user' user.user_id %}" class="btn btn-sm btn-primary">Edit</a>
+                                    <a href="{% url 'delete_user' user.user_id %}" class="btn btn-sm btn-danger">Delete</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center text-muted">No users yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("tableSearch");
+    const tbody = document.querySelector("table tbody");
+
+    searchInput.addEventListener("input", function () {
+        const query = this.value.trim().toLowerCase();
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+        rows.forEach(row => {
+            // Skip header rows (group headers)
+            if (row.querySelectorAll("td").length === 1) return;
+
+            // Check if any cell contains the query
+            const cells = Array.from(row.querySelectorAll("td"));
+            const match = cells.some(cell => cell.innerText.toLowerCase().includes(query));
+
+            // Show/hide row based on match
+            row.style.display = match ? "" : "none";
+        });
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const groupSelect = document.getElementById("groupBy");
+    const tbody = document.querySelector("table tbody");
+
+    groupSelect.addEventListener("change", function () {
+        const groupBy = this.value;
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+
+        if (!groupBy) {
+            rows.forEach(row => tbody.appendChild(row));
+            return;
+        }
+
+        
+        const groups = {};
+        rows.forEach(row => {
+            const cell = row.querySelector(`td[data-field="${groupBy}"]`);
+            if (!cell) return;
+            const value = cell.innerText.trim();
+            if (!groups[value]) groups[value] = [];
+            groups[value].push(row);
+        });
+
+        
+        tbody.innerHTML = "";
+
+        Object.keys(groups).sort().forEach(groupName => {
+            
+            const headerRow = document.createElement("tr");
+            headerRow.innerHTML = `<td colspan="9" style="background:#f1f1f1;font-weight:bold;">${groupName}</td>`;
+            tbody.appendChild(headerRow);
+
+            
+            groups[groupName].forEach(row => tbody.appendChild(row));
+        });
+    });
+});
+</script>
+<script>
+{% if user_labels_json %}
+document.addEventListener('DOMContentLoaded', function() {
+    const userPieCtx = document.getElementById('userPieChart');
+    if (userPieCtx) {
+        const userLabels = {{ user_labels_json|safe }};
+        const userQuantities = {{ user_quantities_json|safe }};
+
+        const userPieChart = new Chart(userPieCtx, {
+            type: 'pie',
+            data: {
+                labels: userLabels,
+                datasets: [{
+                    data: userQuantities,
+                    backgroundColor: [
+                        '#FF6384',
+                        '#36A2EB',
+                        '#FFCD56',
+                        '#4BC0C0',
+                        '#9966FF'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            usePointStyle: true
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += context.parsed + ' users';
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                label += ' (' + percentage + '%)';
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+});
+{% endif %}
+</script>
+{% endblock %}

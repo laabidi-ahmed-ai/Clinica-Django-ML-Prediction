@@ -1,0 +1,317 @@
+{% load static %}
+<!DOCTYPE html>
+<html dir="ltr" lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'Back/src/assets/images/favicon.png' %}">
+    <title>Détails - {{ publication.title }}</title>
+    <link href="{% static 'Back/src/dist/css/style.min.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+
+    <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+
+        <!-- Topbar -->
+        <header class="topbar" data-navbarbg="skin6">
+      <nav class="navbar top-navbar navbar-expand-lg">
+        <div class="navbar-header" data-logobg="skin6">
+          <a class="nav-toggler d-block d-lg-none" href="javascript:void(0)"><i class="ti-menu ti-close"></i></a>
+          <div class="navbar-brand">
+            <a href="{% url 'back_index' %}">
+              <img src="{% static 'Back/src/assets/images/freedashDark.svg' %}" alt="logo" class="img-fluid">
+            </a>
+          </div>
+          <a class="topbartoggler d-block d-lg-none" href="javascript:void(0)"
+             data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+             <i class="ti-more"></i>
+          </a>
+        </div>
+        <div class="navbar-collapse collapse">
+                    <ul class="navbar-nav float-end">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-bs-toggle="dropdown">
+                                <img src="{% static 'Back/src/assets/images/users/profile-pic.jpg' %}" alt="user" class="rounded-circle" width="40">
+                                <span class="ms-2 d-none d-lg-inline-block">
+                                    <span class="text-dark">{{ user.first_name|default:"Admin" }}</span>
+                                    <i data-feather="chevron-down" class="svg-icon"></i>
+                                </span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="#">
+                                    <i data-feather="power" class="svg-icon me-2"></i>Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+        <div class="navbar-collapse collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav float-left me-auto ms-3 ps-1">
+            <li class="nav-item d-none d-md-block">
+              <a class="nav-link" href="javascript:void(0)">
+                <form>
+                  <div class="customize-input">
+                    <input class="form-control custom-shadow custom-radius border-0 bg-white"
+                           type="search" placeholder="Search publication...">
+                    <i class="form-control-icon" data-feather="search"></i>
+                  </div>
+                </form>
+              </a>
+            </li>
+          </ul>
+          <ul class="navbar-nav float-end">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'back_index' %}">↩ Retour au site</a>
+            </li>
+          </ul>
+        </div>
+
+      </nav>
+    </header>
+
+        <!-- Sidebar -->
+        <aside class="left-sidebar" data-sidebarbg="skin6">
+  <div class="scroll-sidebar" data-sidebarbg="skin6">
+    <nav class="sidebar-nav">
+      <ul id="sidebarnav">
+        
+
+        <li class="list-divider"></li>
+
+        <!-- USER MANAGEMENT -->
+        <li class="nav-small-cap"><span class="hide-menu">USER MANAGEMENT</span></li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'dashboard' %}">
+            <i data-feather="users" class="feather-icon"></i>
+            <span class="hide-menu">Users Management</span>
+          </a>
+        </li>
+
+        <li class="list-divider"></li>
+        <li class="nav-small-cap"><span class="hide-menu">PATIENT</span></li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'dashboard_home' %}" aria-expanded="false">
+            <i data-feather="home" class="feather-icon"></i>
+            <span class="hide-menu">Patient Dashboard</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'appointment_list' %}">
+            <i data-feather="calendar" class="feather-icon"></i>
+            <span class="hide-menu">Appointments List</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'patient_list' %}">
+            <i data-feather="users" class="feather-icon"></i>
+            <span class="hide-menu">Patients List</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'appointment_create' %}">
+            <i data-feather="plus-circle" class="feather-icon"></i>
+            <span class="hide-menu">New Appointment</span>
+            </a>
+        </li>
+         <li class="list-divider"></li>
+        <!-- PRODUCTS -->
+        <li class="nav-small-cap"><span class="hide-menu">PRODUCTS</span></li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'dashboard_products' %}">
+            <i data-feather="home" class="feather-icon"></i>
+            <span class="hide-menu">Product Dashboard</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'products_list' %}">
+            <i data-feather="package" class="feather-icon"></i>
+            <span class="hide-menu">Products List</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'orders_list' %}">
+            <i data-feather="shopping-cart" class="feather-icon"></i>
+            <span class="hide-menu">Orders List</span>
+          </a>
+        </li>
+
+        <li class="list-divider"></li>
+
+
+        <!-- DONATIONS -->
+        <li class="nav-small-cap"><span class="hide-menu">DONATIONS</span></li>
+
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'donation:back_index' %}">
+            <i data-feather="activity" class="feather-icon"></i>
+            <span class="hide-menu">Dashboard Donation</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'publication:publication_list' %}">
+            <i data-feather="file-text" class="feather-icon"></i>
+            <span class="hide-menu">Publications List</span>
+          </a>
+        </li>
+         <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'publication:publication_form' %}">
+            <i data-feather="plus-circle" class="feather-icon"></i>
+            <span class="hide-menu">New Publication</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'donation:admin_donation_list' %}">
+            <i data-feather="heart" class="feather-icon"></i>
+            <span class="hide-menu">Donations List</span>
+          </a>
+        </li>
+
+        <li class="list-divider"></li>
+
+        <li class="nav-small-cap"><span class="hide-menu">LABO</span></li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'Labapp:back_analyse_list' %}" aria-expanded="false">
+            <i data-feather="calendar" class="feather-icon"></i>
+            <span class="hide-menu">List Analyses</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'Labapp:back_recherche_list' %}">
+            <i data-feather="tag" class="feather-icon"></i>
+            <span class="hide-menu">recherche List</span>
+            </a>
+        </li>
+
+        <li class="list-divider"></li>
+        
+         <li class="nav-small-cap"><span class="hide-menu">STAGE</span></li>
+        <li class="sidebar-item">
+  <a class="sidebar-link" href="{% url 'stages:liste_stages' %}">
+    <i data-feather="award" class="feather-icon"></i>
+    <span class="hide-menu">Stages List</span>
+  </a>
+</li>
+
+        <li class="sidebar-item">
+  <a class="sidebar-link" href="{% url 'stages:ajouter_stage' %}">
+    <i data-feather="award" class="feather-icon"></i>
+    <span class="hide-menu">New Stage</span>
+  </a>
+</li>
+<li class="sidebar-item">
+  <a class="sidebar-link" href="{% url 'stagiaire:liste_stagiaires' %}">
+    <i data-feather="user-check" class="feather-icon"></i>
+    <span class="hide-menu">Stagiaires List</span>
+  </a>
+</li>
+
+        
+      </ul>
+    </nav>
+  </div>
+</aside>
+
+        <!-- Page wrapper -->
+        <div class="page-wrapper">
+            <div class="page-breadcrumb">
+                <div class="row">
+                    <div class="col-12">
+                        <h3 class="page-title text-dark font-weight-medium mb-1">Détails de la publication</h3>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{% url 'publication:publication_list' %}">Publications</a></li>
+                                <li class="breadcrumb-item active">{{ publication.title }}</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-8 col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">{{ publication.title }}</h4>
+                                
+                                {% if publication.pubPicture %}
+                                <div class="mb-4">
+                                    <img src="{{ publication.pubPicture.url }}" alt="{{ publication.title }}" class="img-fluid rounded" style="max-height: 400px; object-fit: cover; width: 100%;">
+                                </div>
+                                {% endif %}
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <p><strong><i data-feather="map-pin" class="feather-icon"></i> Adresse :</strong></p>
+                                        <p class="text-muted">{{ publication.address }}</p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <p><strong><i data-feather="calendar" class="feather-icon"></i> Créée le :</strong></p>
+                                        <p class="text-muted">{{ publication.date_pub|date:"d M Y" }}</p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <p><strong><i data-feather="clock" class="feather-icon"></i> Échéance :</strong></p>
+                                        <p class="text-danger font-weight-bold">{{ publication.deadline|date:"d M Y" }}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <p><strong><i data-feather="file-text" class="feather-icon"></i> Description :</strong></p>
+                                    <p class="text-muted" style="white-space: pre-wrap;">{{ publication.description }}</p>
+                                </div>
+                                
+                                <div class="border-top pt-3 mt-4">
+                                    <a href="{% url 'publication:publication_update' publication.pk %}" class="btn btn-primary">
+                                        <i data-feather="edit" class="feather-icon"></i> Modifier
+                                    </a>
+                                    <a href="{% url 'publication:publication_delete' publication.pk %}" class="btn btn-danger">
+                                        <i data-feather="trash-2" class="feather-icon"></i> Supprimer
+                                    </a>
+                                    <a href="{% url 'publication:publication_list' %}" class="btn btn-light">
+                                        <i data-feather="arrow-left" class="feather-icon"></i> Retour
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Statistiques</h5>
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="me-3">
+                                        <i data-feather="heart" class="feather-icon text-danger" style="width: 40px; height: 40px;"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="mb-0">{{ publication.donations.count }}</h3>
+                                        <span class="text-muted">Donations reçues</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="footer text-center text-muted">Clinica+ © 2025</footer>
+        </div>
+    </div>
+
+    <script src="{% static 'Back/src/assets/libs/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'Back/src/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'Back/src/dist/js/feather.min.js' %}"></script>
+    <script src="{% static 'Back/src/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js' %}"></script>
+    <script src="{% static 'Back/src/dist/js/sidebarmenu.js' %}"></script>
+    <script src="{% static 'Back/src/dist/js/custom.min.js' %}"></script>
+    <script>feather.replace();</script>
+</body>
+</html>

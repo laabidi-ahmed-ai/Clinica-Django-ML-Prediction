@@ -1,0 +1,881 @@
+{% load static %}
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Clinica+ • Publications</title>
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'Back/src/assets/images/favicon.png' %}">
+  <!-- Freedash core CSS -->
+  <link href="{% static 'Back/src/dist/css/style.min.css' %}" rel="stylesheet">
+  
+  <style>
+    /* Modern clean design */
+    :root {
+      --primary-blue: #4A90E2;
+      --success-green: #28a745;
+      --danger-red: #dc3545;
+      --warning-orange: #FF8C00;
+      --secondary-gray: #6c757d;
+    }
+    
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    
+    /* Page header */
+    .page-header {
+      background: white;
+      padding: 24px 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      margin-bottom: 24px;
+    }
+    
+    .page-title {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin: 0;
+    }
+    
+    /* Add button - Blue gradient */
+    .btn-add {
+      background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+      border: none;
+      color: white;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+    }
+    .btn-add:hover {
+      background: linear-gradient(135deg, #357ABD 0%, #2868A8 100%);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
+    }
+    .btn-add i {
+      margin-right: 6px;
+    }
+    
+    /* Filter section */
+    .filter-section {
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      margin-bottom: 20px;
+    }
+    
+    .filter-section label {
+      font-weight: 500;
+      color: #495057;
+      margin-bottom: 8px;
+      font-size: 0.875rem;
+    }
+    
+    .filter-section .form-control,
+    .filter-section .form-select {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      transition: all 0.3s ease;
+      font-size: 0.875rem;
+    }
+    
+    .filter-section .form-control:focus,
+    .filter-section .form-select:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+      outline: none;
+    }
+    
+    /* Card container */
+    .card {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      background: white;
+    }
+    
+    .card-body {
+      padding: 0;
+    }
+    
+    /* Table */
+    .table-container {
+      overflow-x: auto;
+    }
+    
+    .table {
+      margin-bottom: 0;
+      font-size: 0.875rem;
+    }
+    
+    .table thead th {
+      background-color: #f8f9fa;
+      border-bottom: 2px solid #e9ecef;
+      color: #495057;
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+      padding: 16px 20px;
+      border-top: none;
+      white-space: nowrap;  /* ← Empêche le retour à la ligne */
+  min-width: fit-content;  /* ← Ajuste la largeur */
+    }
+    
+    .table tbody tr {
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border-bottom: 1px solid #f0f0f0;
+      
+    }
+    
+    .table tbody tr:hover {
+      background-color: #f8f9fa;
+      transform: scale(1.005);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .table tbody tr:last-child {
+      border-bottom: none;
+    }
+    
+    .table tbody td {
+      padding: 16px 20px;
+      vertical-align: middle;
+      color: #495057;
+    }
+    
+    /* Publication image */
+    .publication-image {
+      width: 56px;
+      height: 56px;
+      object-fit: cover;
+      border-radius: 8px;
+      transition: transform 0.3s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    
+    .table tbody tr:hover .publication-image {
+      transform: scale(1.15);
+    }
+    
+    /* Title column */
+    .publication-title {
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+      font-size: 0.95rem;
+    }
+    
+    .publication-description {
+      color: #868e96;
+      font-size: 0.8rem;
+      max-width: 400px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    /* Deadline badge - Orange */
+    .badge-deadline {
+      background: linear-gradient(135deg, #FF8C00 0%, #FF6347 100%);
+      color: white;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      display: inline-block;
+      box-shadow: 0 2px 6px rgba(255, 140, 0, 0.3);
+       white-space: nowrap;  /* ← Empêche le retour à la ligne */
+  min-width: fit-content;  /* ← Ajuste la largeur au contenu */
+    }
+    
+    /* Action buttons */
+    .btn-action-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .btn-edit {
+      background: var(--success-green);
+      border: none;
+      color: white;
+      padding: 5px 18px;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 0.8rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(40, 167, 69, 0.25);
+    }
+    
+    .btn-edit:hover {
+      background: #218838;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(40, 167, 69, 0.35);
+    }
+    .btn-danger-custom {
+      background: var(--danger-red);
+      border: none;
+      color: white;
+      padding: 5px 13px;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 0.8rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(220, 53, 69, 0.25);
+    }
+    
+    .btn-danger-custom:hover {
+      background: #c82333;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(220, 53, 69, 0.35);
+    }
+    
+    .btn-edit i,.btn-detail i,
+    .btn-danger-custom i {
+      width: 14px;
+      height: 14px;
+      margin-right: 4px;
+    }
+    
+    /* Modal improvements */
+    .modal-content {
+      border-radius: 16px;
+      border: none;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    
+    .modal-header {
+      border-radius: 16px 16px 0 0;
+      padding: 24px 30px;
+      background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+      color: white;
+      border-bottom: none;
+    }
+    
+    .modal-header.delete-header {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    }
+    
+    .modal-header .modal-title {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    
+    .modal-header .btn-close {
+      filter: brightness(0) invert(1);
+      opacity: 0.8;
+    }
+    
+    .modal-header .btn-close:hover {
+      opacity: 1;
+    }
+    
+    .modal-body {
+      padding: 30px;
+    }
+    
+    .modal-body.delete-modal-body {
+      text-align: center;
+      padding: 40px 30px;
+    }
+    
+    .modal-body .icon-wrapper {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-body .icon-wrapper.delete-icon {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      color: white;
+      box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
+    }
+    
+    .modal-footer {
+      border-top: 1px solid #e9ecef;
+      padding: 20px 30px;
+      justify-content: center;
+      gap: 12px;
+    }
+    
+    .modal-footer .btn {
+      min-width: 120px;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-weight: 500;
+    }
+    
+    /* Info badge in detail modal */
+    .info-badge {
+      background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+      color: white;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: inline-block;
+      box-shadow: 0 2px 6px rgba(23, 162, 184, 0.3);
+    }
+    
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #868e96;
+    }
+    
+    .empty-state i {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+    /* Detail button - Carré comme Edit et Delete */
+.btn-detail {
+  background: #17a2b8 !important;
+  border: none;
+      color: white;
+      padding: 5px 13px;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 0.8rem;
+      transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(23, 162, 184, 0.25);
+  
+  
+}
+
+.btn-detail:hover {
+  background: #138496 !important;
+  color: white !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(23, 162, 184, 0.35);
+  text-decoration: none;
+}
+
+.btn-detail:focus,
+.btn-detail:active {
+  background: #138496 !important;
+  color: white !important;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.3);
+}
+
+
+
+    /* Button action group - DÉPLACER ICI (avant @media) */
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .btn-action-group {
+        flex-direction: column;
+        gap: 6px;
+      }
+      
+      .btn-edit, .btn-danger-custom {
+        width: 100%;
+        font-size: 0.75rem;
+        padding: 6px 12px;
+      }
+      
+      .page-header {
+        padding: 16px 20px;
+      }
+      
+      .page-title {
+        font-size: 1.4rem;
+      }
+
+ 
+
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Preloader -->
+  <div class="preloader">
+    <div class="lds-ripple"><div class="lds-pos"></div><div class="lds-pos"></div></div>
+  </div>
+
+  <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6"
+       data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed"
+       data-boxed-layout="full">
+
+    <!-- Topbar -->
+    <header class="topbar" data-navbarbg="skin6">
+      <nav class="navbar top-navbar navbar-expand-lg">
+        <div class="navbar-header" data-logobg="skin6">
+          <a class="nav-toggler d-block d-lg-none" href="javascript:void(0)"><i class="ti-menu ti-close"></i></a>
+          <div class="navbar-brand">
+            <a href="{% url 'donation:back_index' %}">
+              <img src="{% static 'Front/assets/images/logo_site.png' %}" alt="logo" class="img-fluid" style="width: 120px; margin-top: 30px;">
+            
+            </a>
+          </div>
+          <a class="topbartoggler d-block d-lg-none" href="javascript:void(0)"
+             data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+             <i class="ti-more"></i>
+          </a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="navbar-nav float-end">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-bs-toggle="dropdown">
+                <img src="{% static 'Back/src/assets/images/users/profile-pic.jpg' %}" alt="user" class="rounded-circle" width="40">
+                <span class="ms-2 d-none d-lg-inline-block">
+                  <span class="text-dark">{{ user.first_name|default:"Admin" }}</span>
+                  <i data-feather="chevron-down" class="svg-icon"></i>
+                </span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-end">
+                <a class="dropdown-item" href="#">
+                  <i data-feather="power" class="svg-icon me-2"></i>Logout
+                </a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Sidebar -->
+    <!-- Sidebar -->
+    <aside class="left-sidebar" data-sidebarbg="skin6">
+  <div class="scroll-sidebar" data-sidebarbg="skin6">
+    <nav class="sidebar-nav">
+      <ul id="sidebarnav">
+        
+
+        <li class="list-divider"></li>
+
+        <!-- USER MANAGEMENT -->
+        <li class="nav-small-cap"><span class="hide-menu">USER MANAGEMENT</span></li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'dashboard' %}">
+            <i data-feather="users" class="feather-icon"></i>
+            <span class="hide-menu">Users Management</span>
+          </a>
+        </li>
+
+        <li class="list-divider"></li>
+        <li class="nav-small-cap"><span class="hide-menu">PATIENT</span></li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'dashboard_home' %}" aria-expanded="false">
+            <i data-feather="home" class="feather-icon"></i>
+            <span class="hide-menu">Patient Dashboard</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'appointment_list' %}">
+            <i data-feather="calendar" class="feather-icon"></i>
+            <span class="hide-menu">Appointments List</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'patient_list' %}">
+            <i data-feather="users" class="feather-icon"></i>
+            <span class="hide-menu">Patients List</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'appointment_create' %}">
+            <i data-feather="plus-circle" class="feather-icon"></i>
+            <span class="hide-menu">New Appointment</span>
+            </a>
+        </li>
+         <li class="list-divider"></li>
+        <!-- PRODUCTS -->
+        <li class="nav-small-cap"><span class="hide-menu">PRODUCTS</span></li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'dashboard_products' %}">
+            <i data-feather="home" class="feather-icon"></i>
+            <span class="hide-menu">Product Dashboard</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'products_list' %}">
+            <i data-feather="package" class="feather-icon"></i>
+            <span class="hide-menu">Products List</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'orders_list' %}">
+            <i data-feather="shopping-cart" class="feather-icon"></i>
+            <span class="hide-menu">Orders List</span>
+          </a>
+        </li>
+
+        <li class="list-divider"></li>
+
+
+        <!-- DONATIONS -->
+        <li class="nav-small-cap"><span class="hide-menu">DONATIONS</span></li>
+
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'donation:back_index' %}">
+            <i data-feather="activity" class="feather-icon"></i>
+            <span class="hide-menu">Dashboard Donation</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'publication:publication_list' %}">
+            <i data-feather="file-text" class="feather-icon"></i>
+            <span class="hide-menu">Publications List</span>
+          </a>
+        </li>
+         <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'publication:publication_form' %}">
+            <i data-feather="plus-circle" class="feather-icon"></i>
+            <span class="hide-menu">New Publication</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'donation:admin_donation_list' %}">
+            <i data-feather="heart" class="feather-icon"></i>
+            <span class="hide-menu">Donations List</span>
+          </a>
+        </li>
+
+        <li class="list-divider"></li>
+
+        <li class="nav-small-cap"><span class="hide-menu">LABO</span></li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'Labapp:back_analyse_list' %}" aria-expanded="false">
+            <i data-feather="calendar" class="feather-icon"></i>
+            <span class="hide-menu">List Analyses</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'Labapp:back_recherche_list' %}">
+            <i data-feather="tag" class="feather-icon"></i>
+            <span class="hide-menu">recherche List</span>
+            </a>
+        </li>
+
+        <li class="list-divider"></li>
+        
+         <li class="nav-small-cap"><span class="hide-menu">STAGE</span></li>
+        <li class="sidebar-item">
+  <a class="sidebar-link" href="{% url 'stages:liste_stages' %}">
+    <i data-feather="award" class="feather-icon"></i>
+    <span class="hide-menu">Stages List</span>
+  </a>
+</li>
+
+        <li class="sidebar-item">
+  <a class="sidebar-link" href="{% url 'stages:ajouter_stage' %}">
+    <i data-feather="award" class="feather-icon"></i>
+    <span class="hide-menu">New Stage</span>
+  </a>
+</li>
+<li class="sidebar-item">
+  <a class="sidebar-link" href="{% url 'stagiaire:liste_stagiaires' %}">
+    <i data-feather="user-check" class="feather-icon"></i>
+    <span class="hide-menu">Stagiaires List</span>
+  </a>
+</li>
+
+        
+      </ul>
+    </nav>
+  </div>
+</aside>
+
+    <!-- Page wrapper -->
+    <div class="page-wrapper">
+      <!-- Content -->
+      <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="d-flex align-items-center justify-content-between">
+            <h2 class="page-title">All Publications</h2>
+            <a href="{% url 'publication:publication_form' %}" class="btn btn-add">
+              <i data-feather="plus"></i> Add Publication
+            </a>
+          </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+          <form method="get" action="{% url 'publication:publication_list' %}" id="filterForm" class="row g-3 align-items-end">
+            <div class="col-md-5">
+              <label for="search" class="form-label">Search by Title</label>
+              <input type="text" class="form-control" id="search" name="search" placeholder="Enter publication title..." value="{{ search_query }}">
+            </div>
+            <div class="col-md-3">
+              <label for="sort" class="form-label">Sort By</label>
+              <select class="form-select" id="sort" name="sort">
+                <option value="">Latest First</option>
+                <option value="date_asc" {% if sort_by == 'date_asc' %}selected{% endif %}>Date: Oldest First</option>
+                <option value="date_desc" {% if sort_by == 'date_desc' %}selected{% endif %}>Date: Newest First</option>
+                <option value="deadline_asc" {% if sort_by == 'deadline_asc' %}selected{% endif %}>Deadline: Nearest</option>
+                <option value="deadline_desc" {% if sort_by == 'deadline_desc' %}selected{% endif %}>Deadline: Farthest</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="date" class="form-label">Filter by Date</label>
+              <input type="date" class="form-control" id="date" name="date" value="{{ date_filter }}">
+            </div>
+          </form>
+        </div>
+
+        <!-- Table Card -->
+        <div class="card">
+          <div class="card-body">
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 50px;">ID</th>
+                    <th style="width: 80px;">Image</th>
+                    <th>Title</th>
+                    <th style="width: 150px;">Address</th>
+                    <th style="width: 130px;">Created Date</th>
+                    <th style="width: 130px;">Deadline</th>
+                    <th style="width: 180px;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for pub in publications %}
+                  <tr data-bs-toggle="modal" data-bs-target="#publicationDetailModal{{ pub.id }}">
+                    <td>{{ pub.id }}</td>
+                    <td>
+                      {% if pub.pubPicture %}
+                        <img src="{{ pub.pubPicture.url }}" alt="{{ pub.title }}" class="publication-image">
+                      {% else %}
+                        <div style="width: 56px; height: 56px; background: #e9ecef; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                          <i data-feather="image" style="width: 24px; height: 24px; color: #adb5bd;"></i>
+                        </div>
+                      {% endif %}
+                    </td>
+                    <td>
+                      <div class="publication-title">{{ pub.title }}</div>
+                      <div class="publication-description">{{ pub.description }}</div>
+                    </td>
+                    <td>{{ pub.address }}</td>
+                    <td>{{ pub.date_pub|date:"Y-m-d" }}</td>
+                    <td>
+                      <span class="badge-deadline">
+                        {{ pub.deadline|date:"M. d, Y" }}
+                      </span>
+                    </td>
+                    <td onclick="event.stopPropagation();">
+  <div class="btn-action-group">
+    <!-- Detail button - Cyan -->
+    <a href="javascript:void(0);" class="btn btn-detail" 
+       data-bs-toggle="modal" 
+       data-bs-target="#publicationDetailModal{{ pub.id }}"
+       onclick="event.stopPropagation();">
+      <i data-feather="eye"></i> Detail
+    </a>
+    
+    <!-- Edit button - Green -->
+    <a href="{% url 'publication:publication_update' pub.pk %}" 
+       class="btn btn-edit" 
+       onclick="event.stopPropagation();">
+      <i data-feather="edit"></i> Edit
+    </a>
+    
+    <!-- Delete button - Red -->
+    <button type="button" class="btn btn-danger-custom" 
+            data-bs-toggle="modal" 
+            data-bs-target="#deleteModal{{ pub.id }}"
+            onclick="event.stopPropagation();">
+      <i data-feather="trash-2"></i> Delete
+    </button>
+  </div>
+</td>
+
+
+                  </tr>
+                  {% empty %}
+                  <tr>
+                    <td colspan="7">
+                      <div class="empty-state">
+                        <i data-feather="inbox"></i>
+                        <p class="mb-0">No publications found</p>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="footer text-center text-muted mt-4">
+        Clinica+ Back • Freedash UI
+      </footer>
+    </div>
+  </div>
+
+<!-- Publication Detail Modals -->
+{% for pub in publications %}
+<div class="modal fade" id="publicationDetailModal{{ pub.id }}" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ pub.title }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            {% if pub.pubPicture %}
+              <img src="{{ pub.pubPicture.url }}" class="img-fluid rounded" alt="{{ pub.title }}" style="width: 100%; height: auto; max-height: 400px; object-fit: cover;">
+            {% else %}
+              <div style="height: 300px; background-color: #e9ecef; display: flex; align-items: center; justify-content: center; border-radius: 12px;">
+                <span style="color: #999; font-size: 1.2rem;">No image available</span>
+              </div>
+            {% endif %}
+          </div>
+          <div class="col-md-6">
+            <h4 class="mb-3">{{ pub.title }}</h4>
+            <div class="mb-3">
+              <strong>Address:</strong> <span>{{ pub.address }}</span>
+            </div>
+            <div class="mb-3">
+              <strong>Created:</strong> <span>{{ pub.date_pub|date:"Y-m-d" }}</span>
+            </div>
+            <div class="mb-3">
+              <strong>Deadline:</strong> 
+              <span class="info-badge">
+                {{ pub.deadline|date:"M. d, Y" }}
+              </span>
+            </div>
+            <div class="mb-3">
+              <strong>Description:</strong>
+              <p style="line-height: 1.8; color: #666; margin-top: 10px;">{{ pub.description|linebreaks }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <a href="{% url 'publication:publication_update' pub.pk %}" class="btn btn-edit">
+          <i data-feather="edit"></i> Edit Publication
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+<!-- Delete Modals -->
+{% for pub in publications %}
+<div class="modal fade" id="deleteModal{{ pub.id }}" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header delete-header">
+        <h5 class="modal-title">
+          <i data-feather="alert-triangle" style="width: 20px; height: 20px; margin-right: 8px;"></i>
+          Delete Publication
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body delete-modal-body">
+        <div class="icon-wrapper delete-icon">
+          <i data-feather="trash-2" style="width: 40px; height: 40px;"></i>
+        </div>
+        <h4 class="mb-3">Are you sure you want to delete this publication?</h4>
+        <div class="mb-3">
+          {% if pub.pubPicture %}
+            <img src="{{ pub.pubPicture.url }}" alt="{{ pub.title }}" class="img-fluid rounded mb-3" style="max-width: 150px; max-height: 150px; object-fit: cover;">
+          {% endif %}
+          <p class="text-muted mb-2">
+            <strong>Publication:</strong> {{ pub.title }}<br>
+            <strong>Address:</strong> {{ pub.address }}<br>
+            <strong>Deadline:</strong> {{ pub.deadline }}
+          </p>
+        </div>
+        <p class="text-danger small mt-3">
+          <i data-feather="alert-circle" style="width: 16px; height: 16px; vertical-align: middle;"></i>
+          This action cannot be undone.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <form method="post" action="{% url 'publication:publication_delete' pub.pk %}" style="display: inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">
+            <i data-feather="trash-2" style="width: 16px; height: 16px; margin-right: 5px;"></i>
+            Delete
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+  <!-- JS -->
+  <script src="{% static 'Back/src/assets/libs/jquery/dist/jquery.min.js' %}"></script>
+  <script src="{% static 'Back/src/assets/libs/popper.js/dist/umd/popper.min.js' %}"></script>
+  <script src="{% static 'Back/src/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'Back/src/dist/js/app-style-switcher.js' %}"></script>
+  <script src="{% static 'Back/src/dist/js/feather.min.js' %}"></script>
+  <script src="{% static 'Back/src/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js' %}"></script>
+  <script src="{% static 'Back/src/dist/js/sidebarmenu.js' %}"></script>
+  <script src="{% static 'Back/src/dist/js/custom.min.js' %}"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const filterForm = document.getElementById('filterForm');
+      const sortSelect = document.getElementById('sort');
+      const dateInput = document.getElementById('date');
+      const searchInput = document.getElementById('search');
+      
+      if (sortSelect) {
+        sortSelect.addEventListener('change', function() {
+          filterForm.submit();
+        });
+      }
+      
+      if (dateInput) {
+        dateInput.addEventListener('change', function() {
+          filterForm.submit();
+        });
+      }
+      
+      if (searchInput) {
+        let searchTimeout;
+        searchInput.addEventListener('input', function() {
+          clearTimeout(searchTimeout);
+          searchTimeout = setTimeout(function() {
+            filterForm.submit();
+          }, 500);
+        });
+      }
+      
+      if (window.feather) feather.replace();
+      
+      var modals = document.querySelectorAll('.modal');
+      modals.forEach(function(modal) {
+        modal.addEventListener('shown.bs.modal', function() {
+          if (window.feather) feather.replace();
+        });
+      });
+    });
+  </script>
+</body>
+</html>

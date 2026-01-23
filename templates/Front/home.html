@@ -1,0 +1,255 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Clinica+ - Votre plateforme de dons et publications</title>
+
+    <!-- Favicons -->
+    <link href="{% static 'img/favicon.png' %}" rel="icon">
+    <link href="{% static 'img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700|Poppins:300,400,700" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/aos/aos.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+    <!-- Main CSS File -->
+    <link href="{% static 'css/main.css' %}" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- ======= Header ======= -->
+<header id="header" class="header sticky-top">
+
+    <div class="topbar d-flex align-items-center">
+      <div class="container d-flex justify-content-center justify-content-md-between">
+        <div class="d-none d-md-flex align-items-center">
+          <i class="bi bi-clock me-1"></i> Monday - Saturday, 8AM to 10PM
+        </div>
+        <div class="d-flex align-items-center">
+          <i class="bi bi-phone me-1"></i> Call us now +1 5589 55488 55
+        </div>
+      </div>
+    </div><!-- End Top Bar -->
+
+    <div class="branding d-flex align-items-center">
+
+      <div class="container position-relative d-flex align-items-center justify-content-end">
+        <a href="index.html" class="logo d-flex align-items-center me-auto">
+          <img src="{% static 'Front/assets/images/logo_site.png' %}" alt="" style="width: 120px; height: 90px;">
+          <!-- Uncomment the line below if you also wish to use a text logo -->
+          <!-- <h1 class="sitename">Medicio</h1>  -->
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+         <ul style="display: flex; align-items: center; list-style: none; margin: 0; padding: 0; gap: 30px;">
+            <li><a href="{% url 'front_index' %}"   class="active" style="text-decoration: none; color: #3fbbc0; font-weight: 600;">HOME</a></li>
+            <li><a href="#" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">ABOUT</a></li>
+            <li><a href="{% url 'index' %}" style="text-decoration: none; color: #333; font-weight: 500;">PRODUCTS</a></li>
+            <li><a href="{% url 'donation:front_publication_list' %}"  style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;" >DONATION</a></li>
+            <li><a href="{% url 'stages:liste_stages_front' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">STAGE</a></li>
+            <li><a href="{% url 'Labapp:home' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">LABO</a></li>
+            <li><a href="{% url 'public_appointment' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">PATIENT</a></li>
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+
+        <a class="cta-btn" href="{% url 'public_appointment' %}">Make an Appointment</a>
+        <ul class="navbar-nav ms-auto">
+                        {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle fa-lg" style="font-size: 34px;"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="{% url 'donation:donation_create' %}">
+                                    <i class="fas fa-heart" style="color: #13547a;"></i> My Donations
+                                </a></li>
+                                <li><a class="dropdown-item" href="#">
+                                    <i class="fas fa-sign-out-alt" style="color: #13547a;"></i> Logout
+                                </a></li>
+                            </ul>
+                        </li>
+                        {% else %}
+                       <li><a href="{% url 'loginFront' %}" class="nav-auth-btn nav-login-btn" style="text-decoration: none; background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%); color: white; font-weight: 600; padding: 8px 20px; border-radius: 25px; display: inline-block; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(63, 187, 192, 0.3);"><i class="bi bi-box-arrow-in-right"></i> LOGIN</a></li>
+                        {% endif %}
+                    </ul>
+      </div>
+
+    </div>
+
+  </header><!-- End Header -->
+
+<!-- ======= Hero Section ======= -->
+<section id="hero" class="d-flex align-items-center">
+    <div class="container text-center position-relative" data-aos="fade-up" data-aos-delay="100">
+        <h1>Bienvenue sur Clinica+</h1>
+        <h2>La plateforme qui relie les bienfaiteurs et les associations médicales</h2>
+        <a href="{% url 'donation:liste_dons' %}" class="btn-get-started scrollto">Faire un don</a>
+    </div>
+</section><!-- End Hero -->
+
+<main id="main">
+
+    <!-- ======= About Section ======= -->
+    <section id="about" class="about">
+        <div class="container" data-aos="fade-up">
+            <div class="row">
+                <div class="col-lg-6 order-1 order-lg-2">
+                    <img src="{% static 'img/about.jpg' %}" class="img-fluid" alt="">
+                </div>
+                <div class="col-lg-6 pt-4 pt-lg-0 order-2 order-lg-1 content">
+                    <h3>À propos de Clinica+</h3>
+                    <p>
+                        Clinica+ est une plateforme innovante qui facilite la gestion des dons et des publications dans le domaine médical. 
+                        Nous aidons les associations, les hôpitaux et les bienfaiteurs à se connecter efficacement pour améliorer les conditions de santé.
+                    </p>
+                    <ul>
+                        <li><i class="bi bi-check-circle"></i> Une gestion transparente des dons.</li>
+                        <li><i class="bi bi-check-circle"></i> Des publications médicales vérifiées et actualisées.</li>
+                        <li><i class="bi bi-check-circle"></i> Une communauté d’entraide active et bienveillante.</li>
+                    </ul>
+                    <a href="{% url 'publication:publication_list' %}" class="btn-learn-more">Voir les publications</a>
+                </div>
+            </div>
+        </div>
+    </section><!-- End About Section -->
+
+    <!-- ======= Services Section ======= -->
+    <section id="services" class="services">
+        <div class="container" data-aos="fade-up">
+            <div class="section-title">
+                <h2>Nos Services</h2>
+                <p>Ce que nous proposons</p>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 col-lg-3 d-flex align-items-stretch">
+                    <div class="icon-box">
+                        <div class="icon"><i class="bi bi-heart"></i></div>
+                        <h4><a href="#">Collecte de dons</a></h4>
+                        <p>Permet aux utilisateurs de contribuer facilement à des causes médicales vérifiées.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3 d-flex align-items-stretch">
+                    <div class="icon-box">
+                        <div class="icon"><i class="bi bi-journal-text"></i></div>
+                        <h4><a href="#">Publications</a></h4>
+                        <p>Des articles et publications médicales pour informer et sensibiliser le public.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3 d-flex align-items-stretch">
+                    <div class="icon-box">
+                        <div class="icon"><i class="bi bi-people"></i></div>
+                        <h4><a href="#">Communauté</a></h4>
+                        <p>Un espace de collaboration entre les médecins, associations et bénévoles.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3 d-flex align-items-stretch">
+                    <div class="icon-box">
+                        <div class="icon"><i class="bi bi-hospital"></i></div>
+                        <h4><a href="#">Support médical</a></h4>
+                        <p>Accompagnement logistique et matériel pour les établissements de santé.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section><!-- End Services Section -->
+
+    <!-- ======= Contact Section ======= -->
+    <section id="contact" class="contact">
+        <div class="container" data-aos="fade-up">
+            <div class="section-title">
+                <h2>Contact</h2>
+                <p>Contactez-nous</p>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="info-box mb-4">
+                        <i class="bi bi-geo-alt"></i>
+                        <h3>Notre Adresse</h3>
+                        <p>Tunis, Tunisie</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="info-box mb-4">
+                        <i class="bi bi-envelope"></i>
+                        <h3>Email</h3>
+                        <p>info@clinica.com</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="info-box mb-4">
+                        <i class="bi bi-phone"></i>
+                        <h3>Téléphone</h3>
+                        <p>+216 99 654 322</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <form action="#" method="post" role="form" class="php-email-form">
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <input type="text" name="name" class="form-control" placeholder="Votre nom" required>
+                            </div>
+                            <div class="col-md-6 form-group mt-3 mt-md-0">
+                                <input type="email" class="form-control" name="email" placeholder="Votre email" required>
+                            </div>
+                        </div>
+                        <div class="form-group mt-3">
+                            <input type="text" class="form-control" name="subject" placeholder="Sujet" required>
+                        </div>
+                        <div class="form-group mt-3">
+                            <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
+                        </div>
+                        <div class="text-center"><button type="submit">Envoyer</button></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section><!-- End Contact Section -->
+</main>
+
+<!-- ======= Footer ======= -->
+<footer id="footer">
+    <div class="container">
+        <h3>Clinica+</h3>
+        <p>Unis pour un avenir plus sain.</p>
+        <div class="social-links">
+            <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+            <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+        </div>
+        <div class="copyright">
+            &copy; 2025 <strong><span>Clinica+</span></strong>. Tous droits réservés.
+        </div>
+    </div>
+</footer>
+
+<!-- Vendor JS Files -->
+<script src="{% static 'vendor/aos/aos.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'vendor/glightbox/js/glightbox.min.js' %}"></script>
+<script src="{% static 'vendor/swiper/swiper-bundle.min.js' %}"></script>
+
+<!-- Template Main JS File -->
+<script src="{% static 'js/main.js' %}"></script>
+
+</body>
+</html>

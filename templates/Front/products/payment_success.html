@@ -1,0 +1,290 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Payment Successful - Medicio</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+  
+  <style>
+    .success-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      padding: 40px 20px;
+    }
+    
+    .success-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+      padding: 50px;
+      text-align: center;
+      max-width: 600px;
+      width: 100%;
+      animation: slideUp 0.6s ease-out;
+    }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .success-icon {
+      width: 120px;
+      height: 120px;
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 30px;
+      animation: pulse 2s infinite;
+    }
+    
+    .success-icon i {
+      font-size: 60px;
+      color: white;
+    }
+    
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4);
+      }
+      70% {
+        box-shadow: 0 0 0 20px rgba(40, 167, 69, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+      }
+    }
+    
+    .success-title {
+      font-size: 2.5rem;
+      color: #28a745;
+      margin-bottom: 15px;
+      font-weight: 700;
+    }
+    
+    .success-message {
+      font-size: 1.1rem;
+      color: #666;
+      margin-bottom: 30px;
+    }
+    
+    .order-summary {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 30px;
+      text-align: left;
+    }
+    
+    .order-summary h5 {
+      color: #333;
+      margin-bottom: 20px;
+      font-weight: 600;
+      border-bottom: 2px solid #3fbbc0;
+      padding-bottom: 10px;
+    }
+    
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #e9ecef;
+    }
+    
+    .order-item:last-child {
+      border-bottom: none;
+    }
+    
+    .order-item-name {
+      font-weight: 500;
+      color: #333;
+    }
+    
+    .order-item-qty {
+      color: #666;
+      font-size: 0.9rem;
+    }
+    
+    .order-item-price {
+      font-weight: 600;
+      color: #3fbbc0;
+    }
+    
+    .order-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 15px;
+      margin-top: 10px;
+      border-top: 2px solid #3fbbc0;
+    }
+    
+    .order-total span:first-child {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .order-total span:last-child {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #3fbbc0;
+    }
+    
+    .btn-continue {
+      background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%);
+      color: white;
+      padding: 15px 40px;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s ease;
+      border: none;
+    }
+    
+    .btn-continue:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(63, 187, 192, 0.4);
+      color: white;
+    }
+    
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background-color: #f0f;
+      animation: confetti-fall 3s linear infinite;
+    }
+    
+    @keyframes confetti-fall {
+      0% {
+        transform: translateY(-100vh) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+    
+    .pending-badge {
+      background: linear-gradient(135deg, #ffc107 0%, #ffca2c 100%);
+      color: #333;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="success-container">
+    <div class="success-card">
+      <div class="success-icon">
+        <i class="bi bi-check-lg"></i>
+      </div>
+      
+      <h1 class="success-title">Payment Successful!</h1>
+      <p class="success-message">
+        Thank you for your purchase! Your payment has been processed successfully.<br>
+        Your order(s) are now <span class="pending-badge">Pending Validation</span><br>
+        <span style="margin-top: 10px; display: inline-block;">You will receive a confirmation email once your order is confirmed.</span>
+      </p>
+      
+      {% if commandes %}
+      <div class="order-summary">
+        <h5><i class="bi bi-receipt me-2"></i>Order Summary</h5>
+        
+        {% for commande in commandes %}
+        <div class="order-item">
+          <div>
+            <div class="order-item-name">{{ commande.produit.nom }}</div>
+            <div class="order-item-qty">Quantity: {{ commande.quantite }}</div>
+          </div>
+          <div class="order-item-price">{{ commande.total|floatformat:2 }} DT</div>
+        </div>
+        {% endfor %}
+        
+        <div class="order-total">
+          <span>Total Paid:</span>
+          <span>{{ total|floatformat:2 }} DT</span>
+        </div>
+      </div>
+      {% endif %}
+      
+      
+      <a href="{% url 'index' %}" class="btn-continue">
+        <i class="bi bi-arrow-left me-2"></i>Continue Shopping
+      </a>
+    </div>
+  </div>
+
+  <!-- Confetti Animation -->
+  <script>
+    // Create confetti effect
+    function createConfetti() {
+      const colors = ['#3fbbc0', '#28a745', '#ffc107', '#17a2b8', '#6f42c1'];
+      
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        confetti.style.animationDelay = Math.random() * 2 + 's';
+        document.body.appendChild(confetti);
+        
+        // Remove confetti after animation
+        setTimeout(() => confetti.remove(), 5000);
+      }
+    }
+    
+    // Run confetti on page load
+    window.onload = createConfetti;
+  </script>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+</body>
+
+</html>
+

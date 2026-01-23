@@ -1,0 +1,707 @@
+{% load static %}
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Clinica+ • Dashboard</title>
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'Back/src/assets/images/favicon.png' %}">
+  <link href="{% static 'Back/src/dist/css/style.min.css' %}" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-blue: #4A90E2;
+      --success-green: #28a745;
+      --danger-red: #dc3545;
+      --warning-orange: #FF8C00;
+      --purple: #667eea;
+    }
+    
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    
+    /* Stats Cards */
+    .stats-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      transition: all 0.3s ease;
+      border-left: 4px solid transparent;
+    }
+    
+    .stats-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+    
+    .stats-card.blue { border-left-color: #4A90E2; }
+    .stats-card.green { border-left-color: #28a745; }
+    .stats-card.purple { border-left-color: #667eea; }
+    .stats-card.orange { border-left-color: #FF8C00; }
+    
+    .stats-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    
+    .stats-number {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 8px 0;
+    }
+    
+    .stats-label {
+      color: #868e96;
+      font-size: 0.875rem;
+    }
+    
+    /* Table Cards */
+    .card {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    
+    .card-title {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    
+    .table {
+      font-size: 0.875rem;
+    }
+    
+    .table thead th {
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      color: #495057;
+      border-bottom: 2px solid #e9ecef;
+    }
+    
+    .badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.75rem;
+    }
+    
+    /* Quick Actions */
+    .list-group-item {
+      border: none;
+      border-bottom: 1px solid #f0f0f0;
+      padding: 12px 0;
+    }
+    
+    .list-group-item:hover {
+      background-color: #f8f9fa;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="preloader">
+    <div class="lds-ripple"><div class="lds-pos"></div><div class="lds-pos"></div></div>
+  </div>
+
+  <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6"
+       data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed"
+       data-boxed-layout="full">
+
+    <!-- Topbar -->
+    <header class="topbar" data-navbarbg="skin6">
+      <nav class="navbar top-navbar navbar-expand-lg">
+        <div class="navbar-header" data-logobg="skin6">
+          <a class="nav-toggler d-block d-lg-none" href="javascript:void(0)">
+            <i class="ti-menu ti-close"></i>
+          </a>
+          <div class="navbar-brand">
+            <a href="{% url 'back_index' %}">
+              <img src="{% static 'Front/assets/images/logo_site.png' %}" alt="logo" class="img-fluid" style="width: 120px; margin-top: 30px;">
+            </a>
+          </div>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="navbar-nav float-end">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-bs-toggle="dropdown">
+                <img src="{% static 'Back/src/assets/images/users/profile-pic.jpg' %}" alt="user" class="rounded-circle" width="40">
+                <span class="ms-2 d-none d-lg-inline-block">
+                  <span class="text-dark">{{ user.first_name|default:"Admin" }}</span>
+                  <i data-feather="chevron-down" class="svg-icon"></i>
+                </span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-end">
+                <a class="dropdown-item" href="#">
+                  <i data-feather="power" class="svg-icon me-2"></i>Logout
+                </a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Sidebar -->
+<!-- Sidebar -->
+   <aside class="left-sidebar" data-sidebarbg="skin6">
+  <div class="scroll-sidebar" data-sidebarbg="skin6">
+    <nav class="sidebar-nav">
+      <ul id="sidebarnav">
+        
+
+        <li class="list-divider"></li>
+
+        <!-- USER MANAGEMENT -->
+        <li class="nav-small-cap"><span class="hide-menu">USER MANAGEMENT</span></li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'dashboard' %}">
+            <i data-feather="users" class="feather-icon"></i>
+            <span class="hide-menu">Users Management</span>
+          </a>
+        </li>
+
+        <li class="list-divider"></li>
+        <li class="nav-small-cap"><span class="hide-menu">PATIENT</span></li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'dashboard_home' %}" aria-expanded="false">
+            <i data-feather="home" class="feather-icon"></i>
+            <span class="hide-menu">Patient Dashboard</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'appointment_list' %}">
+            <i data-feather="calendar" class="feather-icon"></i>
+            <span class="hide-menu">Appointments List</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'patient_list' %}">
+            <i data-feather="users" class="feather-icon"></i>
+            <span class="hide-menu">Patients List</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'appointment_create' %}">
+            <i data-feather="plus-circle" class="feather-icon"></i>
+            <span class="hide-menu">New Appointment</span>
+            </a>
+        </li>
+         <li class="list-divider"></li>
+        <!-- PRODUCTS -->
+        <li class="nav-small-cap"><span class="hide-menu">PRODUCTS</span></li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'dashboard_products' %}">
+            <i data-feather="home" class="feather-icon"></i>
+            <span class="hide-menu">Product Dashboard</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'products_list' %}">
+            <i data-feather="package" class="feather-icon"></i>
+            <span class="hide-menu">Products List</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'orders_list' %}">
+            <i data-feather="shopping-cart" class="feather-icon"></i>
+            <span class="hide-menu">Orders List</span>
+          </a>
+        </li>
+
+        <li class="list-divider"></li>
+
+
+        <!-- DONATIONS -->
+        <li class="nav-small-cap"><span class="hide-menu">DONATIONS</span></li>
+
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'donation:back_index' %}">
+            <i data-feather="activity" class="feather-icon"></i>
+            <span class="hide-menu">Dashboard Donation</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'publication:publication_list' %}">
+            <i data-feather="file-text" class="feather-icon"></i>
+            <span class="hide-menu">Publications List</span>
+          </a>
+        </li>
+         <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'publication:publication_form' %}">
+            <i data-feather="plus-circle" class="feather-icon"></i>
+            <span class="hide-menu">New Publication</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'donation:admin_donation_list' %}">
+            <i data-feather="heart" class="feather-icon"></i>
+            <span class="hide-menu">Donations List</span>
+          </a>
+        </li>
+
+        <li class="list-divider"></li>
+
+        <li class="nav-small-cap"><span class="hide-menu">LABO</span></li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'Labapp:back_analyse_list' %}" aria-expanded="false">
+            <i data-feather="calendar" class="feather-icon"></i>
+            <span class="hide-menu">List Analyses</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'Labapp:back_recherche_list' %}">
+            <i data-feather="tag" class="feather-icon"></i>
+            <span class="hide-menu">recherche List</span>
+            </a>
+        </li>
+
+        <li class="list-divider"></li>
+        
+         <li class="nav-small-cap"><span class="hide-menu">STAGE</span></li>
+        <li class="sidebar-item">
+  <a class="sidebar-link" href="{% url 'stages:liste_stages' %}">
+    <i data-feather="award" class="feather-icon"></i>
+    <span class="hide-menu">Stages List</span>
+  </a>
+</li>
+
+        <li class="sidebar-item">
+  <a class="sidebar-link" href="{% url 'stages:ajouter_stage' %}">
+    <i data-feather="award" class="feather-icon"></i>
+    <span class="hide-menu">New Stage</span>
+  </a>
+</li>
+<li class="sidebar-item">
+  <a class="sidebar-link" href="{% url 'stagiaire:liste_stagiaires' %}">
+    <i data-feather="user-check" class="feather-icon"></i>
+    <span class="hide-menu">Stagiaires List</span>
+  </a>
+</li>
+
+        
+      </ul>
+    </nav>
+  </div>
+</aside>
+
+    <!-- Page wrapper -->
+    <div class="page-wrapper">
+      <div class="container-fluid">
+        <!-- Welcome Header -->
+        <div class="mb-4">
+          <h3 class="mb-1">Welcome back, {{ user.first_name|default:"Admin" }}!</h3>
+          <p class="text-muted">Here's what's happening with your platform today.</p>
+        </div>
+        <!-- Stats Cards Unified -->
+<!-- 🔥 FINAL UNIFIED DASHBOARD STATS (Donations + Publications) -->
+<div class="row mb-4">
+
+  <!-- Total Donations -->
+  <div class="col-lg-3 col-md-6 mb-3">
+    <div class="stats-card blue">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <div class="stats-number text-primary">{{ donations.count }}</div>
+          <div class="stats-label">Total Donations</div>
+        </div>
+        <div class="stats-icon" style="background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);">
+          <i data-feather="heart" style="color: white; width: 24px; height: 24px;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Money Donations -->
+  <div class="col-lg-3 col-md-6 mb-3">
+    <div class="stats-card green">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <div class="stats-number text-success">{{ money_count }}</div>
+          <div class="stats-label">Money Donations</div>
+        </div>
+        <div class="stats-icon" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+          <i data-feather="dollar-sign" style="color: white; width: 24px; height: 24px;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Volunteers -->
+  <div class="col-lg-3 col-md-6 mb-3">
+    <div class="stats-card purple">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <div class="stats-number" style="color: #667eea;">{{ volunteer_count }}</div>
+          <div class="stats-label">Volunteers</div>
+        </div>
+        <div class="stats-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+          <i data-feather="users" style="color: white; width: 24px; height: 24px;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pending Donations -->
+  <div class="col-lg-3 col-md-6 mb-3">
+    <div class="stats-card orange">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <div class="stats-number" style="color: #FF8C00;">{{ pending_count }}</div>
+          <div class="stats-label">Pending Donations</div>
+        </div>
+        <div class="stats-icon" style="background: linear-gradient(135deg, #FF8C00 0%, #FF6347 100%);">
+          <i data-feather="clock" style="color: white; width: 24px; height: 24px;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- 🔥 SECOND ROW : PUBLICATION STATS -->
+<div class="row mb-4">
+
+  <!-- Total Publications -->
+  <div class="col-lg-3 col-md-6 mb-3">
+    <div class="stats-card blue">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <div class="stats-number text-primary">{{ total_publications }}</div>
+          <div class="stats-label">Total Publications</div>
+        </div>
+        <div class="stats-icon" style="background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);">
+          <i data-feather="file-text" style="color: white; width: 24px; height: 24px;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Active Publications -->
+  <div class="col-lg-3 col-md-6 mb-3">
+    <div class="stats-card green">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <div class="stats-number text-success">{{ active_publications }}</div>
+          <div class="stats-label">Active Publications</div>
+        </div>
+        <div class="stats-icon" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+          <i data-feather="check-circle" style="color: white; width: 24px; height: 24px;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Expired Publications -->
+  <div class="col-lg-3 col-md-6 mb-3">
+    <div class="stats-card purple">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <div class="stats-number" style="color: #667eea;">{{ expired_publications }}</div>
+          <div class="stats-label">Expired Publications</div>
+        </div>
+        <div class="stats-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+          <i data-feather="alert-triangle" style="color: white; width: 24px; height: 24px;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Today's Publications (Optionnel) -->
+  <div class="col-lg-3 col-md-6 mb-3">
+    <div class="stats-card orange">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <div class="stats-number" style="color: #FF8C00;">{{ today_publications|default:0 }}</div>
+          <div class="stats-label">Today</div>
+        </div>
+        <div class="stats-icon" style="background: linear-gradient(135deg, #FF8C00 0%, #FF6347 100%);">
+          <i data-feather="calendar" style="color: white; width: 24px; height: 24px;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+        <!-- Main Content Row -->
+        <div class="row">
+          <!-- Recent Publications -->
+          <div class="col-lg-8 col-md-12 mb-4">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                  <h4 class="card-title mb-0">Recent Publications</h4>
+                  <a href="{% url 'publication:publication_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-hover mb-0">
+                    <thead>
+                      <tr>
+                        <th>Title</th>
+                        <th>Address</th>
+                        <th>Deadline</th>
+                        <th>Date Created</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for pub in recent_publications %}
+                      <tr>
+                        <td>
+                          <div class="fw-semibold">{{ pub.title }}</div>
+                          <div class="text-muted small">{{ pub.description|truncatewords:8 }}</div>
+                        </td>
+                        <td>{{ pub.address }}</td>
+                        <td>
+                          <span class="badge" style="background: linear-gradient(135deg, #FF8C00 0%, #FF6347 100%); color: white;">
+                            {{ pub.deadline|date:"M d, Y" }}
+                          </span>
+                        </td>
+                        <td>
+                          {{ pub.date_pub|date:"M d" }}
+                          <small class="text-muted d-block">{{ pub.date_pub|time:"H:i" }}</small>
+                        </td>
+                      </tr>
+                      {% empty %}
+                      <tr>
+                        <td colspan="4" class="text-center text-muted py-4">
+                          No publications yet.
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions & Stats -->
+          <div class="col-lg-4 col-md-12">
+            <div class="card mb-3">
+              <div class="card-body">
+                <h4 class="card-title mb-3">Quick Actions</h4>
+                <div class="list-group list-group-flush">
+                  <a class="list-group-item list-group-item-action d-flex align-items-center" href="{% url 'donation:admin_donation_list' %}">
+                    <span class="badge bg-warning text-dark me-3">{{ pending_count }}</span>
+                    Review Pending Donations
+                  </a>
+                  <a class="list-group-item list-group-item-action d-flex align-items-center" href="{% url 'publication:publication_form' %}">
+                    <i data-feather="plus-circle" class="me-3"></i>
+                    Add New Publication
+                  </a>
+                  <a class="list-group-item list-group-item-action d-flex align-items-center" href="{% url 'publication:publication_list' %}">
+                    <i data-feather="file-text" class="me-3"></i>
+                    Manage Publications
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title mb-3">Recent Donations</h4>
+                <ul class="list-unstyled mb-0">
+                  {% for donation in recent_donations %}
+                  <li class="d-flex align-items-center py-2 border-bottom">
+                    <div class="flex-grow-1">
+                      <div class="fw-semibold">{% if donation.id_user.first_name or donation.id_user.last_name %}
+    {{ donation.id_user.first_name }} {{ donation.id_user.last_name }}
+{% else %}
+    {{ donation.id_user.email }}
+{% endif %}
+
+</div>
+                      <div class="text-muted small">
+                        {{ donation.id_publication.title|truncatewords:5 }}
+                        {% if donation.type_donation == 'argent' %}
+                          &middot; {{ donation.montant }} DT
+                        {% endif %}
+                      </div>
+                    </div>
+                    <span class="ms-auto text-muted small">{{ donation.date_donation|date:"M d" }}</span>
+                  </li>
+                  {% empty %}
+                  <li class="py-2 text-muted small">No donations yet.</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-4">
+    
+
+        <!-- Statistics Row - Publication & Donation côte à côte -->
+<div class="row mt-4">
+  <!-- Publication Statistics -->
+  <div class="col-lg-6 col-md-12 mb-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <h4 class="card-title mb-3">Publication Statistics</h4>
+        {% if publication_stats %}
+        <div class="row">
+          <div class="col-12 mb-3">
+            <canvas id="publicationChart" style="max-height: 250px;"></canvas>
+          </div>
+          <div class="col-12">
+            <h6>Summary:</h6>
+            <ul class="list-unstyled mb-0">
+              <li class="d-flex justify-content-between py-2 border-bottom">
+                <span>Total Publications</span>
+                <span class="fw-semibold">{{ total_publications }}</span>
+              </li>
+              <li class="d-flex justify-content-between py-2 border-bottom">
+                <span>Active Publications</span>
+                <span class="fw-semibold text-primary">{{ active_publications }}</span>
+              </li>
+              <li class="d-flex justify-content-between py-2">
+                <span>Publications Expired</span>
+                <span class="fw-semibold text-danger">{{ expired_publications }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        {% else %}
+        <p class="text-muted">No publication statistics available yet.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Donation Statistics -->
+  <div class="col-lg-6 col-md-12 mb-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <h4 class="card-title mb-3">Donation Statistics</h4>
+        {% if donation_stats %}
+        <div class="row">
+          <div class="col-12 mb-3">
+            <canvas id="donationChart" style="max-height: 250px;"></canvas>
+          </div>
+          <div class="col-12">
+            <h6>Summary:</h6>
+            <ul class="list-unstyled mb-0">
+              <li class="d-flex justify-content-between py-2 border-bottom">
+                <span>💰 Money Donations</span>
+                <span class="fw-semibold">{{ money_count }} donations</span>
+              </li>
+              <li class="d-flex justify-content-between py-2 border-bottom">
+                <span>🤝 Volunteer Donations</span>
+                <span class="fw-semibold">{{ volunteer_count }} donations</span>
+              </li>
+              <li class="d-flex justify-content-between py-2">
+                <span>Total Received</span>
+                <span class="fw-semibold text-success">{{ total_money_received|default:"0" }} DT</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        {% else %}
+        <p class="text-muted">No donation statistics available yet.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+      
+
+      <footer class="footer text-center text-muted mt-4">
+        Clinica+ Back • Freedash UI
+      </footer>
+    </div>
+  </div>
+
+  <script src="{% static 'Back/src/assets/libs/jquery/dist/jquery.min.js' %}"></script>
+  <script src="{% static 'Back/src/assets/libs/popper.js/dist/umd/popper.min.js' %}"></script>
+  <script src="{% static 'Back/src/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'Back/src/dist/js/feather.min.js' %}"></script>
+  <script src="{% static 'Back/src/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js' %}"></script>
+  <script src="{% static 'Back/src/dist/js/sidebarmenu.js' %}"></script>
+  <script src="{% static 'Back/src/dist/js/custom.min.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.feather) feather.replace();
+      
+      // Donation Chart
+      {% if donation_stats %}
+      const donationCtx = document.getElementById('donationChart');
+      if (donationCtx) {
+        new Chart(donationCtx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Money Donations', 'Volunteer Donations'],
+            datasets: [{
+              data: [{{ money_count }}, {{ volunteer_count }}],
+              backgroundColor: ['#28a745', '#667eea'],
+              borderWidth: 3,
+              borderColor: '#fff'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  padding: 15,
+                  usePointStyle: true
+                }
+              }
+            }
+          }
+        });
+      }
+      {% endif %}
+    });
+
+    // Publication Pie Chart
+{% if publication_stats %}
+const publicationCtx = document.getElementById('publicationChart');
+if (publicationCtx) {
+    new Chart(publicationCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Active', 'Expired'],
+            datasets: [{
+                data: [{{ active_publications }}, {{ expired_publications }}],
+                backgroundColor: ['#4A90E2', '#dc3545'],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 15,
+                        usePointStyle: true
+                    }
+                }
+            }
+        }
+    });
+}
+{% endif %}
+
+  </script>
+</body>
+</html>

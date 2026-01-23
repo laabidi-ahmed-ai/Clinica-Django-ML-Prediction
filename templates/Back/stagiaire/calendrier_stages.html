@@ -1,0 +1,555 @@
+<!-- stagiaire/templates/stagiaire/calendrier_stages.html -->
+{% load static %}
+<!DOCTYPE html>
+<html dir="ltr" lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'Back/src/assets/images/favicon.png' %}">
+    <title>Clinique+ • Calendrier des Stages</title>
+    
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+    
+    <link href="{% static 'Back/src/dist/css/style.min.css' %}" rel="stylesheet">
+    <style>
+        .calendar-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .fc-toolbar-title {
+            font-size: 1.5rem !important;
+            font-weight: 600;
+        }
+        
+        .fc-button {
+            border-radius: 6px !important;
+            padding: 6px 12px !important;
+        }
+        
+        .fc-button-primary {
+            background-color: var(--bs-primary) !important;
+            border-color: var(--bs-primary) !important;
+        }
+        
+        .fc-button-primary:hover {
+            background-color: #0d6efd !important;
+            border-color: #0a58ca !important;
+        }
+        
+        .fc-daygrid-day-number {
+            font-weight: 600;
+        }
+        
+        .fc-event {
+            border-radius: 4px;
+            border: none;
+            font-size: 12px;
+            padding: 2px 4px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .fc-event:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .stats-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            border-left: 4px solid;
+        }
+        
+        .stats-card h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stats-card p {
+            color: #6c757d;
+            margin: 0;
+        }
+        
+        .color-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .color-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        
+        .event-details-modal .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .detail-row {
+            display: flex;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            width: 140px;
+            color: #495057;
+        }
+        
+        .detail-value {
+            flex: 1;
+            color: #6c757d;
+        }
+        
+        .filter-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .filter-badge {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-badge:hover {
+            transform: scale(1.05);
+        }
+        
+        .filter-badge.active {
+            box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--bs-primary);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+
+    <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+        
+        <!-- Topbar -->
+        <header class="topbar" data-navbarbg="skin6">
+            <nav class="navbar top-navbar navbar-expand-lg">
+                <div class="navbar-header" data-logobg="skin6">
+                    <a class="nav-toggler d-block d-lg-none" href="javascript:void(0)"><i class="ti-menu ti-close"></i></a>
+                    <div class="navbar-brand">
+                        <a href="{% url 'stagiaire:liste_stagiaires' %}">
+                            <img src="{% static 'Front/assets/images/logo_site.png' %}" alt="logo" class="img-fluid" style="width: 120px; margin-top: 30px;">
+                        </a>
+                    </div>
+                    <a class="topbartoggler d-block d-lg-none" href="javascript:void(0)" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="ti-more"></i>
+                    </a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="navbar-nav float-end">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-bs-toggle="dropdown">
+                                <img src="{% static 'Back/src/assets/images/users/profile-pic.jpg' %}" alt="user" class="rounded-circle" width="40">
+                                <span class="ms-2 d-none d-lg-inline-block">
+                                    <span class="text-dark">{{ user.first_name|default:"Admin" }}</span>
+                                    <i data-feather="chevron-down" class="svg-icon"></i>
+                                </span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="#">
+                                    <i data-feather="power" class="svg-icon me-2"></i>Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="left-sidebar" data-sidebarbg="skin6">
+            <div class="scroll-sidebar" data-sidebarbg="skin6">
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li class="sidebar-item">
+                            <a class="sidebar-link sidebar-link" href="#">
+                                <i data-feather="home" class="feather-icon"></i><span class="hide-menu">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="list-divider"></li>
+                        <li class="nav-small-cap"><span class="hide-menu">GESTION DES STAGES</span></li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{% url 'stages:liste_stages' %}">
+                                <i data-feather="file-text" class="feather-icon"></i><span class="hide-menu">Liste des stages</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{% url 'stages:ajouter_stage' %}">
+                                <i data-feather="plus-circle" class="feather-icon"></i><span class="hide-menu">Nouveau stage</span>
+                            </a>
+                        </li>
+                        <li class="list-divider"></li>
+                        <li class="nav-small-cap"><span class="hide-menu">GESTION DES STAGIAIRES</span></li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{% url 'stagiaire:liste_stagiaires' %}">
+                                <i data-feather="users" class="feather-icon"></i><span class="hide-menu">Liste des stagiaires</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link active" href="{% url 'stagiaire:calendrier_stages' %}">
+                                <i data-feather="calendar" class="feather-icon"></i><span class="hide-menu">Calendrier des Stages</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <div class="page-wrapper">
+            <div class="page-breadcrumb">
+                <div class="row">
+                    <div class="col-7 align-self-center">
+                        <h3 class="page-title text-truncate text-dark font-weight-medium mb-1">Calendrier des Stages</h3>
+                        <div class="d-flex align-items-center">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb m-0 p-0">
+                                    <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                                    <li class="breadcrumb-item"><a href="{% url 'stagiaire:liste_stagiaires' %}">Stagiaires</a></li>
+                                    <li class="breadcrumb-item active">Calendrier</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="col-5 align-self-center">
+                        <div class="customize-input float-end">
+                            <a href="{% url 'stagiaire:liste_stagiaires' %}" class="btn btn-secondary me-2">
+                                <i data-feather="arrow-left" class="feather-icon"></i> Retour
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid">
+                <!-- Statistiques -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="stats-card" style="border-left-color: #667eea;">
+                            <h3 class="text-primary">{{ total_stages|default:0 }}</h3>
+                            <p>Stages Total</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-card" style="border-left-color: #4ECDC4;">
+                            <h3 class="text-info">{{ stages_en_cours|default:0 }}</h3>
+                            <p>Stages en Cours</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-card" style="border-left-color: #66BB6A;">
+                            <h3 class="text-success">{{ stages_termines|default:0 }}</h3>
+                            <p>Stages Terminés</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-card" style="border-left-color: #FFA726;">
+                            <h3 class="text-warning">{{ stagiaires_actifs|default:0 }}</h3>
+                            <p>Stagiaires Actifs</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filtres -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="filter-section">
+                            <h6 class="mb-3">Filtrer par type de stage:</h6>
+                            <div class="color-legend">
+                                {% for type_key, color in type_colors.items %}
+                                <div class="color-item">
+                                    <div class="color-box" style="background-color: {{ color }}"></div>
+                                    <span class="filter-badge badge bg-light text-dark" 
+                                          data-type="{{ type_key }}">
+                                        {{ type_key|title }}
+                                    </span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calendrier -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="calendar-container">
+                            <div id="calendar"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Légende -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Légende des Couleurs</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6 class="mt-3 mb-2">Par Type de Stage:</h6>
+                                        <div class="color-legend">
+                                            {% for type_key, color in type_colors.items %}
+                                            <div class="color-item mb-2">
+                                                <div class="color-box" style="background-color: {{ color }}"></div>
+                                                <span>{{ type_key|title }}</span>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="mt-3 mb-2">Statut des Stages:</h6>
+                                        <div class="color-legend">
+                                            <div class="color-item mb-2">
+                                                <div class="color-box" style="background-color: #4ECDC4"></div>
+                                                <span>En Cours</span>
+                                            </div>
+                                            <div class="color-item mb-2">
+                                                <div class="color-box" style="background-color: #66BB6A"></div>
+                                                <span>Terminé</span>
+                                            </div>
+                                            <div class="color-item mb-2">
+                                                <div class="color-box" style="background-color: #FF6B6B"></div>
+                                                <span>Proposé</span>
+                                            </div>
+                                            <div class="color-item mb-2">
+                                                <div class="color-box" style="background-color: #FFA726"></div>
+                                                <span>Validé</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="footer text-center text-muted">
+                Clinique+ • Calendrier des Stages © 2024
+            </footer>
+        </div>
+    </div>
+
+    <!-- Modal pour les détails de l'événement -->
+    <div class="modal fade event-details-modal" id="eventModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Détails du Stage</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="eventDetails">
+                        <!-- Les détails seront injectés ici par JavaScript -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{% static 'Back/src/assets/libs/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'Back/src/assets/libs/popper.js/dist/umd/popper.min.js' %}"></script>
+    <script src="{% static 'Back/src/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'Back/src/dist/js/app-style-switcher.js' %}"></script>
+    <script src="{% static 'Back/src/dist/js/feather.min.js' %}"></script>
+    <script src="{% static 'Back/src/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js' %}"></script>
+    <script src="{% static 'Back/src/dist/js/sidebarmenu.js' %}"></script>
+    <script src="{% static 'Back/src/dist/js/custom.min.js' %}"></script>
+    
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/fr.js"></script>
+    
+    <script>
+        // Initialiser Feather Icons
+        feather.replace();
+        
+        // Données des événements - FIX POUR VS CODE
+        // VS Code ne comprend pas la syntaxe Django dans du JS, mais c'est correct pour Django
+        const eventsData = {{ events_json|safe }};
+        
+        // Types de stage et leurs couleurs
+        const typeColors = {
+            'observation': '#FF6B6B',
+            'clinique': '#4ECDC4',
+            'chirurgical': '#45B7D1',
+            'urgence': '#FFA726',
+            'specialise': '#AB47BC',
+            'recherche': '#26C6DA',
+            'infirmier': '#66BB6A'
+        };
+        
+        // Initialiser le calendrier
+        document.addEventListener('DOMContentLoaded', function() {
+            const calendarEl = document.getElementById('calendar');
+            
+            // Vérifier si eventsData est valide
+            console.log('Événements chargés:', eventsData);
+            
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'fr',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+                },
+                buttonText: {
+                    today: 'Aujourd\'hui',
+                    month: 'Mois',
+                    week: 'Semaine',
+                    day: 'Jour',
+                    list: 'Liste'
+                },
+                events: eventsData,
+                eventClick: function(info) {
+                    showEventDetails(info.event);
+                },
+                eventDisplay: 'block',
+                eventTimeFormat: {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                },
+                height: 'auto',
+                dayMaxEventRows: 3,
+                moreLinkClick: 'popover'
+            });
+            
+            calendar.render();
+            
+            // Gestion des filtres
+            const filterBadges = document.querySelectorAll('.filter-badge');
+            let activeFilters = new Set();
+            
+            filterBadges.forEach(badge => {
+                badge.addEventListener('click', function() {
+                    const type = this.getAttribute('data-type');
+                    
+                    if (activeFilters.has(type)) {
+                        activeFilters.delete(type);
+                        this.classList.remove('active');
+                    } else {
+                        activeFilters.add(type);
+                        this.classList.add('active');
+                    }
+                    
+                    applyFilters();
+                });
+            });
+            
+            function applyFilters() {
+                if (activeFilters.size === 0) {
+                    // Afficher tous les événements
+                    calendar.removeAllEvents();
+                    calendar.addEventSource(eventsData);
+                } else {
+                    // Filtrer les événements
+                    const filteredEvents = eventsData.filter(event => {
+                        const eventType = event.extendedProps.type_stage.toLowerCase();
+                        return Array.from(activeFilters).some(filter => 
+                            eventType.includes(filter.toLowerCase())
+                        );
+                    });
+                    
+                    calendar.removeAllEvents();
+                    calendar.addEventSource(filteredEvents);
+                }
+            }
+        });
+        
+        // Fonction pour afficher les détails de l'événement
+        function showEventDetails(event) {
+            const props = event.extendedProps;
+            
+            const detailsHTML = `
+                <div class="detail-row">
+                    <div class="detail-label">Stagiaire:</div>
+                    <div class="detail-value">
+                        <strong>${props.stagiaire_nom}</strong><br>
+                        ${props.stagiaire_email}<br>
+                        ${props.stagiaire_universite} - ${props.stagiaire_specialite}
+                    </div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-label">Stage:</div>
+                    <div class="detail-value">
+                        <strong>${props.intitule}</strong><br>
+                        Type: ${props.type_stage}<br>
+                        Service: ${props.service}
+                    </div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-label">Période:</div>
+                    <div class="detail-value">
+                        Du ${event.startStr} au ${event.endStr}<br>
+                        Durée: ${props.duree_semaines} semaines<br>
+                        Horaires: ${props.horaires}
+                    </div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-label">Encadrant:</div>
+                    <div class="detail-value">${props.encadrant}</div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-label">Statut:</div>
+                    <div class="detail-value">
+                        <span class="badge ${props.status === 'En Cours' ? 'bg-info' : props.status === 'Terminé' ? 'bg-success' : 'bg-warning'}">
+                            ${props.status}
+                        </span>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('eventDetails').innerHTML = detailsHTML;
+            
+            const modal = new bootstrap.Modal(document.getElementById('eventModal'));
+            modal.show();
+        }
+    </script>
+</body>
+</html>

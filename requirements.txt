@@ -1,0 +1,29 @@
+# Django Core
+Django>=5.0
+
+# Django Channels
+channels>=4.0
+
+# Cloudinary
+cloudinary>=1.0
+django-cloudinary-storage>=0.3
+
+# Payment
+stripe>=14.0
+
+# SMS/Communication
+twilio>=9.0
+
+# PDF Generation
+xhtml2pdf>=0.2
+
+# Machine Learning (pour le système de prédiction de stock)
+scikit-learn>=1.0
+pandas>=1.5
+numpy>=1.20
+joblib>=1.0
+matplotlib>=3.5
+
+# Other dependencies that might be needed
+Pillow>=8.0
+

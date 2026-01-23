@@ -1,0 +1,430 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>{{ produit.nom }} - Medicio</title>
+  <meta name="description" content="{{ produit.description|truncatewords:20 }}">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+  
+  <style>
+    /* Ensure header is visible */
+    .header {
+      position: relative !important;
+      background-color: #ffffff !important;
+      display: block !important;
+    }
+    .header .branding {
+      display: flex !important;
+      align-items: center !important;
+    }
+    .header .topbar {
+      display: flex !important;
+    }
+    .navmenu ul li a:hover {
+      color: #3fbbc0 !important;
+    }
+    .product-detail-section {
+      padding: 60px 0;
+      background-color: #f8f9fa;
+    }
+    .product-image {
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .product-image img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+    .product-info {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .product-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .product-price {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #3fbbc0;
+      margin-bottom: 20px;
+    }
+    .product-category {
+      display: inline-block;
+      padding: 5px 15px;
+      background-color: #3fbbc0;
+      color: white;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+    .product-description {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #666;
+      margin-bottom: 30px;
+    }
+    .product-stock {
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+    }
+    .product-stock.in-stock {
+      color: green;
+    }
+    .product-stock.out-of-stock {
+      color: red;
+    }
+    .btn-add-to-cart {
+      background-color: #3fbbc0;
+      border: none;
+      color: white;
+      padding: 15px 30px;
+      border-radius: 5px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+    .btn-add-to-cart:hover {
+      background-color: #35a5aa;
+      color: white;
+    }
+    .btn-back {
+      background-color: #6c757d;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-back:hover {
+      background-color: #5a6268;
+      color: white;
+    }
+    .similar-products {
+      margin-top: 60px;
+    }
+    .team-member {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .team-member:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    .team-member .member-img {
+      overflow: hidden;
+    }
+    .team-member:hover .member-img img {
+      transform: scale(1.1);
+      transition: transform 0.3s ease;
+    }
+    .team-member .member-img img {
+      transition: transform 0.3s ease;
+      height: 250px;
+      object-fit: cover;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body class="index-page">
+
+  <header id="header" class="header sticky-top">
+
+    <div class="topbar d-flex align-items-center" style="background-color: #3fbbc0; color: white; padding: 8px 0;">
+      <div class="container d-flex justify-content-center justify-content-md-between">
+        <div class="d-none d-md-flex align-items-center" style="color: white;">
+          <i class="bi bi-clock me-1"></i> Monday - Saturday, 8AM to 10PM
+        </div>
+        <div class="d-flex align-items-center" style="color: white;">
+          <i class="bi bi-phone me-1"></i> Call us now +1 5589 55488 55
+        </div>
+      </div>
+    </div><!-- End Top Bar -->
+
+    <div class="branding d-flex align-items-center" style="background-color: #fff; padding: 15px 0; border-bottom: 1px solid #e5e5e5;">
+
+      <div class="container position-relative d-flex align-items-center justify-content-between">
+        <a href="{% url 'index' %}" class="logo d-flex align-items-center me-auto">
+          <img src="{% static 'Front/assets/images/logo_site.png' %}" alt="" style="width: 120px; height: 90px;">
+          <span style="font-size: 24px; font-weight: bold; color: #333; margin-left: 10px;">MEDICIO</span>
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+          <ul style="display: flex; align-items: center; list-style: none; margin: 0; padding: 0; gap: 30px;">
+            <li><a href="{% url 'front_index' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">HOME</a></li>
+            <li><a href="#" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">ABOUT</a></li>
+            <li><a href="{% url 'index' %}" class="active" style="text-decoration: none; color: #3fbbc0; font-weight: 600;">PRODUCTS</a></li>
+            <li><a href="{% url 'donation:front_publication_list' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">DONATION</a></li>
+            <li><a href="{% url 'stages:liste_stages_front' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">STAGE</a></li>
+            <li><a href="{% url 'Labapp:home' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">LABO</a></li>
+            <li><a href="{% url 'public_appointment' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">PATIENT</a></li>
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+        <a class="cta-btn" href="{% url 'public_appointment' %}">Make an Appointment</a>
+            <ul class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user-circle fa-lg" style="font-size: 34px;"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{% url 'donation:user_donation_list' %}">
+                            <i class="fas fa-heart" style="color: #13547a;"></i> My Donations
+                        </a></li>
+                        <li><a class="dropdown-item" href="#">
+                            <i class="fas fa-sign-out-alt" style="color: #13547a;"></i> Logout
+                        </a></li>
+                    </ul>
+                </li>
+                {% else %}
+                <li><a href="{% url 'loginFront' %}" class="nav-auth-btn nav-login-btn" style="text-decoration: none; background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%); color: white; font-weight: 600; padding: 8px 20px; border-radius: 25px; display: inline-block; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(63, 187, 192, 0.3);"><i class="bi bi-box-arrow-in-right"></i> LOGIN</a></li>
+                {% endif %}
+            </ul>
+
+      </div>
+
+    </div>
+
+  </header>
+
+  <!-- Cart Button Section -->
+  <div class="container mt-3 mb-3" style="display: flex; justify-content: flex-end;">
+    <a href="{% url 'panier' %}" class="btn" style="background-color: #3fbbc0; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: 500; transition: background-color 0.3s; position: relative;">
+      <i class="bi bi-cart3"></i> Cart
+      {% if nombre_articles_panier > 0 %}
+        <span class="badge bg-danger" style="position: absolute; top: -8px; right: -8px; font-size: 10px;">{{ nombre_articles_panier }}</span>
+      {% endif %}
+    </a>
+  </div>
+
+  <main class="main">
+    
+    <!-- Messages Django -->
+    {% if messages %}
+      <div class="container mt-3">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Product Detail Section -->
+    <section class="product-detail-section">
+      <div class="container">
+        <a href="{% url 'index' %}" class="btn-back">
+          <i class="bi bi-arrow-left"></i> Back to Products
+        </a>
+        
+        <div class="row">
+          <div class="col-lg-6 mb-4">
+            <div class="product-image">
+              {% if produit.image %}
+                <img src="{{ produit.image.url }}" alt="{{ produit.nom }}" class="img-fluid">
+              {% else %}
+                <div style="height: 500px; background-color: #e9ecef; display: flex; align-items: center; justify-content: center; border-radius: 10px;">
+                  <span style="color: #999; font-size: 1.5rem;">No image available</span>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+          
+          <div class="col-lg-6">
+            <div class="product-info">
+              <span class="product-category">{{ produit.get_category_display }}</span>
+              <h1 class="product-title">{{ produit.nom }}</h1>
+              <div class="product-price">{{ produit.prix_vente }} DT</div>
+              
+              {% if produit.quantite > 0 %}
+                <div class="product-stock in-stock">
+                  <i class="bi bi-check-circle"></i> {{ produit.quantite }} units left
+                </div>
+              {% else %}
+                <div class="product-stock out-of-stock">
+                  <i class="bi bi-x-circle"></i> Out of stock
+                </div>
+              {% endif %}
+              
+              {% if produit.description %}
+                <div class="product-description">
+                  {{ produit.description|linebreaks }}
+                </div>
+              {% else %}
+                <div class="product-description">
+                  No description available for this product.
+                </div>
+              {% endif %}
+              
+              {% if produit.quantite > 0 %}
+                <button type="button" class="btn btn-add-to-cart w-100" data-bs-toggle="modal" data-bs-target="#modalAchat">
+                  <i class="bi bi-cart-plus"></i> Add to Cart
+                </button>
+              {% else %}
+                <button type="button" class="btn btn-secondary w-100" disabled>
+                  <i class="bi bi-x-circle"></i> Unavailable
+                </button>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        
+        <!-- Similar Products Section -->
+        {% if similar_products %}
+        <div class="similar-products">
+          <h3 class="mb-4">Similar Products</h3>
+          <div class="row gy-4">
+            {% for similar in similar_products %}
+            <div class="col-lg-3 col-md-6">
+              <div class="team-member">
+                <a href="{% url 'product_detail' product_id=similar.id %}" style="text-decoration: none; color: inherit;">
+                  <div class="member-img">
+                    {% if similar.image %}
+                      <img src="{{ similar.image.url }}" alt="{{ similar.nom }}" class="img-fluid">
+                    {% else %}
+                      <div style="height: 250px; background-color: #e9ecef; display: flex; align-items: center; justify-content: center;">
+                        <span style="color: #999;">No image</span>
+                      </div>
+                    {% endif %}
+                  </div>
+                  <div class="member-info" style="padding: 15px;">
+                    <h5>{{ similar.nom }}</h5>
+                    <div style="margin-top: 10px;">
+                      <span style="font-weight: bold; color: #3fbbc0; font-size: 1.2em;">{{ similar.prix_vente }} DT</span>
+                    </div>
+                    {% if similar.quantite > 0 %}
+                      <span style="color: green; font-size: 0.9em;">✓ {{ similar.quantite }} units left</span>
+                    {% else %}
+                      <span style="color: red; font-size: 0.9em;">✗ Out of stock</span>
+                    {% endif %}
+                  </div>
+                </a>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </section>
+
+  </main>
+
+  <footer id="footer" class="footer light-background">
+
+    <div class="container footer-top">
+      <div class="row gy-4">
+        <div class="col-lg-4 col-md-6 footer-about">
+          <a href="{% url 'index' %}" class="logo d-flex align-items-center">
+            <span class="sitename">Medicio</span>
+          </a>
+          <div class="footer-contact pt-3">
+            <p>A108 Adam Street</p>
+            <p>New York, NY 535022</p>
+            <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
+            <p><strong>Email:</strong> <span>info@example.com</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container copyright text-center mt-4">
+      <p>© <span>Copyright</span> <strong class="px-1 sitename">Medicio</strong> <span>All Rights Reserved</span></p>
+    </div>
+
+  </footer>
+
+  <!-- Modal pour l'achat -->
+  {% if produit.quantite > 0 %}
+  <div class="modal fade" id="modalAchat" tabindex="-1" aria-labelledby="modalAchatLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalAchatLabel">Buy {{ produit.nom }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="post" action="{% url 'ajouter_au_panier' produit.id %}">
+          {% csrf_token %}
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="quantite" class="form-label">Quantity</label>
+              <input type="number" class="form-control" id="quantite" name="quantite" min="1" max="{{ produit.quantite }}" value="1" required>
+              <small class="form-text text-muted">{{ produit.quantite }} units left</small>
+            </div>
+            <div class="alert alert-info">
+              <strong>Unit price:</strong> {{ produit.prix_vente }} DT<br>
+              <strong>Total:</strong> <span id="total">{{ produit.prix_vente }}</span> DT
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary" style="background-color: #3fbbc0; border: none; color: white; font-weight: bold;"><i class="bi bi-cart-plus"></i> Add to cart</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Calculer le total dynamiquement
+    document.getElementById('quantite').addEventListener('input', function() {
+      const quantite = parseInt(this.value) || 1;
+      const prix = parseFloat('{{ produit.prix_vente }}');
+      document.getElementById('total').textContent = (quantite * prix).toFixed(2);
+    });
+  </script>
+  {% endif %}
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+
+  <!-- Main JS File -->
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+</body>
+
+</html>
+

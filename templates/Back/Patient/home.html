@@ -1,0 +1,181 @@
+{% extends "Back/Patient/base.html" %}
+
+{% block title %}Dashboard - Clinica{% endblock %}
+{% block page_title %}Welcome back{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-lg-3 col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex no-block align-items-center">
+          <div>
+            <h2 class="text-primary mb-1">{{ total_patients }}</h2>
+            <h6 class="text-muted">Patients</h6>
+          </div>
+          <span class="ms-auto display-6 text-primary"><i data-feather="users"></i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-3 col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex no-block align-items-center">
+          <div>
+            <h2 class="text-warning mb-1">{{ pending_appointments }}</h2>
+            <h6 class="text-muted">Pending requests</h6>
+          </div>
+          <span class="ms-auto display-6 text-warning"><i data-feather="clock"></i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-3 col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex no-block align-items-center">
+          <div>
+            <h2 class="text-success mb-1">{{ upcoming_today }}</h2>
+            <h6 class="text-muted">Today</h6>
+          </div>
+          <span class="ms-auto display-6 text-success"><i data-feather="calendar"></i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-3 col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex no-block align-items-center">
+          <div>
+            <h2 class="text-info mb-1">{{ linked_ratio }}%</h2>
+            <h6 class="text-muted">Linked to patients</h6>
+          </div>
+          <span class="ms-auto display-6 text-info"><i data-feather="link-2"></i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-8 col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex align-items-center mb-3">
+          <h4 class="card-title mb-0">Latest appointment requests</h4>
+          <a href="{% url 'appointment_list' %}" class="ms-auto btn btn-sm btn-outline-primary">View all</a>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead>
+              <tr>
+                <th>When</th>
+                <th>Name</th>
+                <th>Department</th>
+                <th>Status</th>
+                <th>Patient</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for appointment in recent_appointments %}
+              <tr>
+                <td>
+                  {{ appointment.requested_date|date:"M d" }}
+                  <small class="text-muted d-block">{{ appointment.requested_time|time:"H:i" }}</small>
+                </td>
+                <td>
+                  <a href="{% url 'appointment_detail' appointment.pk %}" class="text-dark fw-semibold">
+                    {{ appointment.name }}
+                  </a>
+                  <div class="text-muted small">{{ appointment.phone }}</div>
+                </td>
+                <td>{{ appointment.get_department_display }}</td>
+                <td>
+                  <span class="badge bg-{% if appointment.status == 'pending' %}warning{% elif appointment.status == 'confirmed' %}success{% elif appointment.status == 'cancelled' %}danger{% else %}secondary{% endif %}">
+                    {{ appointment.get_status_display }}
+                  </span>
+                </td>
+                <td>
+                  {% if appointment.linked_patient %}
+                  <a href="{% url 'patient_detail' appointment.linked_patient.pk %}">
+                    {{ appointment.linked_patient }}
+                  </a>
+                  {% else %}
+                  <a href="{% url 'patient_add' %}?name={{ appointment.name }}&email={{ appointment.email }}&phone={{ appointment.phone }}">
+                    Create file
+                  </a>
+                  {% endif %}
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5" class="text-center text-muted py-4">
+                  No appointment requests yet.
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4 col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex align-items-center mb-3">
+          <h4 class="card-title mb-0">Quick actions</h4>
+        </div>
+        <div class="list-group list-group-flush">
+          <a class="list-group-item list-group-item-action d-flex align-items-center" href="{% url 'appointment_list' %}?status=pending">
+            <span class="badge bg-warning text-dark me-3">{{ pending_appointments }}</span>
+            Review pending appointments
+          </a>
+          <a class="list-group-item list-group-item-action d-flex align-items-center" href="{% url 'patient_add' %}">
+            <i data-feather="file-plus" class="me-3"></i>
+            Create patient file
+          </a>
+          <a class="list-group-item list-group-item-action d-flex align-items-center" href="{% if latest_pending %}{% url 'appointment_manage' latest_pending.pk %}{% else %}#{% endif %}">
+            {% if latest_pending %}
+            <i data-feather="clipboard" class="me-3"></i>
+            Manage {{ latest_pending.name }}'s request
+            {% else %}
+            <i data-feather="check-circle" class="me-3"></i>
+            All caught up!
+            {% endif %}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title mb-3">Recent patients</h4>
+        <ul class="list-unstyled mb-0">
+          {% for patient in recent_patients %}
+          <li class="d-flex align-items-center py-2 border-bottom">
+            <div>
+              <a href="{% url 'patient_detail' patient.pk %}" class="fw-semibold text-dark">
+                {{ patient.first_name }} {{ patient.last_name }}
+              </a>
+              <div class="text-muted small">
+                {{ patient.email }} &middot; {{ patient.phone }}
+              </div>
+            </div>
+            <span class="ms-auto text-muted small">{{ patient.date_derniere_mise_a_jour|date:"M d" }}</span>
+          </li>
+          {% empty %}
+          <li class="py-2 text-muted small">No patient records yet.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+

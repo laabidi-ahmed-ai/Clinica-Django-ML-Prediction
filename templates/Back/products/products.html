@@ -1,0 +1,1292 @@
+{% extends 'back/products/base.html' %}
+{% load static %}
+
+{% block title %}Products - Admin Panel{% endblock %}
+
+{% block page_title %}
+<div class="mb-4">
+    <h3 class="mb-1">Products Management</h3>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Purple gradient buttons */
+    .btn-purple {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(102, 126, 234, 0.3);
+    }
+    .btn-purple:hover {
+        background: linear-gradient(135deg, #5568d3 0%, #653d8f 100%);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(102, 126, 234, 0.4);
+    }
+    /* Action buttons */
+    .btn-action-group {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .btn-detail {
+        background: #17a2b8 !important;
+        border: none;
+        color: white;
+        padding: 8px 18px;
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 6px rgba(23, 162, 184, 0.25);
+    }
+    
+    .btn-detail:hover {
+        background: #138496 !important;
+        color: white !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(23, 162, 184, 0.35);
+        text-decoration: none;
+    }
+    
+    .btn-detail:focus,
+    .btn-detail:active {
+        background: #138496 !important;
+        color: white !important;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.3);
+    }
+    
+    .btn-edit {
+        background: #28a745;
+        border: none;
+        color: white;
+        padding: 8px 18px;
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 6px rgba(40, 167, 69, 0.25);
+    }
+    
+    .btn-edit:hover {
+        background: #218838;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(40, 167, 69, 0.35);
+    }
+    
+    .btn-danger-custom {
+        background: #dc3545;
+        border: none;
+        color: white;
+        padding: 8px 18px;
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 6px rgba(220, 53, 69, 0.25);
+    }
+    
+    .btn-danger-custom:hover {
+        background: #c82333;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(220, 53, 69, 0.35);
+    }
+    
+    .btn-edit i,
+    .btn-detail i,
+    .btn-danger-custom i,
+    .btn-predict i {
+        width: 14px;
+        height: 14px;
+        margin-right: 4px;
+    }
+    /* Table animations */
+    .table tbody tr {
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+        transform: scale(1.01);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .table tbody tr:active {
+        transform: scale(0.99);
+    }
+    /* Filter section */
+    .filter-section {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    .filter-section .form-control,
+    .filter-section .form-select {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 8px;
+        transition: border-color 0.3s ease;
+    }
+    .filter-section .form-control:focus,
+    .filter-section .form-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+    /* Product image animation */
+    .product-image {
+        transition: transform 0.3s ease;
+        border-radius: 5px;
+    }
+    .table tbody tr:hover .product-image {
+        transform: scale(1.1);
+    }
+    /* Modal animations */
+    .modal-content {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+    .modal-header {
+        border-radius: 15px 15px 0 0;
+        padding: 20px 25px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    .modal-header.delete-header {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        color: white;
+    }
+    .modal-header .btn-close {
+        filter: brightness(0) invert(1);
+    }
+    .modal-body {
+        padding: 30px 25px;
+    }
+    .modal-body.delete-modal-body {
+        text-align: center;
+    }
+    .modal-body .icon-wrapper {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+    }
+    .modal-body .icon-wrapper.delete-icon {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        color: white;
+    }
+    .modal-footer {
+        border-top: none;
+        padding: 20px 25px;
+        justify-content: center;
+        gap: 10px;
+    }
+    .modal-footer .btn {
+        min-width: 120px;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+    }
+    /* Card animation */
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    /* Button animations */
+    .btn {
+        transition: all 0.3s ease;
+    }
+    .btn-sm {
+        padding: 6px 16px;
+        font-size: 0.875rem;
+        min-width: 80px;
+    }
+    
+    /* Predict Rupture Button - Same style as other action buttons */
+    .btn-predict {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        border: none;
+        color: white;
+        padding: 8px 18px;
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 6px rgba(102, 126, 234, 0.25);
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .btn-predict:hover {
+        background: linear-gradient(135deg, #5568d3 0%, #653d8f 100%) !important;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(102, 126, 234, 0.35);
+    }
+    .btn-predict:focus,
+    .btn-predict:active {
+        background: linear-gradient(135deg, #5568d3 0%, #653d8f 100%) !important;
+        color: white;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+    }
+    
+    /* Autocomplete styles */
+    .autocomplete-wrapper {
+        position: relative;
+    }
+    
+    .autocomplete-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #ddd;
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+        max-height: 300px;
+        overflow-y: auto;
+        z-index: 1000;
+        display: none;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    }
+    
+    .autocomplete-dropdown.show {
+        display: block;
+    }
+    
+    .autocomplete-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 15px;
+        cursor: pointer;
+        border-bottom: 1px solid #f0f0f0;
+        transition: all 0.2s ease;
+    }
+    
+    .autocomplete-item:last-child {
+        border-bottom: none;
+    }
+    
+    .autocomplete-item:hover {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+    
+    .autocomplete-item.selected {
+        background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%);
+        color: white;
+    }
+    
+    .autocomplete-item.selected .item-category,
+    .autocomplete-item.selected .item-stock {
+        color: rgba(255,255,255,0.8);
+    }
+    
+    .autocomplete-img {
+        width: 45px;
+        height: 45px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-right: 12px;
+        border: 2px solid #f0f0f0;
+    }
+    
+    .autocomplete-img-placeholder {
+        width: 45px;
+        height: 45px;
+        background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+        border-radius: 8px;
+        margin-right: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #adb5bd;
+        font-size: 18px;
+    }
+    
+    .item-info {
+        flex: 1;
+    }
+    
+    .item-name {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 2px;
+    }
+    
+    .autocomplete-item.selected .item-name {
+        color: white;
+    }
+    
+    .item-category {
+        font-size: 12px;
+        color: #888;
+    }
+    
+    .item-price {
+        font-weight: 700;
+        color: #3fbbc0;
+        font-size: 14px;
+    }
+    
+    .autocomplete-item.selected .item-price {
+        color: white;
+    }
+    
+    .item-stock {
+        font-size: 11px;
+        color: #888;
+    }
+    
+    .autocomplete-no-results {
+        padding: 20px;
+        text-align: center;
+        color: #888;
+    }
+    
+    .autocomplete-loading {
+        padding: 20px;
+        text-align: center;
+        color: #888;
+    }
+    
+    .highlight {
+        background: #fff3cd;
+        padding: 0 2px;
+        border-radius: 2px;
+    }
+    
+    .autocomplete-item.selected .highlight {
+        background: rgba(255,255,255,0.3);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-4">
+                        <h4 class="card-title mb-0">All Products</h4>
+                        
+                        <div class="ms-auto">
+                            <button type="button" class="btn btn-purple" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                                <i data-feather="plus"></i> Add Product
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Filter Section -->
+                    <div class="filter-section">
+                        <form method="get" action="{% url 'products_list' %}" id="filterForm" class="row g-3 align-items-end">
+                            <div class="col-md-3">
+                                <label for="search" class="form-label">Search by Name</label>
+                                <div class="autocomplete-wrapper">
+                                    <input type="text" class="form-control" id="search" name="search" placeholder="Enter product name..." value="{{ search_query }}" autocomplete="off">
+                                    <div class="autocomplete-dropdown" id="autocompleteDropdown"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="category" class="form-label">Filter by Category</label>
+                                <select class="form-select" id="category" name="category">
+                                    <option value="">All Categories</option>
+                                    {% for value, label in categories %}
+                                        <option value="{{ value }}" {% if category_filter == value %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="sort" class="form-label">Sort By</label>
+                                <select class="form-select" id="sort" name="sort">
+                                    <option value="">Latest First</option>
+                                    <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                                    <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+                                    <option value="date_asc" {% if sort_by == 'date_asc' %}selected{% endif %}>Date: Oldest First</option>
+                                    <option value="date_desc" {% if sort_by == 'date_desc' %}selected{% endif %}>Date: Newest First</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="date" class="form-label">Filter by Date</label>
+                                <input type="date" class="form-control" id="date" name="date" value="{{ date_filter }}">
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Purchase Price</th>
+                                    <th>Selling Price</th>
+                                    <th>Quantity</th>
+                                    <th>Stock Prediction</th>
+                                    <th>Date Added</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in products %}
+                                <tr data-bs-toggle="modal" data-bs-target="#productDetailModal{{ product.id }}">
+                                    <td>{{ product.id }}</td>
+                                    <td>
+                                        {% if product.image %}
+                                            <img src="{{ product.image.url }}" alt="{{ product.nom }}" class="product-image" style="width: 50px; height: 50px; object-fit: cover;">
+                                        {% else %}
+                                            <span class="text-muted">No image</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ product.nom }}</td>
+                                    <td>{{ product.get_category_display }}</td>
+                                    <td>{{ product.prix_achat|floatformat:2 }} DT</td>
+                                    <td>{{ product.prix_vente|floatformat:2 }} DT</td>
+                                    <td>{{ product.quantite }}</td>
+                                    <td onclick="event.stopPropagation();">
+                                        {% with stock_status=product.get_stock_status %}
+                                            {% if stock_status.days_until_out is not None %}
+                                                <button type="button" 
+                                                        class="btn btn-predict" 
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target="#stockPredictionModal{{ product.id }}"
+                                                        onclick="event.stopPropagation();">
+                                                    <i data-feather="activity"></i> Predict Rupture
+                                                </button>
+                                            {% else %}
+                                                <span class="badge badge-secondary" style="background-color: #6c757d; color: #fff; padding: 6px 12px; border-radius: 5px;">
+                                                    N/A
+                                                </span>
+                                            {% endif %}
+                                        {% endwith %}
+                                    </td>
+                                    <td>{{ product.date_ajout|date:"Y-m-d H:i" }}</td>
+                                    <td onclick="event.stopPropagation();">
+                                        <div class="btn-action-group">
+                                            <!-- Detail button - Cyan -->
+                                            <a href="javascript:void(0);" class="btn btn-detail" 
+                                               data-bs-toggle="modal" 
+                                               data-bs-target="#productDetailModal{{ product.id }}"
+                                               onclick="event.stopPropagation();">
+                                                <i data-feather="eye"></i> Detail
+                                            </a>
+                                            
+                                            <!-- Edit button - Green -->
+                                            <button type="button" class="btn btn-edit" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#editProductModal{{ product.id }}" 
+                                                    onclick="event.stopPropagation();">
+                                                <i data-feather="edit"></i> Edit
+                                            </button>
+                                            
+                                            <!-- Delete button - Red -->
+                                            <button type="button" class="btn btn-danger-custom" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#deleteProductModal{{ product.id }}" 
+                                                    onclick="event.stopPropagation();">
+                                                <i data-feather="trash-2"></i> Delete
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="10" class="text-center">No products found</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Product Detail Modals -->
+{% for product in products %}
+<div class="modal fade" id="productDetailModal{{ product.id }}" tabindex="-1" aria-labelledby="productDetailModalLabel{{ product.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productDetailModalLabel{{ product.id }}">{{ product.nom }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" class="img-fluid rounded" alt="{{ product.nom }}" style="width: 100%; height: auto; max-height: 400px; object-fit: cover;">
+                        {% else %}
+                            <div style="height: 300px; background-color: #e9ecef; display: flex; align-items: center; justify-content: center; border-radius: 10px;">
+                                <span style="color: #999; font-size: 1.2rem;">No image available</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <h4 class="mb-3">{{ product.nom }}</h4>
+                        <div class="mb-3">
+                            <span class="badge" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 5px 15px; font-size: 0.9rem;">{{ product.get_category_display }}</span>
+                        </div>
+                        <div class="mb-3">
+                            <strong>Purchase Price:</strong> <span class="text-primary">{{ product.prix_achat|floatformat:2 }} DT</span>
+                        </div>
+                        <div class="mb-3">
+                            <strong>Selling Price:</strong> <span class="text-primary" style="font-size: 1.2em; font-weight: bold;">{{ product.prix_vente|floatformat:2 }} DT</span>
+                        </div>
+                        <div class="mb-3">
+                            <strong>Quantity:</strong> <span class="text-success">{{ product.quantite }} units left</span>
+                        </div>
+                        <div class="mb-3">
+                            <strong>Date Added:</strong> <span>{{ product.date_ajout|date:"Y-m-d H:i" }}</span>
+                        </div>
+                        {% if product.description %}
+                            <div class="mb-3">
+                                <strong>Description:</strong>
+                                <p style="line-height: 1.8; color: #666; margin-top: 10px;">{{ product.description|linebreaks }}</p>
+                            </div>
+                        {% else %}
+                            <div class="mb-3">
+                                <strong>Description:</strong>
+                                <p class="text-muted">No description available for this product.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-edit" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#editProductModal{{ product.id }}">
+                    <i data-feather="edit"></i> Edit Product
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<!-- Add Product Modal -->
+<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addProductModalLabel">Add Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{% url 'product_add' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nom" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="nom" name="nom" required 
+                               pattern="^[a-zA-Z0-9\s]+$" 
+                               title="Name cannot contain special characters">
+                        <small class="text-danger" id="nom_error" style="display: none;"></small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3" 
+                                  minlength="10" 
+                                  title="Description must contain at least 10 characters"></textarea>
+                        <small class="text-danger" id="description_error" style="display: none;"></small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category *</label>
+                        <select class="form-control" id="category" name="category" required>
+                            <option value="medical_consumables">Medical Consumables</option>
+                            <option value="medicines_pharmaceutical">Medicines and Pharmaceutical Products</option>
+                            <option value="medical_equipment">Medical Equipment and Care Devices</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="prix_achat" class="form-label">Purchase Price (DT) *</label>
+                            <input type="number" step="0.01" min="5" class="form-control" id="prix_achat" name="prix_achat" required 
+                                   title="Purchase price must be at least 5 DT">
+                            <small class="text-danger" id="prix_achat_error" style="display: none;"></small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="prix_vente" class="form-label">Selling Price (DT) *</label>
+                            <input type="number" step="0.01" min="5" class="form-control" id="prix_vente" name="prix_vente" required 
+                                   title="Selling price must be at least 5 DT and greater than purchase price">
+                            <small class="text-danger" id="prix_vente_error" style="display: none;"></small>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantite" class="form-label">Quantity</label>
+                        <input type="number" class="form-control" id="quantite" name="quantite" value="0" min="4" 
+                               title="Quantity must be more than 3">
+                        <small class="text-danger" id="quantite_error" style="display: none;"></small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Image</label>
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-purple">Add Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Product Modals -->
+{% for product in products %}
+<div class="modal fade" id="editProductModal{{ product.id }}" tabindex="-1" aria-labelledby="editProductModalLabel{{ product.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProductModalLabel{{ product.id }}">Edit Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{% url 'product_edit' product.id %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nom{{ product.id }}" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="nom{{ product.id }}" name="nom" value="{{ product.nom }}" required 
+                               pattern="^[a-zA-Z0-9\s]+$" 
+                               title="Name cannot contain special characters">
+                        <small class="text-danger" id="nom{{ product.id }}_error" style="display: none;"></small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description{{ product.id }}" class="form-label">Description</label>
+                        <textarea class="form-control" id="description{{ product.id }}" name="description" rows="3" 
+                                  minlength="10" 
+                                  title="Description must contain at least 10 characters">{{ product.description }}</textarea>
+                        <small class="text-danger" id="description{{ product.id }}_error" style="display: none;"></small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="category{{ product.id }}" class="form-label">Category *</label>
+                        <select class="form-control" id="category{{ product.id }}" name="category" required>
+                            <option value="medical_consumables" {% if product.category == 'medical_consumables' %}selected{% endif %}>Medical Consumables</option>
+                            <option value="medicines_pharmaceutical" {% if product.category == 'medicines_pharmaceutical' %}selected{% endif %}>Medicines and Pharmaceutical Products</option>
+                            <option value="medical_equipment" {% if product.category == 'medical_equipment' %}selected{% endif %}>Medical Equipment and Care Devices</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="prix_achat{{ product.id }}" class="form-label">Purchase Price (DT) *</label>
+                            <input type="number" step="0.01" min="5" class="form-control" id="prix_achat{{ product.id }}" name="prix_achat" value="{{ product.prix_achat }}" required 
+                                   title="Purchase price must be at least 5 DT">
+                            <small class="text-danger" id="prix_achat{{ product.id }}_error" style="display: none;"></small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="prix_vente{{ product.id }}" class="form-label">Selling Price (DT) *</label>
+                            <input type="number" step="0.01" min="5" class="form-control" id="prix_vente{{ product.id }}" name="prix_vente" value="{{ product.prix_vente }}" required 
+                                   title="Selling price must be at least 5 DT and greater than purchase price">
+                            <small class="text-danger" id="prix_vente{{ product.id }}_error" style="display: none;"></small>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantite{{ product.id }}" class="form-label">Quantity</label>
+                        <input type="number" class="form-control" id="quantite{{ product.id }}" name="quantite" value="{{ product.quantite }}" min="4" 
+                               title="Quantity must be more than 3">
+                        <small class="text-danger" id="quantite{{ product.id }}_error" style="display: none;"></small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="image{{ product.id }}" class="form-label">Image</label>
+                        <input type="file" class="form-control" id="image{{ product.id }}" name="image" accept="image/*">
+                        {% if product.image %}
+                            <small class="text-muted">Current: <a href="{{ product.image.url }}" target="_blank">{{ product.image.name }}</a></small>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-purple">Update Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<!-- Delete Product Modals -->
+{% for product in products %}
+<!-- Delete Product Modal -->
+<div class="modal fade" id="deleteProductModal{{ product.id }}" tabindex="-1" aria-labelledby="deleteProductModalLabel{{ product.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header delete-header">
+                <h5 class="modal-title" id="deleteProductModalLabel{{ product.id }}">
+                    <i data-feather="alert-triangle" style="width: 20px; height: 20px; margin-right: 8px;"></i>
+                    Delete Product
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body delete-modal-body">
+                <div class="icon-wrapper delete-icon">
+                    <i data-feather="trash-2" style="width: 40px; height: 40px;"></i>
+                </div>
+                <h4 class="mb-3">Are you sure you want to delete this product?</h4>
+                <div class="mb-3">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.nom }}" class="img-fluid rounded mb-3" style="max-width: 150px; max-height: 150px; object-fit: cover;">
+                    {% endif %}
+                    <p class="text-muted mb-2">
+                        <strong>Product Name:</strong> {{ product.nom }}<br>
+                        <strong>Category:</strong> {{ product.get_category_display }}<br>
+                        <strong>Price:</strong> {{ product.prix_vente|floatformat:2 }} DT<br>
+                        <strong>Quantity in Stock:</strong> {{ product.quantite }}
+                    </p>
+                </div>
+                <p class="text-danger small mt-3">
+                    <i data-feather="alert-circle" style="width: 16px; height: 16px; vertical-align: middle;"></i>
+                    This action cannot be undone. The product will be permanently deleted.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form method="post" action="{% url 'product_delete' product.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        <i data-feather="trash-2" style="width: 16px; height: 16px; margin-right: 5px;"></i>
+                        Delete Product
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<!-- Stock Prediction Modals -->
+{% for product in products %}
+<div class="modal fade" id="stockPredictionModal{{ product.id }}" tabindex="-1" aria-labelledby="stockPredictionModalLabel{{ product.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 15px 15px 0 0;">
+                <h5 class="modal-title" id="stockPredictionModalLabel{{ product.id }}">
+                    <i data-feather="activity" style="width: 20px; height: 20px; margin-right: 8px;"></i>
+                    Stock Prediction - {{ product.nom }}
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="text-align: center; padding: 30px;">
+                {% with stock_status=product.get_stock_status %}
+                    {% if stock_status.days_until_out is not None %}
+                        <div class="mb-4">
+                            <div style="font-size: 4rem; font-weight: bold; 
+                                        color: {% if stock_status.color == 'danger' %}#dc3545{% elif stock_status.color == 'warning' %}#ffc107{% elif stock_status.color == 'success' %}#28a745{% else %}#6c757d{% endif %};">
+                                {{ stock_status.days_until_out|floatformat:0 }}
+                            </div>
+                            <div style="font-size: 1.2rem; color: #666; margin-top: 10px;">
+                                day(s) until stockout
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-{{ stock_status.color }}" 
+                             style="background-color: {% if stock_status.color == 'danger' %}#dc3545{% elif stock_status.color == 'warning' %}#ffc107{% elif stock_status.color == 'success' %}#28a745{% else %}#6c757d{% endif %}; 
+                                    color: {% if stock_status.color == 'warning' %}#000{% else %}#fff{% endif %}; 
+                                    border: none; 
+                                    padding: 15px; 
+                                    border-radius: 10px; 
+                                    font-size: 1.1rem; 
+                                    font-weight: 500;">
+                            <strong>{{ stock_status.message }}</strong>
+                        </div>
+                        
+                        <div class="mt-4" style="color: #666;">
+                            <p><strong>Current Quantity:</strong> {{ product.quantite }} units</p>
+                            <p><strong>Selling Price:</strong> {{ product.prix_vente|floatformat:2 }} DT</p>
+                            <p><strong>Category:</strong> {{ product.get_category_display }}</p>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-secondary">
+                            <strong>Prediction Not Available</strong>
+                            <p>Insufficient data to generate a prediction.</p>
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            </div>
+            <div class="modal-footer" style="border-top: none; justify-content: center; padding: 20px;">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="min-width: 120px;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+        // Auto-submit form when filters change
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterForm = document.getElementById('filterForm');
+            const categorySelect = document.getElementById('category');
+            const sortSelect = document.getElementById('sort');
+            const dateInput = document.getElementById('date');
+            const searchInput = document.getElementById('search');
+            
+            // Auto-submit on category change
+            if (categorySelect) {
+                categorySelect.addEventListener('change', function() {
+                    filterForm.submit();
+                });
+            }
+            
+            // Auto-submit on sort change
+            if (sortSelect) {
+                sortSelect.addEventListener('change', function() {
+                    filterForm.submit();
+                });
+            }
+            
+            // Auto-submit on date change
+            if (dateInput) {
+                dateInput.addEventListener('change', function() {
+                    filterForm.submit();
+                });
+            }
+            
+            // Autocomplete for search with debounce
+            if (searchInput) {
+                const autocompleteDropdown = document.getElementById('autocompleteDropdown');
+                let searchTimeout;
+                let selectedIndex = -1;
+                
+                searchInput.addEventListener('input', function() {
+                    const query = this.value.trim();
+                    clearTimeout(searchTimeout);
+                    
+                    if (query.length < 1) {
+                        autocompleteDropdown.classList.remove('show');
+                        autocompleteDropdown.innerHTML = '';
+                        return;
+                    }
+                    
+                    autocompleteDropdown.innerHTML = '<div class="autocomplete-loading"><i data-feather="loader" class="spin"></i> Searching...</div>';
+                    autocompleteDropdown.classList.add('show');
+                    if (typeof feather !== 'undefined') feather.replace();
+                    
+                    searchTimeout = setTimeout(function() {
+                        fetch('/api/product-suggestions/?q=' + encodeURIComponent(query))
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.suggestions.length === 0) {
+                                    autocompleteDropdown.innerHTML = '<div class="autocomplete-no-results"><i data-feather="search"></i> No products found</div>';
+                                } else {
+                                    let html = '';
+                                    data.suggestions.forEach((item, index) => {
+                                        const highlightedName = item.name.replace(new RegExp('(' + query + ')', 'gi'), '<span class="highlight">$1</span>');
+                                        html += `
+                                            <div class="autocomplete-item" data-index="${index}" data-name="${item.name}">
+                                                ${item.image 
+                                                    ? `<img src="${item.image}" class="autocomplete-img" alt="${item.name}">` 
+                                                    : '<div class="autocomplete-img-placeholder"><i data-feather="package"></i></div>'}
+                                                <div class="item-info">
+                                                    <div class="item-name">${highlightedName}</div>
+                                                    <div class="item-category">${item.category}</div>
+                                                </div>
+                                                <div class="text-end">
+                                                    <div class="item-price">${item.price.toFixed(2)} DT</div>
+                                                    <div class="item-stock">${item.stock} in stock</div>
+                                                </div>
+                                            </div>
+                                        `;
+                                    });
+                                    autocompleteDropdown.innerHTML = html;
+                                    
+                                    // Add click handlers
+                                    document.querySelectorAll('.autocomplete-item').forEach(item => {
+                                        item.addEventListener('click', function() {
+                                            searchInput.value = this.dataset.name;
+                                            autocompleteDropdown.classList.remove('show');
+                                            filterForm.submit();
+                                        });
+                                    });
+                                }
+                                if (typeof feather !== 'undefined') feather.replace();
+                                selectedIndex = -1;
+                            })
+                            .catch(err => {
+                                autocompleteDropdown.innerHTML = '<div class="autocomplete-no-results">Error loading suggestions</div>';
+                            });
+                    }, 200);
+                });
+                
+                // Keyboard navigation
+                searchInput.addEventListener('keydown', function(e) {
+                    const items = document.querySelectorAll('.autocomplete-item');
+                    
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+                        updateSelection(items);
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        selectedIndex = Math.max(selectedIndex - 1, -1);
+                        updateSelection(items);
+                    } else if (e.key === 'Enter' && selectedIndex >= 0) {
+                        e.preventDefault();
+                        searchInput.value = items[selectedIndex].dataset.name;
+                        autocompleteDropdown.classList.remove('show');
+                        filterForm.submit();
+                    } else if (e.key === 'Escape') {
+                        autocompleteDropdown.classList.remove('show');
+                        selectedIndex = -1;
+                    }
+                });
+                
+                function updateSelection(items) {
+                    items.forEach((item, index) => {
+                        if (index === selectedIndex) {
+                            item.classList.add('selected');
+                            item.scrollIntoView({ block: 'nearest' });
+                        } else {
+                            item.classList.remove('selected');
+                        }
+                    });
+                }
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!searchInput.contains(e.target) && !autocompleteDropdown.contains(e.target)) {
+                        autocompleteDropdown.classList.remove('show');
+                        selectedIndex = -1;
+                    }
+                });
+            }
+        
+        // Reinitialize Feather icons after dynamic content
+        if (typeof feather !== 'undefined') {
+            feather.replace();
+        }
+        
+        // Reinitialize Feather icons after modal is shown
+        var modals = document.querySelectorAll('.modal');
+        modals.forEach(function(modal) {
+            modal.addEventListener('shown.bs.modal', function() {
+                if (typeof feather !== 'undefined') {
+                    feather.replace();
+                }
+            });
+        });
+
+        // Validations pour le formulaire d'ajout de produit
+        const addProductForm = document.querySelector('form[action="{% url 'product_add' %}"]');
+        if (addProductForm) {
+            const nomInput = document.getElementById('nom');
+            const descriptionInput = document.getElementById('description');
+            const prixAchatInput = document.getElementById('prix_achat');
+            const prixVenteInput = document.getElementById('prix_vente');
+            const quantiteInput = document.getElementById('quantite');
+
+            // Fonction pour valider le nom (pas de caractères spéciaux)
+            function validateName(name, errorElement) {
+                const namePattern = /^[a-zA-Z0-9\s]+$/;
+                if (name && !namePattern.test(name)) {
+                    errorElement.textContent = 'Name cannot contain special characters';
+                    errorElement.style.display = 'block';
+                    return false;
+                }
+                errorElement.style.display = 'none';
+                return true;
+            }
+
+            // Fonction pour valider la description (minimum 10 caractères, peut contenir ./:/%)
+            function validateDescription(description, errorElement) {
+                if (description && description.length < 10) {
+                    errorElement.textContent = 'Description must contain at least 10 characters';
+                    errorElement.style.display = 'block';
+                    return false;
+                }
+                // Vérifier les caractères spéciaux autorisés (./:/%) et rejeter les autres
+                if (description) {
+                    // Pattern: lettres, chiffres, espaces, et les caractères autorisés: . / : %
+                    const allowedPattern = /^[a-zA-Z0-9\s./:%]+$/;
+                    if (!allowedPattern.test(description)) {
+                        errorElement.textContent = 'Description can only contain letters, numbers, spaces, and these characters: . / : %';
+                        errorElement.style.display = 'block';
+                        return false;
+                    }
+                }
+                errorElement.style.display = 'none';
+                return true;
+            }
+
+            // Fonction pour valider le prix d'achat (>= 5 DT)
+            function validatePurchasePrice(price, errorElement) {
+                const priceValue = parseFloat(price);
+                if (!price || isNaN(priceValue) || priceValue <= 0) {
+                    errorElement.textContent = 'Purchase price cannot be 0';
+                    errorElement.style.display = 'block';
+                    return false;
+                }
+                if (priceValue < 5) {
+                    errorElement.textContent = 'Purchase price must be at least 5 DT';
+                    errorElement.style.display = 'block';
+                    return false;
+                }
+                errorElement.style.display = 'none';
+                return true;
+            }
+
+            // Fonction pour valider le prix de vente (>= 5 DT et > prix d'achat)
+            function validateSellingPrice(sellingPrice, purchasePrice, errorElement) {
+                const sellingPriceValue = parseFloat(sellingPrice);
+                const purchasePriceValue = parseFloat(purchasePrice);
+                
+                if (!sellingPrice || isNaN(sellingPriceValue) || sellingPriceValue <= 0) {
+                    errorElement.textContent = 'Selling price cannot be 0';
+                    errorElement.style.display = 'block';
+                    return false;
+                }
+                if (sellingPriceValue < 5) {
+                    errorElement.textContent = 'Selling price must be at least 5 DT';
+                    errorElement.style.display = 'block';
+                    return false;
+                }
+                if (purchasePrice && !isNaN(purchasePriceValue) && sellingPriceValue <= purchasePriceValue) {
+                    errorElement.textContent = 'Selling price must be more than purchase price';
+                    errorElement.style.display = 'block';
+                    return false;
+                }
+                errorElement.style.display = 'none';
+                return true;
+            }
+
+            // Fonction pour valider la quantité (> 3)
+            function validateQuantity(quantity, errorElement) {
+                const quantityValue = parseInt(quantity);
+                if (!quantity || isNaN(quantityValue) || quantityValue <= 3) {
+                    errorElement.textContent = 'Quantity must be more than 3';
+                    errorElement.style.display = 'block';
+                    return false;
+                }
+                errorElement.style.display = 'none';
+                return true;
+            }
+
+            // Validation en temps réel pour le nom
+            if (nomInput) {
+                nomInput.addEventListener('input', function() {
+                    validateName(this.value, document.getElementById('nom_error'));
+                });
+                nomInput.addEventListener('blur', function() {
+                    validateName(this.value, document.getElementById('nom_error'));
+                });
+            }
+
+            // Validation en temps réel pour la description
+            if (descriptionInput) {
+                descriptionInput.addEventListener('input', function() {
+                    validateDescription(this.value, document.getElementById('description_error'));
+                });
+                descriptionInput.addEventListener('blur', function() {
+                    validateDescription(this.value, document.getElementById('description_error'));
+                });
+            }
+
+            // Validation en temps réel pour le prix d'achat
+            if (prixAchatInput) {
+                prixAchatInput.addEventListener('input', function() {
+                    validatePurchasePrice(this.value, document.getElementById('prix_achat_error'));
+                    // Re-valider le prix de vente si le prix d'achat change
+                    if (prixVenteInput && prixVenteInput.value) {
+                        validateSellingPrice(prixVenteInput.value, this.value, document.getElementById('prix_vente_error'));
+                    }
+                });
+                prixAchatInput.addEventListener('blur', function() {
+                    validatePurchasePrice(this.value, document.getElementById('prix_achat_error'));
+                });
+            }
+
+            // Validation en temps réel pour le prix de vente
+            if (prixVenteInput) {
+                prixVenteInput.addEventListener('input', function() {
+                    const purchasePrice = prixAchatInput ? prixAchatInput.value : '';
+                    validateSellingPrice(this.value, purchasePrice, document.getElementById('prix_vente_error'));
+                });
+                prixVenteInput.addEventListener('blur', function() {
+                    const purchasePrice = prixAchatInput ? prixAchatInput.value : '';
+                    validateSellingPrice(this.value, purchasePrice, document.getElementById('prix_vente_error'));
+                });
+            }
+
+            // Validation en temps réel pour la quantité
+            if (quantiteInput) {
+                quantiteInput.addEventListener('input', function() {
+                    validateQuantity(this.value, document.getElementById('quantite_error'));
+                });
+                quantiteInput.addEventListener('blur', function() {
+                    validateQuantity(this.value, document.getElementById('quantite_error'));
+                });
+            }
+
+            // Validation avant soumission du formulaire
+            addProductForm.addEventListener('submit', function(e) {
+                let isValid = true;
+
+                if (nomInput) {
+                    if (!validateName(nomInput.value, document.getElementById('nom_error'))) {
+                        isValid = false;
+                    }
+                }
+
+                if (descriptionInput && descriptionInput.value) {
+                    if (!validateDescription(descriptionInput.value, document.getElementById('description_error'))) {
+                        isValid = false;
+                    }
+                }
+
+                if (prixAchatInput) {
+                    if (!validatePurchasePrice(prixAchatInput.value, document.getElementById('prix_achat_error'))) {
+                        isValid = false;
+                    }
+                }
+
+                if (prixVenteInput) {
+                    const purchasePrice = prixAchatInput ? prixAchatInput.value : '';
+                    if (!validateSellingPrice(prixVenteInput.value, purchasePrice, document.getElementById('prix_vente_error'))) {
+                        isValid = false;
+                    }
+                }
+
+                if (quantiteInput) {
+                    if (!validateQuantity(quantiteInput.value, document.getElementById('quantite_error'))) {
+                        isValid = false;
+                    }
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        }
+
+        // Validations pour les formulaires d'édition de produit
+        {% for product in products %}
+        const editProductForm{{ product.id }} = document.querySelector('form[action="{% url 'product_edit' product.id %}"]');
+        if (editProductForm{{ product.id }}) {
+            const nomInput{{ product.id }} = document.getElementById('nom{{ product.id }}');
+            const descriptionInput{{ product.id }} = document.getElementById('description{{ product.id }}');
+            const prixAchatInput{{ product.id }} = document.getElementById('prix_achat{{ product.id }}');
+            const prixVenteInput{{ product.id }} = document.getElementById('prix_vente{{ product.id }}');
+            const quantiteInput{{ product.id }} = document.getElementById('quantite{{ product.id }}');
+
+            // Validation en temps réel pour le nom
+            if (nomInput{{ product.id }}) {
+                nomInput{{ product.id }}.addEventListener('input', function() {
+                    validateName(this.value, document.getElementById('nom{{ product.id }}_error'));
+                });
+                nomInput{{ product.id }}.addEventListener('blur', function() {
+                    validateName(this.value, document.getElementById('nom{{ product.id }}_error'));
+                });
+            }
+
+            // Validation en temps réel pour la description
+            if (descriptionInput{{ product.id }}) {
+                descriptionInput{{ product.id }}.addEventListener('input', function() {
+                    validateDescription(this.value, document.getElementById('description{{ product.id }}_error'));
+                });
+                descriptionInput{{ product.id }}.addEventListener('blur', function() {
+                    validateDescription(this.value, document.getElementById('description{{ product.id }}_error'));
+                });
+            }
+
+            // Validation en temps réel pour le prix d'achat
+            if (prixAchatInput{{ product.id }}) {
+                prixAchatInput{{ product.id }}.addEventListener('input', function() {
+                    validatePurchasePrice(this.value, document.getElementById('prix_achat{{ product.id }}_error'));
+                    // Re-valider le prix de vente si le prix d'achat change
+                    if (prixVenteInput{{ product.id }} && prixVenteInput{{ product.id }}.value) {
+                        validateSellingPrice(prixVenteInput{{ product.id }}.value, this.value, document.getElementById('prix_vente{{ product.id }}_error'));
+                    }
+                });
+                prixAchatInput{{ product.id }}.addEventListener('blur', function() {
+                    validatePurchasePrice(this.value, document.getElementById('prix_achat{{ product.id }}_error'));
+                });
+            }
+
+            // Validation en temps réel pour le prix de vente
+            if (prixVenteInput{{ product.id }}) {
+                prixVenteInput{{ product.id }}.addEventListener('input', function() {
+                    const purchasePrice = prixAchatInput{{ product.id }} ? prixAchatInput{{ product.id }}.value : '';
+                    validateSellingPrice(this.value, purchasePrice, document.getElementById('prix_vente{{ product.id }}_error'));
+                });
+                prixVenteInput{{ product.id }}.addEventListener('blur', function() {
+                    const purchasePrice = prixAchatInput{{ product.id }} ? prixAchatInput{{ product.id }}.value : '';
+                    validateSellingPrice(this.value, purchasePrice, document.getElementById('prix_vente{{ product.id }}_error'));
+                });
+            }
+
+            // Validation en temps réel pour la quantité
+            if (quantiteInput{{ product.id }}) {
+                quantiteInput{{ product.id }}.addEventListener('input', function() {
+                    validateQuantity(this.value, document.getElementById('quantite{{ product.id }}_error'));
+                });
+                quantiteInput{{ product.id }}.addEventListener('blur', function() {
+                    validateQuantity(this.value, document.getElementById('quantite{{ product.id }}_error'));
+                });
+            }
+
+            // Validation avant soumission du formulaire
+            editProductForm{{ product.id }}.addEventListener('submit', function(e) {
+                let isValid = true;
+
+                if (nomInput{{ product.id }}) {
+                    if (!validateName(nomInput{{ product.id }}.value, document.getElementById('nom{{ product.id }}_error'))) {
+                        isValid = false;
+                    }
+                }
+
+                if (descriptionInput{{ product.id }} && descriptionInput{{ product.id }}.value) {
+                    if (!validateDescription(descriptionInput{{ product.id }}.value, document.getElementById('description{{ product.id }}_error'))) {
+                        isValid = false;
+                    }
+                }
+
+                if (prixAchatInput{{ product.id }}) {
+                    if (!validatePurchasePrice(prixAchatInput{{ product.id }}.value, document.getElementById('prix_achat{{ product.id }}_error'))) {
+                        isValid = false;
+                    }
+                }
+
+                if (prixVenteInput{{ product.id }}) {
+                    const purchasePrice = prixAchatInput{{ product.id }} ? prixAchatInput{{ product.id }}.value : '';
+                    if (!validateSellingPrice(prixVenteInput{{ product.id }}.value, purchasePrice, document.getElementById('prix_vente{{ product.id }}_error'))) {
+                        isValid = false;
+                    }
+                }
+
+                if (quantiteInput{{ product.id }}) {
+                    if (!validateQuantity(quantiteInput{{ product.id }}.value, document.getElementById('quantite{{ product.id }}_error'))) {
+                        isValid = false;
+                    }
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        }
+        {% endfor %}
+    });
+</script>
+{% endblock %}

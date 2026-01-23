@@ -1,0 +1,124 @@
+{% extends "Front/labo/recherche/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="mx-auto" style="max-width: 800px; margin-top:50px; position: relative;">
+    <h2 class="text-center mb-5">Créer une nouvelle Recherche</h2>
+
+    <form method="post" id="rechercheForm">
+        {% csrf_token %}
+        {% for field in form %}
+            <div style="margin-bottom:20px; position:relative;">
+                {{ field.label_tag }}<br>
+                {{ field }}
+                <!-- Popup pour ce champ -->
+                <div class="popup-error-field" style="
+                    display:none;
+                    position:absolute;
+                    top:100%;
+                    left:0;
+                    background:#3db8c6;
+                    color:white;
+                    padding:5px 10px;
+                    border-radius:6px;
+                    font-size:14px;
+                    margin-top:5px;
+                    z-index:999;
+                "></div>
+            </div>
+        {% endfor %}
+
+        <button type="submit" style="padding:10px 20px; background:#3db8c6; color:white; border:none; border-radius:6px; cursor:pointer;">
+            Enregistrer
+        </button>
+    </form>
+</div>
+
+<script>
+const form = document.getElementById('rechercheForm');
+const lettersRegex = /^[A-Za-z\s]+$/;
+
+// Liste des champs avec règles
+const fields = [
+    {el: form.querySelector('#id_nom_recherche'), rules: [
+        {test: v => !!v.trim(), msg: 'Nom requis'},
+        {test: v => lettersRegex.test(v), msg: 'Nom: lettres seulement'}
+    ]},
+    {el: form.querySelector('#id_maladie'), rules: [
+        {test: v => !!v.trim(), msg: 'Maladie requise'},
+        {test: v => lettersRegex.test(v), msg: 'Maladie: lettres seulement'}
+    ]},
+    {el: form.querySelector('#id_objectif'), rules: [
+        {test: v => !!v.trim(), msg: 'Objectif requis'},
+        {test: v => v.length >= 50, msg: 'Objectif: minimum 50 caractères'}
+    ]},
+    {el: form.querySelector('#id_date_deb'), rules: [
+        {test: v => !!v, msg: 'Date début requise'}
+    ]},
+    {el: form.querySelector('#id_date_fin'), rules: [
+        {test: v => !!v, msg: 'Date fin requise'}
+    ]},
+    {el: form.querySelector('#id_type_recherche'), rules: [
+        {test: v => !!v, msg: 'Type requis'}
+    ]},
+    {el: form.querySelector('#id_etat'), rules: [
+        {test: v => !!v, msg: 'État requis'}
+    ]},
+    {el: form.querySelector('#id_risque'), rules: [
+        {test: v => !!v.trim(), msg: 'Risque requis'},
+        {test: v => ["HIGH","MEDIUM","LOW"].includes(v.toUpperCase()), msg: 'Risque doit être HIGH, MEDIUM ou LOW'}
+    ]},
+    {el: form.querySelector('#id_resultats_obtenus'), rules: [
+        {test: v => !!v.trim(), msg: 'Résultat requis'},
+        {test: v => v.length >= 50, msg: 'Résultat: minimum 50 caractères'}
+    ]}
+];
+
+// Fonction de validation d’un champ
+function validateField(field){
+    const popup = field.el.parentElement.querySelector('.popup-error-field');
+    popup.style.display = 'none';
+
+    for(const rule of field.rules){
+        if(!rule.test(field.el.value)){
+            popup.innerHTML = rule.msg;
+            popup.style.display = 'block';
+            return false;
+        }
+    }
+    return true;
+}
+
+// Validation en temps réel (quand l’utilisateur quitte le champ)
+fields.forEach(f => {
+    f.el.addEventListener('input', () => validateField(f));
+    f.el.addEventListener('blur', () => validateField(f));
+});
+
+// Validation finale au clic sur Enregistrer
+form.addEventListener('submit', function(e){
+    e.preventDefault();
+
+    // Valide tous les champs
+    for(let f of fields){
+        if(!validateField(f)){
+            f.el.focus();
+            return; // arrête le formulaire
+        }
+    }
+
+    // Vérification spécifique des dates
+    const dateDeb = form.querySelector('#id_date_deb');
+    const dateFin = form.querySelector('#id_date_fin');
+    if(dateDeb.value && dateFin.value && dateDeb.value > dateFin.value){
+        const popup = dateDeb.parentElement.querySelector('.popup-error-field');
+        popup.innerHTML = 'Date début doit être avant date fin';
+        popup.style.display = 'block';
+        dateDeb.focus();
+        return;
+    }
+
+    form.submit();
+});
+</script>
+{% endblock %}

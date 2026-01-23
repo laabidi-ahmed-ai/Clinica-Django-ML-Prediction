@@ -1,0 +1,19 @@
+{% extends "Back/Patient/base.html" %}
+
+{% block title %}Manage appointment - {{ object.name }}{% endblock %}
+{% block page_title %}Manage appointment{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">TEST - Can you see this?</h4>
+        <p>Object: {{ object }}</p>
+        <p>Form: {{ form }}</p>
+        <p>Formset: {{ prescription_formset }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

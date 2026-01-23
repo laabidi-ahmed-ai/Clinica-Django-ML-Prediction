@@ -1,0 +1,333 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Make an Appointment - Clinica</title>
+  <meta name="description" content="Submit your appointment request with Clinica">
+  <meta name="keywords" content="">
+  <link href="{% static 'Front/Patient/assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'Front/Patient/assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@300;400;500;600&family=Raleway:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <link href="{% static 'Front/Patient/assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/Patient/assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/Patient/assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/Patient/assets/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/Patient/assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/Patient/assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/Patient/assets/css/main.css' %}" rel="stylesheet">
+</head>
+
+<body class="appointment-page">
+  <header id="header" class="header sticky-top">
+
+    <div class="topbar d-flex align-items-center">
+      <div class="container d-flex justify-content-center justify-content-md-between">
+        <div class="d-none d-md-flex align-items-center">
+          <i class="bi bi-clock me-1"></i> Monday - Saturday, 8AM to 10PM
+        </div>
+        <div class="d-flex align-items-center">
+          <i class="bi bi-phone me-1"></i> Call us now +1 5589 55488 55
+        </div>
+      </div>
+    </div><!-- End Top Bar -->
+
+    <div class="branding d-flex align-items-center">
+
+      <div class="container position-relative d-flex align-items-center justify-content-end">
+        <a href="index.html" class="logo d-flex align-items-center me-auto">
+          <img src="{% static 'Front/assets/images/logo_site.png' %}" alt="" style="width: 120px; height: 90px;">
+          <!-- Uncomment the line below if you also wish to use a text logo -->
+          <!-- <h1 class="sitename">Medicio</h1>  -->
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+         <ul style="display: flex; align-items: center; list-style: none; margin: 0; padding: 0; gap: 30px;">
+            <li><a href="{% url 'front_index' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">HOME</a></li>
+            <li><a href="#" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">ABOUT</a></li>
+            <li><a href="{% url 'index' %}" style="text-decoration: none; color: #333; font-weight: 500;">PRODUCTS</a></li>
+            <li><a href="{% url 'donation:front_publication_list' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;" >DONATION</a></li>
+            <li><a href="{% url 'stages:liste_stages_front' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">STAGE</a></li>
+            <li><a href="{% url 'Labapp:home' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">LABO</a></li>
+            <li><a href="{% url 'my_patient_portal' %}"  class="active" style="text-decoration: none; color: #3fbbc0; font-weight: 600;">PATIENT</a></li>
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+
+        <a class="cta-btn" href="{% url 'public_appointment' %}">Make an Appointment</a>
+        <ul class="navbar-nav ms-auto">
+                        {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle fa-lg" style="font-size: 34px;"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="{% url 'donation:donation_create' %}">
+                                    <i class="fas fa-heart" style="color: #13547a;"></i> My Donations
+                                </a></li>
+                                <li><a class="dropdown-item" href="#">
+                                    <i class="fas fa-sign-out-alt" style="color: #13547a;"></i> Logout
+                                </a></li>
+                            </ul>
+                        </li>
+                        {% else %}
+                        <li><a href="{% url 'loginFront' %}" class="nav-auth-btn nav-login-btn" style="text-decoration: none; background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%); color: white; font-weight: 600; padding: 8px 20px; border-radius: 25px; display: inline-block; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(63, 187, 192, 0.3);"><i class="bi bi-box-arrow-in-right"></i> LOGIN</a></li>
+                        {% endif %}
+                    </ul>
+      </div>
+
+    </div>
+
+  </header>
+
+  <main class="main">
+    <section class="breadcrumbs section light-background">
+      <div class="container" data-aos="fade-up">
+        <div class="row align-items-center">
+          <div class="col-lg-8">
+            <p class="text-uppercase text-muted small mb-1">Clinica Appointments</p>
+            <h1 class="mb-3">Tell us how we can help</h1>
+            <p class="mb-0">Complete the short form below and our care team will confirm your visit shortly.</p>
+          </div>
+          <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+            <a href="{% url 'front_index' %}" class="btn btn-outline-secondary">Back to home</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="appointment section">
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="row g-4">
+          <div class="col-lg-5">
+            <div class="info-item h-100 d-flex flex-column justify-content-center">
+              <h3 class="mb-3">What to expect</h3>
+              <ul class="list-unstyled">
+                <li class="mb-3"><i class="bi bi-check-circle text-primary me-2"></i>We?ll call you within one business day to
+                  confirm.</li>
+                <li class="mb-3"><i class="bi bi-check-circle text-primary me-2"></i>Please choose a preferred date &amp; time ?
+                  we?ll do our best to match it.</li>
+                <li class="mb-3"><i class="bi bi-check-circle text-primary me-2"></i>Your information is secure and only used to
+                  schedule your visit.</li>
+              </ul>
+              <div class="mt-4">
+                <p class="mb-1 text-muted">Prefer to call?</p>
+                <a href="tel:+155895548855" class="h4 text-decoration-none">+1 5589 55488 55</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-7">
+            <div class="card shadow-sm border-0">
+              <div class="card-body">
+                <h3 class="card-title mb-3">Appointment request</h3>
+                {% if request.GET.success %}
+                <div class="alert alert-success">Your appointment request has been sent successfully.</div>
+                {% endif %}
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'info' }}">{{ message }}</div>
+                {% endfor %}
+                {% endif %}
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                  {% for error in form.non_field_errors %}
+                  <div>{{ error }}</div>
+                  {% endfor %}
+                </div>
+                {% endif %}
+                <form method="post" class="row g-3">
+                  {% csrf_token %}
+                  <div class="col-md-6">
+                    <label class="form-label">Full Name *</label>
+                    <input type="text" name="name" class="form-control" id="id_name"
+                      value="{{ form.name.value|default_if_none:'' }}" 
+                      pattern="[A-Za-z\s\-'\.]+"
+                      title="Name cannot contain numbers"
+                      required>
+                    {% for error in form.name.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Email *</label>
+                    <input type="email" name="email" class="form-control" id="id_email"
+                      value="{{ form.email.value|default_if_none:'' }}" required>
+                    {% for error in form.email.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Phone *</label>
+                    <input type="tel" name="phone" class="form-control" id="id_phone"
+                      value="{{ form.phone.value|default_if_none:'' }}" 
+                      pattern="[\+\d\s\-\(\)]+" 
+                      title="Phone number can only contain +, numbers, spaces, hyphens, and parentheses"
+                      required>
+                    {% for error in form.phone.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Preferred date *</label>
+                    <input type="date" name="requested_date" class="form-control" id="id_requested_date"
+                      value="{{ form.requested_date.value|default_if_none:'' }}" 
+                      min="{% now 'Y-m-d' %}"
+                      required>
+                    {% for error in form.requested_date.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Preferred time *</label>
+                    <input type="time" name="requested_time" class="form-control" id="id_requested_time"
+                      value="{{ form.requested_time.value|default_if_none:'' }}" 
+                      min="08:00" 
+                      max="16:59"
+                      required>
+                    {% for error in form.requested_time.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Department *</label>
+                    <select name="department" id="id_department" class="form-select" required>
+                      <option value="">Select Department</option>
+                      {% for value, label in form.department.field.choices %}
+                      {% if value %}
+                      <option value="{{ value }}" {% if form.department.value == value %}selected{% endif %}>{{ label }}
+                      </option>
+                      {% endif %}
+                      {% endfor %}
+                    </select>
+                    {% for error in form.department.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Doctor (optional)</label>
+                    <input type="text" name="doctor_name" class="form-control" id="id_doctor_name"
+                      value="{{ form.doctor_name.value|default_if_none:'' }}" placeholder="Preferred doctor">
+                    {% for error in form.doctor_name.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Notes</label>
+                    <textarea name="notes" class="form-control" rows="4"
+                      placeholder="Describe your symptoms or requests">{{ form.notes.value|default_if_none:'' }}</textarea>
+                    {% for error in form.notes.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                  </div>
+                  <div class="col-12 d-flex align-items-center gap-3">
+                    <button type="submit" class="btn btn-primary px-4">Submit request</button>
+                    <span class="text-muted small">We typically reply within 24h.</span>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="footer light-background">
+    <div class="container text-center">
+      <p class="mb-1">&copy; {% now "Y" %} Clinica</p>
+      <p class="small text-muted mb-0">Template powered by Medicio.</p>
+    </div>
+  </footer>
+
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
+  <div id="preloader"></div>
+  <script src="{% static 'Front/Patient/assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'Front/Patient/assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static 'Front/Patient/assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'Front/Patient/assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'Front/Patient/assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'Front/Patient/assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'Front/Patient/assets/js/main.js' %}"></script>
+  <script>
+    // Additional frontend validation
+    document.addEventListener('DOMContentLoaded', function() {
+      const phoneInput = document.getElementById('id_phone');
+      const dateInput = document.getElementById('id_requested_date');
+      const timeInput = document.getElementById('id_requested_time');
+      const form = document.querySelector('form');
+
+      // Phone validation - only allow +, digits, spaces, hyphens, parentheses
+      if (phoneInput) {
+        phoneInput.addEventListener('input', function(e) {
+          const value = e.target.value;
+          const validPattern = /^[\+\d\s\-\(\)]*$/;
+          if (!validPattern.test(value)) {
+            e.target.setCustomValidity('Phone number can only contain +, numbers, spaces, hyphens, and parentheses.');
+          } else {
+            e.target.setCustomValidity('');
+          }
+        });
+      }
+
+      // Name validation - no numbers
+      const nameInput = document.getElementById('id_name');
+      if (nameInput) {
+        nameInput.addEventListener('input', function(e) {
+          const value = e.target.value;
+          if (/\d/.test(value)) {
+            e.target.setCustomValidity('Name cannot contain numbers.');
+          } else {
+            e.target.setCustomValidity('');
+          }
+        });
+      }
+
+      // Date validation - ensure it's today or later
+      if (dateInput) {
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.setAttribute('min', today);
+        dateInput.addEventListener('change', function(e) {
+          const selectedDate = new Date(e.target.value);
+          const todayDate = new Date();
+          todayDate.setHours(0, 0, 0, 0);
+          if (selectedDate < todayDate) {
+            e.target.setCustomValidity('Preferred date cannot be in the past.');
+          } else {
+            e.target.setCustomValidity('');
+          }
+        });
+      }
+
+      // Time validation - ensure it's between 8:00 AM and 4:59 PM
+      if (timeInput) {
+        timeInput.addEventListener('change', function(e) {
+          const time = e.target.value;
+          const [hours, minutes] = time.split(':').map(Number);
+          const totalMinutes = hours * 60 + minutes;
+          const minMinutes = 8 * 60; // 8:00 AM
+          const maxMinutes = 16 * 60 + 59; // 4:59 PM
+          
+          if (totalMinutes < minMinutes || totalMinutes > maxMinutes) {
+            e.target.setCustomValidity('Preferred time must be between 8:00 AM and 4:59 PM.');
+          } else {
+            e.target.setCustomValidity('');
+          }
+        });
+      }
+    });
+  </script>
+ </body>
+ 
+ </html>
+
+
+
+
+

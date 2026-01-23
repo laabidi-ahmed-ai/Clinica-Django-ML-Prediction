@@ -1,0 +1,908 @@
+{% extends 'back/products/base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - Admin Panel{% endblock %}
+
+{% block page_title %}
+<div class="mb-4">
+    <h3 class="mb-1">Welcome back</h3>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex no-block align-items-center">
+                    <div>
+                        <h2 class="text-primary mb-1">{{ total_orders }}</h2>
+                        <h6 class="text-muted">Total Orders</h6>
+                    </div>
+                    <span class="ms-auto display-6 text-primary"><i data-feather="shopping-cart"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex no-block align-items-center">
+                    <div>
+                        <h2 class="text-warning mb-1">{{ pending_orders }}</h2>
+                        <h6 class="text-muted">Pending Orders</h6>
+                    </div>
+                    <span class="ms-auto display-6 text-warning"><i data-feather="clock"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex no-block align-items-center">
+                    <div>
+                        <h2 class="text-success mb-1">{{ orders_today }}</h2>
+                        <h6 class="text-muted">Today</h6>
+                    </div>
+                    <span class="ms-auto display-6 text-success"><i data-feather="calendar"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex no-block align-items-center">
+                    <div>
+                        <h2 class="text-info mb-1">{{ acceptance_rate }}%</h2>
+                        <h6 class="text-muted">Acceptance Rate</h6>
+                    </div>
+                    <span class="ms-auto display-6 text-info"><i data-feather="trending-up"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Profit Statistics Card in top row -->
+<div class="row mt-3">
+    <div class="col-lg-12 col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-lg-3 col-md-6">
+                        <h4 class="card-title mb-2">Profit Statistics</h4>
+                        <h2 class="text-success mb-1">{{ total_profit|floatformat:2 }} DT</h2>
+                        <h6 class="text-muted">Total Profit (Selling Price - Purchase Price)</h6>
+                    </div>
+                    <div class="col-lg-9 col-md-6">
+                        {% if profit_stats_list %}
+                        <div class="table-responsive">
+                            <table class="table table-sm mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Profit</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for stat in profit_stats_list %}
+                                    <tr>
+                                        <td>{{ stat.name }}</td>
+                                        <td>{{ stat.quantity }}</td>
+                                        <td class="text-success fw-semibold">{{ stat.profit|floatformat:2 }} DT</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <p class="text-muted mb-0">No profit statistics available yet.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Advanced Analytics Section -->
+<div class="row mt-3">
+    <!-- Revenue Chart - Last 7 Days -->
+    <div class="col-lg-6 col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-3">📈 Revenue - Last 7 Days</h4>
+                <canvas id="revenueChart7Days" style="max-height: 300px;"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Revenue Chart - Last 12 Months -->
+    <div class="col-lg-6 col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-3">📊 Revenue - Last 12 Months</h4>
+                <canvas id="revenueChart12Months" style="max-height: 300px;"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Top Products & Conversion Rate -->
+<div class="row mt-3">
+    <!-- Top Products by Revenue -->
+    <div class="col-lg-8 col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-3">🏆 Top Products by Revenue</h4>
+                <canvas id="topProductsChart" style="max-height: 350px;"></canvas>
+                {% if top_products_by_revenue %}
+                <div class="mt-3">
+                    <div class="table-responsive">
+                        <table class="table table-sm mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Product</th>
+                                    <th>Quantity Sold</th>
+                                    <th>Revenue</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in top_products_by_revenue|slice:":5" %}
+                                <tr>
+                                    <td><strong>#{{ forloop.counter }}</strong></td>
+                                    <td>{{ product.name }}</td>
+                                    <td>{{ product.quantity }}</td>
+                                    <td class="text-success fw-semibold">{{ product.revenue|floatformat:2 }} DT</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Conversion & Performance Metrics -->
+    <div class="col-lg-4 col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-3">⚡ Performance Metrics</h4>
+                
+                <div class="metric-card mb-3">
+                    <div class="d-flex align-items-center">
+                        <div class="metric-icon bg-primary">
+                            <i data-feather="shopping-cart"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h6 class="mb-0 text-muted">Cart Conversion Rate</h6>
+                            <h3 class="mb-0 text-primary">{{ conversion_rate }}%</h3>
+                            <small class="text-muted">Panier → Commande</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="metric-card mb-3">
+                    <div class="d-flex align-items-center">
+                        <div class="metric-icon bg-success">
+                            <i data-feather="trending-up"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h6 class="mb-0 text-muted">Orders per Day</h6>
+                            <h3 class="mb-0 text-success">{{ orders_per_day_avg }}</h3>
+                            <small class="text-muted">Average</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="metric-card mb-3">
+                    <div class="d-flex align-items-center">
+                        <div class="metric-icon bg-info">
+                            <i data-feather="dollar-sign"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h6 class="mb-0 text-muted">Total Revenue</h6>
+                            <h3 class="mb-0 text-info">{{ total_revenue|floatformat:2 }} DT</h3>
+                            <small class="text-muted">All time</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="d-flex align-items-center">
+                        <div class="metric-icon bg-warning">
+                            <i data-feather="check-circle"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h6 class="mb-0 text-muted">Acceptance Rate</h6>
+                            <h3 class="mb-0 text-warning">{{ acceptance_rate }}%</h3>
+                            <small class="text-muted">Orders accepted</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-lg-8 col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <h4 class="card-title mb-0">Latest Orders</h4>
+                    <div class="ms-auto d-flex gap-2">
+                        <a href="{% url 'export_orders_pdf' %}" class="btn btn-sm btn-danger" title="Export all orders to PDF">
+                            <i data-feather="file-text"></i> Export PDF
+                        </a>
+                        <a href="{% url 'orders_list' %}" class="btn btn-sm btn-outline-primary">View all</a>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Product</th>
+                                <th>Customer</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in recent_orders %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'orders_list' %}" class="text-dark fw-semibold">
+                                        #{{ order.id }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <div class="text-dark fw-semibold">{{ order.produit.nom }}</div>
+                                    <div class="text-muted small">{{ order.produit.get_category_display }}</div>
+                                </td>
+                                <td>
+                                    <div class="text-dark fw-semibold">{{ order.prenom_client }} {{ order.nom_client }}</div>
+                                    <div class="text-muted small">{{ order.email_client }}</div>
+                                </td>
+                                <td>{{ order.quantite }}</td>
+                                <td>{{ order.total|floatformat:2 }} DT</td>
+                                <td>
+                                    <span class="badge bg-{% if order.statut == 'en_attente' %}warning{% elif order.statut == 'acceptee' %}success{% elif order.statut == 'refusee' %}danger{% else %}secondary{% endif %}">
+                                        {{ order.get_statut_display }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {{ order.date_creation|date:"M d" }}
+                                    <small class="text-muted d-block">{{ order.date_creation|time:"H:i" }}</small>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center text-muted py-4">
+                                    No orders yet.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <h4 class="card-title mb-0">Quick Actions</h4>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a class="list-group-item list-group-item-action d-flex align-items-center" href="{% url 'orders_list' %}?status=en_attente">
+                        <span class="badge bg-warning text-dark me-3">{{ pending_orders }}</span>
+                        Review pending orders
+                    </a>
+                    <a class="list-group-item list-group-item-action d-flex align-items-center" href="{% url 'products_list' %}">
+                        <i data-feather="package" class="me-3"></i>
+                        Manage products
+                    </a>
+                    <a class="list-group-item list-group-item-action d-flex align-items-center" href="{% if latest_pending %}{% url 'orders_list' %}#order-{{ latest_pending.id }}{% else %}#{% endif %}">
+                        {% if latest_pending %}
+                        <i data-feather="clipboard" class="me-3"></i>
+                        Manage order #{{ latest_pending.id }}
+                        {% else %}
+                        <i data-feather="check-circle" class="me-3"></i>
+                        All caught up!
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-body">
+                <h4 class="card-title mb-3">Recent Products</h4>
+                <ul class="list-unstyled mb-0">
+                    {% for product in recent_products %}
+                    <li class="d-flex align-items-center py-2 border-bottom">
+                        <div>
+                            <a href="{% url 'products_list' %}" class="fw-semibold text-dark">
+                                {{ product.nom }}
+                            </a>
+                            <div class="text-muted small">
+                                {{ product.get_category_display }} &middot; {{ product.prix_vente|floatformat:2 }} DT &middot; Stock: {{ product.quantite }}
+                            </div>
+                        </div>
+                        <span class="ms-auto text-muted small">{{ product.date_ajout|date:"M d" }}</span>
+                    </li>
+                    {% empty %}
+                    <li class="py-2 text-muted small">No products yet.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Section -->
+<div class="row mt-4">
+    <!-- Most Bought Products Pie Chart -->
+    <div class="col-lg-12 col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-3">Most Bought Products</h4>
+                {% if product_stats_list %}
+                <div class="row">
+                    <div class="col-lg-6 col-md-12">
+                        <canvas id="productPieChart" style="max-height: 400px;"></canvas>
+                    </div>
+                    <div class="col-lg-6 col-md-12">
+                        <div class="mt-3">
+                            <h6>Product Statistics:</h6>
+                            <ul class="list-unstyled">
+                                {% for stat in product_stats_list %}
+                                <li class="d-flex justify-content-between py-2 border-bottom">
+                                    <span>{{ stat.name }}</span>
+                                    <span class="fw-semibold">{{ stat.quantity }} units ({{ stat.percentage }}%)</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <p class="text-muted">No product statistics available yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Low Stock Alert Popup -->
+{% if low_stock_products %}
+<div class="low-stock-popup" id="lowStockPopup">
+    <div class="low-stock-header">
+        <div class="low-stock-icon">
+            <i data-feather="alert-triangle"></i>
+        </div>
+        <h5>⚠️ Low Stock Alert!</h5>
+        <button type="button" class="btn-close-popup" onclick="closeLowStockPopup()">
+            <i data-feather="x"></i>
+        </button>
+    </div>
+    <div class="low-stock-body">
+        <p class="low-stock-message">The following products need restocking (less than {{ low_stock_threshold }} items):</p>
+        <ul class="low-stock-list">
+            {% for product in low_stock_products %}
+            <li class="low-stock-item {% if product.quantite == 0 %}out-of-stock{% elif product.quantite <= 3 %}critical{% endif %}">
+                <div class="product-info">
+                    <span class="product-name">{{ product.nom }}</span>
+                    <span class="product-category">{{ product.get_category_display }}</span>
+                </div>
+                <div class="stock-badge {% if product.quantite == 0 %}badge-danger{% elif product.quantite <= 3 %}badge-critical{% else %}badge-warning{% endif %}">
+                    {% if product.quantite == 0 %}
+                        OUT OF STOCK
+                    {% else %}
+                        {{ product.quantite }} left
+                    {% endif %}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="low-stock-footer">
+        <a href="{% url 'products_list' %}" class="btn-restock">
+            <i data-feather="package"></i> Manage Products
+        </a>
+    </div>
+</div>
+<div class="low-stock-overlay" id="lowStockOverlay" onclick="closeLowStockPopup()"></div>
+{% endif %}
+
+<style>
+    .low-stock-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1040;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .low-stock-overlay.show {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .low-stock-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.8);
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+        z-index: 1050;
+        width: 90%;
+        max-width: 500px;
+        max-height: 80vh;
+        overflow: hidden;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .low-stock-popup.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    
+    .low-stock-header {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+        color: white;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .low-stock-icon {
+        width: 45px;
+        height: 45px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: shake 0.5s ease-in-out infinite;
+    }
+    
+    @keyframes shake {
+        0%, 100% { transform: rotate(-5deg); }
+        50% { transform: rotate(5deg); }
+    }
+    
+    .low-stock-header h5 {
+        margin: 0;
+        flex: 1;
+        font-weight: 600;
+    }
+    
+    .btn-close-popup {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.3s;
+    }
+    
+    .btn-close-popup:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .low-stock-body {
+        padding: 20px;
+        max-height: 350px;
+        overflow-y: auto;
+    }
+    
+    .low-stock-message {
+        color: #666;
+        margin-bottom: 15px;
+        font-size: 14px;
+    }
+    
+    .low-stock-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .low-stock-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 15px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        background: #f8f9fa;
+        transition: all 0.3s ease;
+    }
+    
+    .low-stock-item:hover {
+        background: #e9ecef;
+    }
+    
+    .low-stock-item.critical {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+    }
+    
+    .low-stock-item.out-of-stock {
+        background: #f8d7da;
+        border-left: 4px solid #dc3545;
+    }
+    
+    .product-info {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .product-name {
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .product-category {
+        font-size: 12px;
+        color: #888;
+    }
+    
+    .stock-badge {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    
+    .badge-warning {
+        background: #ffc107;
+        color: #333;
+    }
+    
+    .badge-critical {
+        background: #fd7e14;
+        color: white;
+    }
+    
+    .badge-danger {
+        background: #dc3545;
+        color: white;
+        animation: pulse 1s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+    
+    .low-stock-footer {
+        padding: 15px 20px;
+        background: #f8f9fa;
+        border-top: 1px solid #e9ecef;
+        text-align: center;
+    }
+    
+    .btn-restock {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%);
+        color: white;
+        padding: 12px 25px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-restock:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(63, 187, 192, 0.4);
+        color: white;
+    }
+    
+    /* Metric Cards Styles */
+    .metric-card {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 15px;
+        border-left: 4px solid transparent;
+        transition: all 0.3s ease;
+    }
+    
+    .metric-card:hover {
+        background: #e9ecef;
+        transform: translateX(5px);
+    }
+    
+    .metric-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+    
+    .metric-icon.bg-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .metric-icon.bg-success {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    }
+    
+    .metric-icon.bg-info {
+        background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+    }
+    
+    .metric-icon.bg-warning {
+        background: linear-gradient(135deg, #ffc107 0%, #ffca2c 100%);
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+    // Product Pie Chart
+    {% if product_stats_list %}
+    document.addEventListener('DOMContentLoaded', function() {
+        const productPieCtx = document.getElementById('productPieChart');
+        if (productPieCtx) {
+            const productLabels = {{ product_labels_json|safe }};
+            const productQuantities = {{ product_quantities_json|safe }};
+            
+            const productPieChart = new Chart(productPieCtx, {
+                type: 'pie',
+                data: {
+                    labels: productLabels,
+                    datasets: [{
+                        data: productQuantities,
+                        backgroundColor: [
+                            '#667eea',
+                            '#764ba2',
+                            '#f093fb',
+                            '#f5576c',
+                            '#4facfe',
+                            '#00f2fe',
+                            '#43e97b',
+                            '#38f9d7',
+                            '#fa709a',
+                            '#fee140'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += context.parsed + ' units';
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                    label += ' (' + percentage + '%)';
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    });
+    {% endif %}
+    
+    // Low Stock Alert Popup
+    {% if low_stock_products %}
+    function showLowStockPopup() {
+        document.getElementById('lowStockPopup').classList.add('show');
+        document.getElementById('lowStockOverlay').classList.add('show');
+        feather.replace();
+    }
+    
+    function closeLowStockPopup() {
+        document.getElementById('lowStockPopup').classList.remove('show');
+        document.getElementById('lowStockOverlay').classList.remove('show');
+    }
+    
+    // Show popup on page load with a small delay
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(showLowStockPopup, 500);
+    });
+    {% endif %}
+    
+    // Revenue Charts
+    document.addEventListener('DOMContentLoaded', function() {
+        // Revenue Chart - Last 7 Days
+        const revenue7DaysCtx = document.getElementById('revenueChart7Days');
+        if (revenue7DaysCtx) {
+            const revenue7DaysData = {{ revenue_by_day_json|safe }};
+            new Chart(revenue7DaysCtx, {
+                type: 'line',
+                data: {
+                    labels: revenue7DaysData.map(d => d.date),
+                    datasets: [{
+                        label: 'Revenue (DT)',
+                        data: revenue7DaysData.map(d => d.revenue),
+                        borderColor: 'rgb(63, 187, 192)',
+                        backgroundColor: 'rgba(63, 187, 192, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Revenue: ' + context.parsed.y.toFixed(2) + ' DT';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toFixed(0) + ' DT';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Revenue Chart - Last 12 Months
+        const revenue12MonthsCtx = document.getElementById('revenueChart12Months');
+        if (revenue12MonthsCtx) {
+            const revenue12MonthsData = {{ revenue_by_month_json|safe }};
+            new Chart(revenue12MonthsCtx, {
+                type: 'bar',
+                data: {
+                    labels: revenue12MonthsData.map(d => d.date),
+                    datasets: [{
+                        label: 'Revenue (DT)',
+                        data: revenue12MonthsData.map(d => d.revenue),
+                        backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                        borderColor: 'rgb(102, 126, 234)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Revenue: ' + context.parsed.y.toFixed(2) + ' DT';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toFixed(0) + ' DT';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Top Products by Revenue Chart
+        const topProductsCtx = document.getElementById('topProductsChart');
+        if (topProductsCtx) {
+            const topProductsData = {{ top_products_revenue_json|safe }};
+            new Chart(topProductsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: topProductsData.map(d => d.name),
+                    datasets: [{
+                        data: topProductsData.map(d => d.revenue),
+                        backgroundColor: [
+                            '#667eea',
+                            '#764ba2',
+                            '#f093fb',
+                            '#f5576c',
+                            '#4facfe'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += context.parsed + ' DT';
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                    label += ' (' + percentage + '%)';
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

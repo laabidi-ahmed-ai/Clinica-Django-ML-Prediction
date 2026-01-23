@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Carte des laboratoires</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-sA+e2HapbH2pq7x0Xz1nED9XXThtR+7yH7P4h3sZgCI="
+        crossorigin=""/>
+  <style>
+    #map { height: 600px; width: 100%; }
+  </style>
+</head>
+<body>
+  <h2>Carte des laboratoires de recherche</h2>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-o9N1j8qTC0cxt4QX2kXmT8q7DKk0CQgYw3Zohc8q0xo="
+          crossorigin=""></script>
+
+  <script>
+    // Initialisation de la carte centrée sur la Tunisie
+    var map = L.map('map').setView([33.8869, 9.5375], 6);
+
+    // Ajouter le fond de carte
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    // Liste des laboratoires (on va passer ces données depuis Django)
+    var labs = [
+      {% for lab in labs %}
+      {
+        name: "{{ lab.nom }}",
+        latitude: {{ lab.latitude }},
+        longitude: {{ lab.longitude }},
+        description: "{{ lab.description|escapejs }}"
+      },
+      {% endfor %}
+    ];
+
+    // Ajouter un marqueur pour chaque labo
+    labs.forEach(function(lab){
+      L.marker([lab.latitude, lab.longitude])
+        .addTo(map)
+        .bindPopup("<b>" + lab.name + "</b><br>" + lab.description);
+    });
+  </script>
+</body>
+</html>

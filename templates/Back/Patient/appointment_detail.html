@@ -1,0 +1,256 @@
+{% extends "Back/Patient/base.html" %}
+
+{% block title %}Appointment - {{ appointment.name }}{% endblock %}
+{% block page_title %}Appointment detail{% endblock %}
+
+{% block breadcrumb_actions %}
+<div class="btn-group">
+  <a href="{% url 'patient_add' %}?name={{ appointment.name }}&email={{ appointment.email }}&phone={{ appointment.phone }}" class="btn btn-outline-primary">
+    <i data-feather="user-plus" class="me-1" style="width:16px;height:16px;"></i>Create patient
+  </a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <!-- LEFT COLUMN -->
+  <div class="col-lg-6">
+    <!-- Request Details Card -->
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title mb-4">Request details</h4>
+        <dl class="row mb-0">
+          <dt class="col-sm-4">Status</dt>
+          <dd class="col-sm-8">
+            <span class="badge bg-{% if appointment.status == 'pending' %}warning{% elif appointment.status == 'confirmed' %}success{% elif appointment.status == 'cancelled' %}danger{% else %}secondary{% endif %}">
+              {{ appointment.get_status_display }}
+            </span>
+          </dd>
+
+          <dt class="col-sm-4">Requested date</dt>
+          <dd class="col-sm-8">{{ appointment.requested_date }}</dd>
+
+          <dt class="col-sm-4">Requested time</dt>
+          <dd class="col-sm-8">{{ appointment.requested_time|time:"H:i" }}</dd>
+
+          <dt class="col-sm-4">Department</dt>
+          <dd class="col-sm-8">{{ appointment.get_department_display }}</dd>
+
+          <dt class="col-sm-4">Preferred doctor</dt>
+          <dd class="col-sm-8">{{ appointment.doctor_name|default:"?" }}</dd>
+
+          <dt class="col-sm-4">Created</dt>
+          <dd class="col-sm-8">{{ appointment.created_at|date:"Y-m-d H:i" }}</dd>
+          
+          <dt class="col-sm-4">Price</dt>
+          <dd class="col-sm-8"><strong class="text-primary">{{ appointment.price }} TND</strong></dd>
+          
+          <dt class="col-sm-4">Payment Status</dt>
+          <dd class="col-sm-8">
+            <span class="badge bg-{% if appointment.payment_status == 'paid' %}success{% elif appointment.payment_status == 'refunded' %}info{% else %}warning{% endif %}">
+              {{ appointment.get_payment_status_display }}
+            </span>
+          </dd>
+        </dl>
+      </div>
+    </div>
+    
+    <!-- Medical Test Request Form -->
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title mb-3">
+          <i data-feather="activity" class="me-2"></i>
+          Request Medical Test/Analysis
+        </h4>
+        <form method="post" class="row g-3">
+          {% csrf_token %}
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">{{ medical_test_form.test_type.label }}</label>
+            {{ medical_test_form.test_type }}
+            {% for error in medical_test_form.test_type.errors %}
+            <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">{{ medical_test_form.test_name.label }}</label>
+            {{ medical_test_form.test_name }}
+            {% for error in medical_test_form.test_name.errors %}
+            <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-semibold">{{ medical_test_form.reason.label }}</label>
+            {{ medical_test_form.reason }}
+            {% for error in medical_test_form.reason.errors %}
+            <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-semibold">{{ medical_test_form.instructions.label }}</label>
+            {{ medical_test_form.instructions }}
+            {% for error in medical_test_form.instructions.errors %}
+            <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary">
+              <i data-feather="plus" class="me-1" style="width:16px;height:16px;"></i>
+              Request Test
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <!-- Medical Tests Requested -->
+    {% if medical_tests %}
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title mb-3">
+          <i data-feather="file-text" class="me-2"></i>
+          Requested Medical Tests
+        </h4>
+        <div class="list-group">
+          {% for test in medical_tests %}
+          <div class="list-group-item">
+            <div class="d-flex w-100 justify-content-between align-items-start">
+              <div>
+                <h6 class="mb-1">{{ test.test_name }}</h6>
+                <p class="mb-1 text-muted small">
+                  <strong>Type:</strong> {{ test.get_test_type_display }} &bull; 
+                  <strong>Status:</strong> 
+                  <span class="badge bg-{% if test.status == 'completed' %}success{% elif test.status == 'scheduled' %}info{% elif test.status == 'cancelled' %}danger{% else %}warning{% endif %}">
+                    {{ test.get_status_display }}
+                  </span>
+                </p>
+                <p class="mb-1"><strong>Reason:</strong> {{ test.reason }}</p>
+                {% if test.instructions %}
+                <p class="mb-1 text-muted small"><strong>Instructions:</strong> {{ test.instructions }}</p>
+                {% endif %}
+                <small class="text-muted">Requested by {{ test.requested_by.get_full_name|default:test.requested_by.user_id }} on {{ test.requested_at|date:"Y-m-d H:i" }}</small>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div class="col-lg-6">
+    <!-- Requester Card -->
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title mb-4">Requester</h4>
+        <dl class="row mb-0">
+          <dt class="col-sm-4">Name</dt>
+          <dd class="col-sm-8">{{ appointment.name }}</dd>
+
+          <dt class="col-sm-4">Email</dt>
+          <dd class="col-sm-8">{{ appointment.email }}</dd>
+
+          <dt class="col-sm-4">Phone</dt>
+          <dd class="col-sm-8">{{ appointment.phone }}</dd>
+
+          <dt class="col-sm-4">Notes</dt>
+          <dd class="col-sm-8">
+            {% if appointment.notes %}
+              {% with patient_notes=appointment.get_patient_notes doctor_notes=appointment.get_doctor_notes %}
+                {% if patient_notes %}
+                  <div class="mb-3">
+                    <strong class="text-primary">Patient's notes:</strong><br>
+                    <div class="text-muted mt-1 p-2 bg-light rounded" style="white-space: pre-wrap;">{{ patient_notes }}</div>
+                  </div>
+                {% endif %}
+                {% if doctor_notes %}
+                  <div>
+                    <strong class="text-success">Doctor's notes:</strong><br>
+                    <div class="mt-1 p-2 bg-light rounded" style="white-space: pre-wrap;">{{ doctor_notes }}</div>
+                  </div>
+                {% endif %}
+              {% endwith %}
+            {% else %}
+              <span class="text-muted">No notes provided</span>
+            {% endif %}
+          </dd>
+        </dl>
+      </div>
+    </div>
+
+    <!-- Linked Patient Card -->
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title mb-3">Linked patient</h4>
+        {% if appointment.linked_patient %}
+        <p class="mb-2">
+          <a href="{% url 'patient_detail' appointment.linked_patient.id %}" class="fw-semibold">
+            {{ appointment.linked_patient }}
+          </a>
+        </p>
+        <div class="text-muted small">
+          {{ appointment.linked_patient.email }} &middot; {{ appointment.linked_patient.phone }}
+        </div>
+        {% else %}
+        <p class="text-muted mb-0">Not linked</p>
+        {% endif %}
+      </div>
+    </div>
+    
+    <!-- Prescriptions Card -->
+    {% if appointment.prescriptions.exists %}
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title mb-3">
+          <i data-feather="box" class="me-2"></i>
+          Prescriptions
+        </h4>
+        <div class="table-responsive">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Medication</th>
+                <th>Dosage</th>
+                <th>Frequency</th>
+                <th>Duration</th>
+                <th>Prescribed by</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for prescription in appointment.prescriptions.all %}
+              <tr>
+                <td>{{ prescription.medication_name }}</td>
+                <td>{{ prescription.dosage }}</td>
+                <td>{{ prescription.frequency }}</td>
+                <td>{{ prescription.duration }}</td>
+                <td>{{ prescription.prescribed_by.get_full_name|default:prescription.prescribed_by.user_id }}</td>
+              </tr>
+              {% if prescription.instructions %}
+              <tr>
+                <td colspan="5" class="text-muted small">
+                  <i data-feather="info" style="width:14px;height:14px;"></i>
+                  {{ prescription.instructions }}
+                </td>
+              </tr>
+              {% endif %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="d-flex gap-2">
+  <a href="{% url 'appointment_manage' appointment.id %}" class="btn btn-primary">
+    <i data-feather="sliders" class="me-1" style="width:16px;height:16px;"></i>Manage request
+  </a>
+  <a href="{% url 'appointment_list' %}" class="btn btn-outline-secondary">
+    <i data-feather="arrow-left" class="me-1" style="width:16px;height:16px;"></i>Back to list
+  </a>
+</div>
+{% endblock %}
+

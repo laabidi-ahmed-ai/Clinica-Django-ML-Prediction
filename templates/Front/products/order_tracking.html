@@ -1,0 +1,477 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Track Order - Medicio</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+  
+  <style>
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+    }
+    
+    .tracking-container {
+      max-width: 700px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    
+    .tracking-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+      overflow: hidden;
+      animation: slideUp 0.6s ease-out;
+    }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .tracking-header {
+      background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%);
+      color: white;
+      padding: 40px 30px;
+      text-align: center;
+    }
+    
+    .tracking-header h1 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    
+    .tracking-header p {
+      margin: 10px 0 0;
+      opacity: 0.9;
+    }
+    
+    .order-icon {
+      width: 80px;
+      height: 80px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+    
+    .order-icon i {
+      font-size: 40px;
+    }
+    
+    .tracking-body {
+      padding: 40px 30px;
+    }
+    
+    .status-badge {
+      display: inline-block;
+      padding: 10px 25px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+    }
+    
+    .status-pending {
+      background: linear-gradient(135deg, #ffc107 0%, #ffca2c 100%);
+      color: #333;
+    }
+    
+    .status-accepted {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      color: white;
+    }
+    
+    .status-rejected {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      color: white;
+    }
+    
+    .order-details {
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 25px;
+    }
+    
+    .order-details h3 {
+      color: #3fbbc0;
+      margin-bottom: 20px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #e9ecef;
+    }
+    
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+    
+    .detail-label {
+      color: #666;
+      font-weight: 500;
+    }
+    
+    .detail-value {
+      color: #333;
+      font-weight: 600;
+    }
+    
+    .product-highlight {
+      background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    
+    .product-highlight .quantity {
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+    
+    .product-highlight .product-name {
+      font-size: 1.3rem;
+      margin-top: 5px;
+    }
+    
+    .delivery-section {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 25px;
+    }
+    
+    .delivery-section h4 {
+      color: #856404;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .delivery-section p {
+      color: #856404;
+      margin: 0;
+    }
+    
+    .timeline {
+      position: relative;
+      padding-left: 30px;
+      margin-top: 30px;
+    }
+    
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: #e9ecef;
+    }
+    
+    .timeline-item {
+      position: relative;
+      padding-bottom: 25px;
+    }
+    
+    .timeline-item:last-child {
+      padding-bottom: 0;
+    }
+    
+    .timeline-dot {
+      position: absolute;
+      left: -24px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #e9ecef;
+      border: 3px solid white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .timeline-dot.active {
+      background: #28a745;
+    }
+    
+    .timeline-dot.current {
+      background: #3fbbc0;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(63, 187, 192, 0.4);
+      }
+      70% {
+        box-shadow: 0 0 0 10px rgba(63, 187, 192, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(63, 187, 192, 0);
+      }
+    }
+    
+    .timeline-content h5 {
+      margin: 0 0 5px;
+      color: #333;
+      font-weight: 600;
+    }
+    
+    .timeline-content p {
+      margin: 0;
+      color: #666;
+      font-size: 0.9rem;
+    }
+    
+    .btn-home {
+      display: inline-block;
+      background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%);
+      color: white;
+      padding: 15px 40px;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-home:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(63, 187, 192, 0.4);
+      color: white;
+    }
+    
+    .error-container {
+      text-align: center;
+      padding: 60px 30px;
+    }
+    
+    .error-icon {
+      font-size: 80px;
+      color: #dc3545;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="tracking-container">
+    {% if error %}
+    <div class="tracking-card">
+      <div class="error-container">
+        <div class="error-icon">
+          <i class="bi bi-exclamation-triangle"></i>
+        </div>
+        <h2>{{ error }}</h2>
+        <p class="text-muted mb-4">The tracking link you used is invalid or has expired.</p>
+        <a href="{% url 'index' %}" class="btn-home">
+          <i class="bi bi-house me-2"></i>Go to Homepage
+        </a>
+      </div>
+    </div>
+    {% else %}
+    <div class="tracking-card">
+      <div class="tracking-header">
+        <div class="order-icon">
+          <i class="bi bi-box-seam"></i>
+        </div>
+        <h1>Order #{{ order.id }}</h1>
+        <p>Track your order status</p>
+      </div>
+      
+      <div class="tracking-body">
+        <div class="text-center mb-4">
+          <span class="status-badge {% if order.statut == 'en_attente' %}status-pending{% elif order.statut == 'acceptee' %}status-accepted{% else %}status-rejected{% endif %}">
+            {% if order.statut == 'en_attente' %}
+              <i class="bi bi-clock me-2"></i>Pending
+            {% elif order.statut == 'acceptee' %}
+              <i class="bi bi-check-circle me-2"></i>Confirmed
+            {% else %}
+              <i class="bi bi-x-circle me-2"></i>Rejected
+            {% endif %}
+          </span>
+        </div>
+        
+        <div class="product-highlight">
+          <div class="quantity">{{ order.quantite }}x</div>
+          <div class="product-name">{{ order.produit.nom }}</div>
+        </div>
+        
+        <div class="order-details">
+          <h3><i class="bi bi-receipt"></i> Order Details</h3>
+          <div class="detail-row">
+            <span class="detail-label">Order ID</span>
+            <span class="detail-value">#{{ order.id }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Product</span>
+            <span class="detail-value">{{ order.produit.nom }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Category</span>
+            <span class="detail-value">{{ order.produit.get_category_display }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Quantity</span>
+            <span class="detail-value">{{ order.quantite }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Unit Price</span>
+            <span class="detail-value">{{ order.produit.prix_vente }} DT</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Total</span>
+            <span class="detail-value" style="color: #3fbbc0; font-size: 1.2rem;">{{ order.total|floatformat:2 }} DT</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Order Date</span>
+            <span class="detail-value">{{ order.date_creation|date:"F d, Y - H:i" }}</span>
+          </div>
+        </div>
+        
+        <div class="order-details">
+          <h3><i class="bi bi-person"></i> Customer Information</h3>
+          <div class="detail-row">
+            <span class="detail-label">Name</span>
+            <span class="detail-value">{{ order.prenom_client }} {{ order.nom_client }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Email</span>
+            <span class="detail-value">{{ order.email_client }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Phone</span>
+            <span class="detail-value">{{ order.telephone_client }}</span>
+          </div>
+        </div>
+        
+        {% if order.statut == 'acceptee' %}
+        <div class="delivery-section">
+          <h4><i class="bi bi-truck"></i> Delivery Information</h4>
+          <p><strong>Address:</strong> {{ order.adresse_client }}</p>
+          <p class="mt-2"><strong>Estimated delivery:</strong> Within 24-48 hours</p>
+        </div>
+        {% endif %}
+        
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot active"></div>
+            <div class="timeline-content">
+              <h5>Order Placed</h5>
+              <p>{{ order.date_creation|date:"F d, Y - H:i" }}</p>
+            </div>
+          </div>
+          
+          {% if order.statut == 'acceptee' %}
+          <div class="timeline-item">
+            <div class="timeline-dot active"></div>
+            <div class="timeline-content">
+              <h5>Order Confirmed</h5>
+              <p>Your order has been confirmed</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot current"></div>
+            <div class="timeline-content">
+              <h5>In Delivery</h5>
+              <p>Your order is on its way!</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <h5>Delivered</h5>
+              <p>Expected within 24-48 hours</p>
+            </div>
+          </div>
+          {% elif order.statut == 'en_attente' %}
+          <div class="timeline-item">
+            <div class="timeline-dot current"></div>
+            <div class="timeline-content">
+              <h5>Awaiting Confirmation</h5>
+              <p>Your order is being reviewed</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <h5>In Delivery</h5>
+              <p>Pending confirmation</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <h5>Delivered</h5>
+              <p>Pending confirmation</p>
+            </div>
+          </div>
+          {% else %}
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background: #dc3545;"></div>
+            <div class="timeline-content">
+              <h5>Order Rejected</h5>
+              <p>Unfortunately, your order could not be processed</p>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+        
+        <div class="text-center mt-4">
+          <a href="{% url 'index' %}" class="btn-home">
+            <i class="bi bi-arrow-left me-2"></i>Continue Shopping
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+</body>
+
+</html>
+

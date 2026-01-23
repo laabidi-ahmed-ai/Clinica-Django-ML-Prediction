@@ -1,0 +1,128 @@
+{% extends "Back/Patient/base.html" %}
+
+{% block title %}{% if object %}Edit patient{% else %}Add patient{% endif %} - Clinica{% endblock %}
+{% block page_title %}{% if object %}Edit patient{% else %}Add patient{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-body">
+        <form method="post" class="needs-validation" novalidate>
+          {% csrf_token %}
+          <div class="row g-3">
+            {% for field in form %}
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">{{ field.label }}</label>
+              {{ field }}
+              {% if field.help_text %}
+              <div class="form-text">{{ field.help_text }}</div>
+              {% endif %}
+              {% for error in field.errors %}
+              <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+            {% endfor %}
+          </div>
+          {% if form.non_field_errors %}
+          <div class="alert alert-danger mt-3">
+            {% for error in form.non_field_errors %}
+            <div>{{ error }}</div>
+            {% endfor %}
+          </div>
+          {% endif %}
+          <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-primary">
+              <i data-feather="save" class="me-1" style="width:16px;height:16px;"></i>Save
+            </button>
+            <a href="{% url 'patient_list' %}" class="btn btn-outline-secondary">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Set max date for date_of_birth to today
+    const dobInput = document.getElementById('id_date_of_birth');
+    if (dobInput) {
+      const today = new Date().toISOString().split('T')[0];
+      dobInput.setAttribute('max', today);
+      dobInput.addEventListener('change', function(e) {
+        const selectedDate = new Date(e.target.value);
+        const todayDate = new Date();
+        todayDate.setHours(0, 0, 0, 0);
+        if (selectedDate >= todayDate) {
+          e.target.setCustomValidity('Date of birth must be before today.');
+        } else {
+          e.target.setCustomValidity('');
+        }
+      });
+    }
+
+    // Phone validation
+    const phoneInput = document.getElementById('id_phone');
+    if (phoneInput) {
+      phoneInput.addEventListener('input', function(e) {
+        const value = e.target.value;
+        const validPattern = /^[\+\d\s\-\(\)]*$/;
+        if (!validPattern.test(value)) {
+          e.target.setCustomValidity('Phone number can only contain +, numbers, spaces, hyphens, and parentheses.');
+        } else {
+          e.target.setCustomValidity('');
+        }
+      });
+    }
+
+    // Name validation - no numbers
+    const firstNameInput = document.getElementById('id_first_name');
+    const lastNameInput = document.getElementById('id_last_name');
+    
+    [firstNameInput, lastNameInput].forEach(input => {
+      if (input) {
+        input.addEventListener('input', function(e) {
+          const value = e.target.value;
+          if (/\d/.test(value)) {
+            e.target.setCustomValidity('Name cannot contain numbers.');
+          } else {
+            e.target.setCustomValidity('');
+          }
+        });
+      }
+    });
+
+    // Hospitalization conditional fields
+    const hospSelect = document.getElementById('id_hospitalisation');
+    const dateEntreeInput = document.getElementById('id_date_entree_hosp');
+    const dateSortieInput = document.getElementById('id_date_sortie_hosp');
+    const typeHospSelect = document.getElementById('id_type_hosp');
+
+    function toggleHospFields() {
+      const isRequired = hospSelect && hospSelect.value === 'oui';
+      if (dateEntreeInput) {
+        dateEntreeInput.required = isRequired;
+        dateEntreeInput.closest('.col-md-6').style.display = isRequired ? '' : 'none';
+      }
+      if (dateSortieInput) {
+        dateSortieInput.required = isRequired;
+        dateSortieInput.closest('.col-md-6').style.display = isRequired ? '' : 'none';
+      }
+      if (typeHospSelect) {
+        typeHospSelect.required = isRequired;
+        typeHospSelect.closest('.col-md-6').style.display = isRequired ? '' : 'none';
+      }
+    }
+
+    if (hospSelect) {
+      hospSelect.addEventListener('change', toggleHospFields);
+      toggleHospFields(); // Initial call
+    }
+  });
+</script>
+{% endblock %}
+
+

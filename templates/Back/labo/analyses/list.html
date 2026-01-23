@@ -1,0 +1,313 @@
+{% extends "back/labo/base.html" %}
+
+{% block extra_css %}
+<style>
+/* Modal styles */
+.modal {
+    display: none; /* hidden by default */
+    position: fixed;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1050;
+    padding: 1rem;
+}
+.modal[aria-hidden="false"] {
+    display: flex;
+}
+.modal-content {
+    background: #fff;
+    border-radius: 8px;
+    max-width: 720px;
+    width: 100%;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+    padding: 1rem 1.25rem;
+    display: block;
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: .5rem;
+}
+.modal-header h5 {
+    margin: 0;
+}
+.close-btn {
+    cursor: pointer;
+    font-size: 1.25rem;
+    line-height: 1;
+    background: transparent;
+    border: none;
+}
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: .5rem;
+    margin-top: 1rem;
+}
+.save-btn {
+    background: #0d6efd;
+    color: white;
+    border: none;
+    padding: .375rem .75rem;
+    border-radius: .25rem;
+    cursor: pointer;
+}
+.close-btn-footer {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: .375rem .75rem;
+    border-radius: .25rem;
+    cursor: pointer;
+}
+
+/* Notification popup */
+.notification-popup {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 18px;
+    border-radius: 8px;
+    background-color: #28a745;
+    color: white;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    z-index: 11000; /* above modals */
+    display: flex;
+    gap: .75rem;
+    align-items: center;
+    min-width: 220px;
+    max-width: calc(100% - 40px);
+}
+.notification-popup .msg {
+    flex: 1 1 auto;
+    font-size: 0.95rem;
+}
+.notification-popup .close-popup {
+    cursor: pointer;
+    font-weight: 700;
+    padding-left: .5rem;
+    background: transparent;
+    border: none;
+    color: white;
+}
+
+/* Small screens improvement */
+@media (max-width: 576px) {
+    .modal-content { max-width: 95%; padding: .75rem; }
+    .notification-popup { left: 20px; right: 20px; top: auto; bottom: 20px; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<h2 class="mt-4 mb-3">Liste des Analyses</h2>
+
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Code Échantillon</th>
+            <th>Type</th>
+            <th>Patient</th>
+            <th>Date Prélèvement</th>
+            <th>État</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for analyse in analyses %}
+        <tr>
+            <td>{{ analyse.id }}</td>
+            <td>{{ analyse.echantillon_code }}</td>
+            <td>{{ analyse.get_type_display }}</td>
+            <td>{{ analyse.patient_id }}</td>
+            <td>{{ analyse.date_prelevement|date:"d/m/Y" }}</td>
+            <td>{{ analyse.get_etat_display }}</td>
+            <td>
+                <button class="btn btn-info btn-sm" type="button" data-modal="details{{ analyse.id }}">Détails</button>
+                <button class="btn btn-warning btn-sm" type="button" data-modal="edit{{ analyse.id }}">Modifier</button>
+                <button type="button" class="btn btn-danger btn-sm" data-modal="delete{{ analyse.id }}">Supprimer</button>
+
+                <form id="deleteForm{{ analyse.id }}" method="POST" action="{% url 'Labapp:back_analyse_delete' analyse.id %}" style="display:none;">
+                    {% csrf_token %}
+                </form>
+            </td>
+        </tr>
+
+        <!-- Détails Modal -->
+        <div id="details{{ analyse.id }}" class="modal" role="dialog" aria-hidden="true" aria-labelledby="detailsTitle{{ analyse.id }}">
+            <div class="modal-content" role="document">
+                <div class="modal-header">
+                    <h5 id="detailsTitle{{ analyse.id }}">Détails Analyse {{ analyse.echantillon_code }}</h5>
+                    <button class="close-btn" aria-label="Close" data-close="details{{ analyse.id }}">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Type:</strong> {{ analyse.get_type_display }}</p>
+                    <p><strong>Patient:</strong> {{ analyse.patient_id }}</p>
+                    <p><strong>Date Prélèvement:</strong> {{ analyse.date_prelevement|date:"d/m/Y" }}</p>
+                    <p><strong>Date Résultat:</strong> {{ analyse.date_res|date:"d/m/Y" }}</p>
+                    <p><strong>État:</strong> {{ analyse.get_etat_display }}</p>
+                    <p><strong>Commentaire:</strong> {{ analyse.commentaire }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modifier Modal -->
+        <div id="edit{{ analyse.id }}" class="modal" role="dialog" aria-hidden="true" aria-labelledby="editTitle{{ analyse.id }}">
+            <div class="modal-content" role="document">
+                <div class="modal-header">
+                    <h5 id="editTitle{{ analyse.id }}">Modifier Analyse {{ analyse.echantillon_code }}</h5>
+                    <button class="close-btn" aria-label="Close" data-close="edit{{ analyse.id }}">&times;</button>
+                </div>
+                <form method="POST" action="{% url 'Labapp:back_analyse_update' analyse.id %}">
+                    {% csrf_token %}
+                    <div class="mb-2">
+                        <label>Code Échantillon</label>
+                        <input type="text" name="echantillon_code" class="form-control" value="{{ analyse.echantillon_code }}">
+                    </div>
+                    <div class="mb-2">
+                        <label>Type</label>
+                        <select name="type" class="form-select">
+                            {% for key, value in analyse.TYPE_ANALYSE %}
+                            <option value="{{ key }}" {% if analyse.type == key %}selected{% endif %}>{{ value }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label>Patient</label>
+                        <input type="text" name="patient_id" class="form-control" value="{{ analyse.patient_id }}">
+                    </div>
+                    <div class="mb-2">
+                        <label>Date Prélèvement</label>
+                        <input type="date" name="date_prelevement" class="form-control" value="{{ analyse.date_prelevement|date:'Y-m-d' }}">
+                    </div>
+                    <div class="mb-2">
+                        <label>Date Résultat</label>
+                        <input type="date" name="date_res" class="form-control" value="{{ analyse.date_res|date:'Y-m-d' }}">
+                    </div>
+                    <div class="mb-2">
+                        <label>État</label>
+                        <select name="etat" class="form-select">
+                            {% for key, value in analyse.ETAT_ANALYSE %}
+                            <option value="{{ key }}" {% if analyse.etat == key %}selected{% endif %}>{{ value }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label>Commentaire</label>
+                        <textarea name="commentaire" class="form-control">{{ analyse.commentaire }}</textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="save-btn">Enregistrer</button>
+                        <button type="button" class="close-btn-footer" data-close="edit{{ analyse.id }}">Fermer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Supprimer Modal -->
+        <div id="delete{{ analyse.id }}" class="modal" role="dialog" aria-hidden="true" aria-labelledby="deleteTitle{{ analyse.id }}">
+            <div class="modal-content" role="document">
+                <div class="modal-header">
+                    <h5 id="deleteTitle{{ analyse.id }}">Supprimer Analyse {{ analyse.echantillon_code }}</h5>
+                    <button class="close-btn" aria-label="Close" data-close="delete{{ analyse.id }}">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Êtes-vous sûr de vouloir supprimer cette analyse ? Cette action est irréversible.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="close-btn-footer" data-close="delete{{ analyse.id }}">Annuler</button>
+                    <button type="button" class="save-btn" onclick="submitDelete('{{ analyse.id }}')">Supprimer</button>
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+    </tbody>
+</table>
+
+{# Show popup only for the first finished analysis provided by the view #}
+{% if first_finished %}
+    <div id="autoPopup" class="notification-popup" role="status" aria-live="polite">
+        <div class="msg">L'analyse <strong>{{ first_finished.echantillon_code }}</strong> est terminée !</div>
+        <button class="close-popup" aria-label="Fermer la notification">&times;</button>
+    </div>
+{% endif %}
+
+<script>
+(function(){
+    // Modal open/close handling
+    function openModalById(id) {
+        var modal = document.getElementById(id);
+        if (!modal) return;
+        modal.setAttribute('aria-hidden', 'false');
+    }
+    function closeModalById(id) {
+        var modal = document.getElementById(id);
+        if (!modal) return;
+        modal.setAttribute('aria-hidden', 'true');
+    }
+
+    document.querySelectorAll('[data-modal]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            var id = this.getAttribute('data-modal');
+            openModalById(id);
+        });
+    });
+
+    document.querySelectorAll('[data-close]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            var id = this.getAttribute('data-close');
+            closeModalById(id);
+        });
+    });
+
+    // Close modal when clicking outside modal-content
+    window.addEventListener('click', function(event) {
+        document.querySelectorAll('.modal[aria-hidden="false"]').forEach(modal => {
+            if (event.target === modal) closeModalById(modal.id);
+        });
+    });
+
+    // Close on Escape
+    window.addEventListener('keydown', function(event) {
+        if (event.key === "Escape") {
+            document.querySelectorAll('.modal[aria-hidden="false"]').forEach(modal => {
+                closeModalById(modal.id);
+            });
+            var popup = document.getElementById('autoPopup');
+            if (popup) popup.style.display = 'none';
+        }
+    });
+
+    // Submit delete form
+    window.submitDelete = function(id) {
+        var f = document.getElementById('deleteForm' + id);
+        if (f) f.submit();
+    };
+
+    // Notification popup: auto-hide and manual close
+    var popup = document.getElementById('autoPopup');
+    if (popup) {
+        var hideTimeout = setTimeout(function() {
+            if (popup) {
+                popup.style.display = 'none';
+                if (popup.parentNode) popup.parentNode.removeChild(popup);
+            }
+        }, 3000);
+
+        var closeBtn = popup.querySelector('.close-popup');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function() {
+                clearTimeout(hideTimeout);
+                if (popup.parentNode) popup.parentNode.removeChild(popup);
+            });
+        }
+    }
+})();
+</script>
+{% endblock %}

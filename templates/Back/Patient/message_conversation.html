@@ -1,0 +1,155 @@
+{% extends "Back/Patient/base.html" %}
+
+{% block title %}Conversation with {{ patient.first_name }} {{ patient.last_name }} - Clinica{% endblock %}
+{% block page_title %}Message Conversation{% endblock %}
+
+{% block breadcrumb_actions %}
+<a href="{% url 'messages_list' %}" class="btn btn-outline-secondary">
+  <i data-feather="arrow-left" class="me-1" style="width:16px;height:16px;"></i>
+  Back to Messages
+</a>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  .message-container {
+    max-height: 600px;
+    overflow-y: auto;
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .message-bubble {
+    max-width: 70%;
+    padding: 12px 16px;
+    border-radius: 18px;
+    margin-bottom: 12px;
+    word-wrap: break-word;
+  }
+  .message-from-patient {
+    background: #e3f2fd;
+    margin-right: auto;
+    border-bottom-left-radius: 4px;
+  }
+  .message-from-doctor {
+    background: #c8e6c9;
+    margin-left: auto;
+    border-bottom-right-radius: 4px;
+  }
+  .message-time {
+    font-size: 0.75rem;
+    color: #6c757d;
+    margin-top: 4px;
+  }
+  .message-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+  .message-wrapper.from-patient {
+    align-items: flex-start;
+  }
+  .message-wrapper.from-doctor {
+    align-items: flex-end;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-lg-8 mx-auto">
+    <!-- Patient Info Card -->
+    <div class="card mb-3">
+      <div class="card-body">
+        <div class="d-flex align-items-center justify-content-between">
+          <div>
+            <h5 class="mb-1">
+              <i data-feather="user" class="me-2"></i>
+              {{ patient.first_name }} {{ patient.last_name }}
+            </h5>
+            <p class="mb-0 text-muted">
+              <i data-feather="mail" class="me-1" style="width:14px;height:14px;"></i>
+              {{ patient.email }}
+              {% if patient.phone %}
+              <span class="ms-3">
+                <i data-feather="phone" class="me-1" style="width:14px;height:14px;"></i>
+                {{ patient.phone }}
+              </span>
+              {% endif %}
+            </p>
+          </div>
+          <a href="{% url 'patient_detail' patient.id %}" class="btn btn-sm btn-outline-primary">
+            View Patient File
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Messages Card -->
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Conversation</h5>
+        <div class="message-container" id="messageContainer">
+          {% if messages %}
+            {% for message in messages %}
+            <div class="message-wrapper from-{{ message.sender_type }}">
+              <div class="message-bubble message-from-{{ message.sender_type }}">
+                {% if message.subject %}
+                <div class="fw-bold mb-1">{{ message.subject }}</div>
+                {% endif %}
+                <div>{{ message.message }}</div>
+                <div class="message-time text-end">
+                  {{ message.created_at|date:"M d, Y H:i" }}
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          {% else %}
+            <div class="text-center text-muted py-5">
+              <i data-feather="message-circle" style="width:48px;height:48px;"></i>
+              <p class="mt-3">No messages yet. Start the conversation below.</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Reply Form Card -->
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Send Message</h5>
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label">{{ form.subject.label }}</label>
+            {{ form.subject }}
+            {% for error in form.subject.errors %}
+            <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <div class="mb-3">
+            <label class="form-label">{{ form.message.label }}</label>
+            {{ form.message }}
+            {% for error in form.message.errors %}
+            <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <button type="submit" class="btn btn-primary">
+            <i data-feather="send" class="me-1" style="width:16px;height:16px;"></i>
+            Send Message
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  feather.replace();
+  
+  // Scroll to bottom of messages
+  const messageContainer = document.getElementById('messageContainer');
+  if (messageContainer) {
+    messageContainer.scrollTop = messageContainer.scrollHeight;
+  }
+</script>
+{% endblock %}

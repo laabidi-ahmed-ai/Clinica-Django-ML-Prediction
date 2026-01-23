@@ -1,0 +1,163 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Donation Successful - Clinica+</title>
+
+  <!-- BOOTSTRAP + ICONS -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/assets/css/main.css' %}" rel="stylesheet">
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .success-card {
+      background: white;
+      padding: 40px;
+      border-radius: 22px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 600px;
+      animation: fadeIn 0.7s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .success-icon {
+      width: 120px;
+      height: 120px;
+      background: linear-gradient(135deg, #28a745, #20c997);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 25px;
+      animation: pulse 2s infinite;
+    }
+
+    .success-icon i {
+      font-size: 60px;
+      color: white;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(40,167,69,0.4); }
+      70% { box-shadow: 0 0 0 25px rgba(40,167,69,0); }
+      100% { box-shadow: 0 0 0 0 rgba(40,167,69,0); }
+    }
+
+    .btn-home {
+      background: linear-gradient(135deg, #3fbbc0, #2a9d9f);
+      color: white;
+      padding: 12px 35px;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 25px;
+      transition: 0.3s ease;
+    }
+
+    .btn-home:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(63,187,192,0.4);
+      color: white;
+    }
+
+    /* Confetti */
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      animation: confetti-fall 3s linear infinite;
+    }
+    @keyframes confetti-fall {
+      0% { transform: translateY(-100vh) rotate(0); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="success-card">
+
+  <div class="success-icon">
+    <i class="bi bi-check-lg"></i>
+  </div>
+
+  <h2 class="text-success fw-bold">Donation Successful!</h2>
+
+  <p class="mt-3" style="font-size: 1.1rem; color: #555;">
+    Thank you for your kindness ❤️<br>
+    Your payment has been successfully processed.
+  </p>
+
+  <p class="mt-2" style="font-size: 1rem; color: #444;">
+    {% if telegram_linked %}
+      📩 Check your Telegram — we have sent you a confirmation message!
+    {% else %}
+      📩 Connect your Telegram to receive instant notifications.
+    {% endif %}
+  </p>
+  {% if not user.is_authenticated or not user.profile or not user.profile.telegram_username %}
+
+<div style="margin-top: 20px; text-align: center;">
+    <p style="font-size: 1.1rem; font-weight: 500;">
+        Vous n’avez pas de compte Telegram ?
+    </p>
+
+    <a href="{% url 'donation:donation_receipt' donation.id_donation %}"
+       class="btn btn-primary"
+       style="background:#3fbbc0; border:none; padding:10px 20px; font-size:0.9rem; border-radius:6px;">
+        Voir le reçu de donation
+    </a>
+</div>
+{% endif %}
+
+
+  <div class="border rounded p-3 mt-4" style="background:#f8f9fa;">
+    <h5 class="fw-bold mb-2"><i class="bi bi-heart-fill text-danger"></i> Donation Summary</h5>
+    <p class="mb-1"><strong>Publication:</strong> {{ donation.id_publication.title }}</p>
+    <p class="mb-1"><strong>Amount:</strong> {{ donation.montant }} USD</p>
+    <p><strong>Status:</strong> <span class="text-success">Confirmed</span></p>
+  </div>
+
+  <a href="{% url 'donation:donation_create' %}?publication={{ donation.id_publication.id }}" class="btn-home">
+    <i class="bi bi-arrow-left"></i> Back to Donation Page
+  </a>
+
+</div>
+
+<script>
+  // Confetti effect
+  function createConfetti() {
+    const colors = ['#3fbbc0', '#28a745', '#ffc107', '#17a2b8', '#6f42c1'];
+    for (let i = 0; i < 40; i++) {
+      const confetti = document.createElement('div');
+      confetti.className = 'confetti';
+      confetti.style.left = Math.random() * 100 + 'vw';
+      confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+      confetti.style.animationDelay = Math.random() * 2 + 's';
+      document.body.appendChild(confetti);
+      setTimeout(() => confetti.remove(), 5000);
+    }
+  }
+  window.onload = createConfetti;
+</script>
+
+</body>
+</html>

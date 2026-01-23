@@ -1,0 +1,225 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Quiz Santé - Medicio</title>
+  <meta name="description" content="Test your health knowledge and win 5% discount!">
+  
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Bootstrap CSS -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  
+  <!-- Main CSS -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 0;
+    }
+    .quiz-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+    .quiz-header {
+      background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%);
+      color: white;
+      padding: 40px;
+      text-align: center;
+    }
+    .quiz-header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+    .quiz-header p {
+      margin: 10px 0 0 0;
+      opacity: 0.9;
+      font-size: 1.1rem;
+    }
+    .quiz-body {
+      padding: 40px;
+    }
+    .question-card {
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 30px;
+      margin-bottom: 30px;
+      border-left: 5px solid #3fbbc0;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .question-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .question-number {
+      display: inline-block;
+      background: #3fbbc0;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 40px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+    .question-text {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .option-label {
+      display: block;
+      padding: 15px 20px;
+      margin-bottom: 10px;
+      background: white;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 1rem;
+    }
+    .option-label:hover {
+      border-color: #3fbbc0;
+      background: #f0f9ff;
+      transform: translateX(5px);
+    }
+    .option-label input[type="radio"] {
+      margin-right: 10px;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+    .option-label input[type="radio"]:checked + span {
+      color: #3fbbc0;
+      font-weight: 600;
+    }
+    .submit-btn {
+      background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%);
+      border: none;
+      color: white;
+      padding: 15px 50px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      border-radius: 50px;
+      width: 100%;
+      margin-top: 20px;
+      transition: all 0.3s;
+      box-shadow: 0 5px 15px rgba(63, 187, 192, 0.4);
+    }
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(63, 187, 192, 0.6);
+    }
+    .back-link {
+      color: white;
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: 20px;
+      transition: all 0.3s;
+    }
+    .back-link:hover {
+      color: #f0f9ff;
+      transform: translateX(-5px);
+    }
+    .reward-badge {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      padding: 15px 30px;
+      border-radius: 50px;
+      display: inline-block;
+      margin: 20px 0;
+      font-weight: 600;
+      box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="quiz-container">
+    <div class="quiz-header">
+      <a href="{% url 'panier' %}" class="back-link">
+        <i class="bi bi-arrow-left"></i> Back to Cart
+      </a>
+      <h1><i class="bi bi-heart-pulse"></i> Health Quiz</h1>
+      <p>Test your knowledge and win 5% discount!</p>
+      <div class="reward-badge">
+        <i class="bi bi-trophy-fill"></i> Answer all 3 questions correctly to win!
+      </div>
+    </div>
+    
+    <div class="quiz-body">
+      <form method="post" id="quizForm">
+        {% csrf_token %}
+        
+        {% for question in questions %}
+        <div class="question-card">
+          <div class="question-number">{{ forloop.counter }}</div>
+          <div class="question-text">{{ question.question }}</div>
+          
+          <div class="options">
+            {% for option in question.options %}
+            <label class="option-label">
+              <input type="radio" name="question_{{ question.id }}" value="{{ forloop.counter0 }}" required>
+              <span>{{ option }}</span>
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+        
+        <button type="submit" class="submit-btn">
+          <i class="bi bi-check-circle"></i> Submit My Answers
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  
+  <script>
+    // Validation avant soumission
+    document.getElementById('quizForm').addEventListener('submit', function(e) {
+      const questions = document.querySelectorAll('.question-card');
+      let allAnswered = true;
+      
+      questions.forEach((card, index) => {
+        const radios = card.querySelectorAll('input[type="radio"]');
+        const checked = Array.from(radios).some(radio => radio.checked);
+        if (!checked) {
+          allAnswered = false;
+          card.style.borderLeftColor = '#dc3545';
+        } else {
+          card.style.borderLeftColor = '#3fbbc0';
+        }
+      });
+      
+      if (!allAnswered) {
+        e.preventDefault();
+        alert('Veuillez répondre à toutes les questions avant de soumettre!');
+        return false;
+      }
+    });
+  </script>
+</body>
+
+</html>
+

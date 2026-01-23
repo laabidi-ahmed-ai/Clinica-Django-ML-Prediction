@@ -1,0 +1,261 @@
+{% extends "Back/Patient/base.html" %}
+
+{% block title %}Medical History - {{ patient.first_name }} {{ patient.last_name }}{% endblock %}
+{% block page_title %}Medical History{% endblock %}
+
+{% block breadcrumb_actions %}
+<div class="btn-group">
+  <a href="{% url 'patient_detail' patient.id %}" class="btn btn-outline-primary">
+    <i data-feather="user" class="me-1" style="width:16px;height:16px;"></i>Patient Profile
+  </a>
+  <a href="{% url 'patient_export_pdf' patient.id %}" class="btn btn-outline-success">
+    <i data-feather="download" class="me-1" style="width:16px;height:16px;"></i>Export PDF
+  </a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div>
+            <h3 class="mb-1">{{ patient.first_name }} {{ patient.last_name }}</h3>
+            <p class="text-muted mb-0">
+              <i data-feather="calendar" style="width:14px;height:14px;"></i>
+              Born: {{ patient.date_of_birth }}
+              {% if patient.cin %}
+              | CIN: {{ patient.cin }}
+              {% endif %}
+            </p>
+          </div>
+          <div class="ms-auto text-end">
+            <div class="d-flex gap-3">
+              <div>
+                <div class="fs-4 fw-bold text-primary">{{ total_entries }}</div>
+                <div class="text-muted small">Medical Entries</div>
+              </div>
+              <div>
+                <div class="fs-4 fw-bold text-info">{{ total_appointments }}</div>
+                <div class="text-muted small">Appointments</div>
+              </div>
+              <div>
+                <div class="fs-4 fw-bold text-danger">{{ hospitalization_count }}</div>
+                <div class="text-muted small">Hospitalizations</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title mb-4">
+          <i data-feather="clock" class="me-2" style="width:20px;height:20px;"></i>
+          Medical Timeline
+        </h4>
+
+        {% if timeline_items %}
+        <div class="timeline">
+          {% for item in timeline_items %}
+          <div class="timeline-item mb-4 pb-4 border-bottom">
+            {% if item.type == 'history_entry' %}
+            <!-- Medical History Entry -->
+            <div class="d-flex">
+              <div class="timeline-marker me-3">
+                <div class="badge bg-{% if item.object.is_hospitalization %}danger{% elif item.object.entry_type == 'emergency' %}warning{% elif item.object.entry_type == 'surgery' %}info{% else %}primary{% endif %} rounded-circle" style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+                  <i data-feather="{% if item.object.is_hospitalization %}home{% elif item.object.entry_type == 'emergency' %}alert-circle{% elif item.object.entry_type == 'surgery' %}activity{% else %}file-text{% endif %}" style="width:20px;height:20px;"></i>
+                </div>
+              </div>
+              <div class="flex-grow-1">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <div>
+                    <h5 class="mb-1">
+                      <span class="badge bg-{% if item.object.is_hospitalization %}danger{% elif item.object.entry_type == 'emergency' %}warning{% elif item.object.entry_type == 'surgery' %}info{% else %}primary{% endif %}">
+                        {{ item.object.get_entry_type_display }}
+                      </span>
+                      {% if item.object.is_hospitalization %}
+                      <span class="badge bg-danger-subtle text-danger ms-1">Hospitalization</span>
+                      {% endif %}
+                    </h5>
+                    <p class="text-muted mb-0">
+                      <i data-feather="calendar" style="width:14px;height:14px;"></i>
+                      {{ item.object.entry_date }}
+                      {% if item.object.doctor %}
+                      | <i data-feather="user" style="width:14px;height:14px;"></i> Dr. {{ item.object.doctor }}
+                      {% endif %}
+                    </p>
+                  </div>
+                </div>
+
+                {% if item.object.is_hospitalization and item.object.hospitalization_start %}
+                <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+                  <strong>Hospitalization Details:</strong><br>
+                  <i data-feather="log-in" style="width:14px;height:14px;"></i> Entry: {{ item.object.hospitalization_start }}
+                  {% if item.object.hospitalization_end %}
+                  | <i data-feather="log-out" style="width:14px;height:14px;"></i> Exit: {{ item.object.hospitalization_end }}
+                  | Duration: {{ item.object.get_duration_days }} days
+                  {% else %}
+                  | <span class="text-warning">Currently hospitalized</span>
+                  {% endif %}
+                  {% if item.object.hospitalization_type %}
+                  <br>Type: {{ item.object.get_hospitalization_type_display }}
+                  {% endif %}
+                </div>
+                {% endif %}
+
+                <div class="row g-3">
+                  {% if item.object.symptoms %}
+                  <div class="col-md-12">
+                    <div class="card bg-light">
+                      <div class="card-body py-2">
+                        <h6 class="card-subtitle mb-1 text-muted">Symptoms:</h6>
+                        <p class="mb-0">{{ item.object.symptoms }}</p>
+                      </div>
+                    </div>
+                  </div>
+                  {% endif %}
+
+                  {% if item.object.diagnosis %}
+                  <div class="col-md-12">
+                    <div class="card bg-light">
+                      <div class="card-body py-2">
+                        <h6 class="card-subtitle mb-1 text-muted">Diagnosis:</h6>
+                        <p class="mb-0"><strong>{{ item.object.diagnosis }}</strong></p>
+                      </div>
+                    </div>
+                  </div>
+                  {% endif %}
+
+                  {% if item.object.treatment %}
+                  <div class="col-md-6">
+                    <div class="card bg-light">
+                      <div class="card-body py-2">
+                        <h6 class="card-subtitle mb-1 text-muted">Treatment:</h6>
+                        <p class="mb-0">{{ item.object.treatment }}</p>
+                      </div>
+                    </div>
+                  </div>
+                  {% endif %}
+
+                  {% if item.object.medications %}
+                  <div class="col-md-6">
+                    <div class="card bg-light">
+                      <div class="card-body py-2">
+                        <h6 class="card-subtitle mb-1 text-muted">Medications:</h6>
+                        <p class="mb-0">{{ item.object.medications }}</p>
+                      </div>
+                    </div>
+                  </div>
+                  {% endif %}
+
+                  {% if item.object.doctor_notes %}
+                  <div class="col-md-12">
+                    <div class="card bg-info-subtle">
+                      <div class="card-body py-2">
+                        <h6 class="card-subtitle mb-1 text-info">Doctor's Notes:</h6>
+                        <p class="mb-0">{{ item.object.doctor_notes }}</p>
+                      </div>
+                    </div>
+                  </div>
+                  {% endif %}
+                </div>
+
+                {% if item.object.related_appointment %}
+                <div class="mt-2">
+                  <small class="text-muted">
+                    <i data-feather="link" style="width:12px;height:12px;"></i>
+                    Related to appointment on {{ item.object.related_appointment.requested_date }}
+                  </small>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+
+            {% elif item.type == 'appointment' %}
+            <!-- Appointment without history entry -->
+            <div class="d-flex">
+              <div class="timeline-marker me-3">
+                <div class="badge bg-secondary rounded-circle" style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+                  <i data-feather="calendar" style="width:20px;height:20px;"></i>
+                </div>
+              </div>
+              <div class="flex-grow-1">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <div>
+                    <h5 class="mb-1">
+                      <span class="badge bg-{% if item.object.status == 'pending' %}warning{% elif item.object.status == 'confirmed' %}success{% elif item.object.status == 'cancelled' %}danger{% else %}secondary{% endif %}">
+                        Appointment - {{ item.object.get_status_display }}
+                      </span>
+                    </h5>
+                    <p class="text-muted mb-0">
+                      <i data-feather="calendar" style="width:14px;height:14px;"></i>
+                      {{ item.object.requested_date }} at {{ item.object.requested_time|time:"H:i" }}
+                      | Department: {{ item.object.get_department_display }}
+                      {% if item.object.doctor_name %}
+                      | Dr. {{ item.object.doctor_name }}
+                      {% endif %}
+                    </p>
+                  </div>
+                  <a href="{% url 'appointment_detail' item.object.id %}" class="btn btn-sm btn-outline-primary">
+                    View Details
+                  </a>
+                </div>
+
+                {% if item.object.get_patient_notes %}
+                <div class="card bg-light">
+                  <div class="card-body py-2">
+                    <h6 class="card-subtitle mb-1 text-muted">Patient Notes:</h6>
+                    <p class="mb-0">{{ item.object.get_patient_notes }}</p>
+                  </div>
+                </div>
+                {% endif %}
+
+                {% if item.object.get_doctor_notes %}
+                <div class="card bg-info-subtle mt-2">
+                  <div class="card-body py-2">
+                    <h6 class="card-subtitle mb-1 text-info">Doctor's Notes:</h6>
+                    <p class="mb-0">{{ item.object.get_doctor_notes }}</p>
+                  </div>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-5 text-muted">
+          <i data-feather="inbox" style="width:48px;height:48px;" class="mb-3"></i>
+          <p class="mb-0">No medical history entries or appointments found for this patient.</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="d-flex gap-2 mt-4">
+  <a href="{% url 'patient_detail' patient.id %}" class="btn btn-outline-primary">
+    <i data-feather="arrow-left" class="me-1" style="width:16px;height:16px;"></i>
+    Back to Patient Profile
+  </a>
+  <a href="{% url 'patient_list' %}" class="btn btn-outline-secondary">
+    <i data-feather="list" class="me-1" style="width:16px;height:16px;"></i>
+    All Patients
+  </a>
+</div>
+
+<style>
+.timeline-item:last-child {
+  border-bottom: none !important;
+}
+</style>
+{% endblock %}

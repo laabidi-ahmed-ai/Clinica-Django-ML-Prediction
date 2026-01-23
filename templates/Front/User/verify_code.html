@@ -1,0 +1,24 @@
+
+{% load static %}
+
+
+<head>
+  <link href="{% static 'css/loginFront.css' %}" rel="stylesheet">
+</head>
+{% block content %}
+<div class="container mt-5" style="max-width: 500px;">
+    <h3 class="mb-4 text-center">Verify Your Code</h3>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="email" value="{{ email }}">
+        <div class="mb-3">
+            <label for="code" class="form-label">Enter the code sent to your email</label>
+            <input type="text" class="form-control" id="code" name="code" placeholder="123456" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Verify Code</button>
+    </form>
+    {% if error %}
+    <div class="alert alert-danger mt-3">{{ error }}</div>
+    {% endif %}
+</div>
+{% endblock %}

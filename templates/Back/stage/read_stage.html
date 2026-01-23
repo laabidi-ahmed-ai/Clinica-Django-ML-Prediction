@@ -1,0 +1,646 @@
+{% load static %}
+<!DOCTYPE html>
+<html dir="ltr" lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'Back/src/assets/images/favicon.png' %}">
+    <title>Clinique+ • Gestion des Stages</title>
+    <link href="{% static 'Back/src/dist/css/style.min.css' %}" rel="stylesheet">
+    <style>
+        .btn-action {
+            padding: 5px 10px;
+            margin: 2px;
+            font-size: 12px;
+        }
+        .progress-bar {
+            transition: width 0.6s ease;
+        }
+        .badge {
+            font-size: 11px;
+        }
+        .table-responsive {
+            overflow-x: auto;
+        }
+        .table thead th {
+            white-space: nowrap;
+        }
+        .table tbody td {
+            white-space: nowrap;
+        }
+        a.text-dark:hover {
+            color: var(--bs-primary) !important;
+        }
+    </style>
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+</head>
+
+<body>
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+
+    <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+        
+        <!-- Topbar -->
+        <header class="topbar" data-navbarbg="skin6">
+            <nav class="navbar top-navbar navbar-expand-lg">
+                <div class="navbar-header" data-logobg="skin6">
+                    <a class="nav-toggler d-block d-lg-none" href="javascript:void(0)"><i class="ti-menu ti-close"></i></a>
+                    <div class="navbar-brand">
+                        <a href="{% url 'stages:liste_stages' %}">
+                            <img src="{% static 'Front/assets/images/logo_site.png' %}" alt="logo" class="img-fluid" style="width: 120px; margin-top: 30px;">
+                        </a>
+                    </div>
+                    <a class="topbartoggler d-block d-lg-none" href="javascript:void(0)" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="ti-more"></i>
+                    </a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="navbar-nav float-end">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-bs-toggle="dropdown">
+                                <img src="{% static 'Back/src/assets/images/users/profile-pic.jpg' %}" alt="user" class="rounded-circle" width="40">
+                                <span class="ms-2 d-none d-lg-inline-block">
+                                    <span class="text-dark">{{ user.first_name|default:"Admin" }}</span>
+                                    <i data-feather="chevron-down" class="svg-icon"></i>
+                                </span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="#">
+                                    <i data-feather="power" class="svg-icon me-2"></i>Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="left-sidebar" data-sidebarbg="skin6">
+            <div class="scroll-sidebar" data-sidebarbg="skin6">
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li class="sidebar-item">
+                            <a class="sidebar-link sidebar-link" href="#">
+                                <i data-feather="home" class="feather-icon"></i><span class="hide-menu">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="list-divider"></li>
+                        <li class="nav-small-cap"><span class="hide-menu">GESTION DES STAGES</span></li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link active" href="{% url 'stages:liste_stages' %}">
+                                <i data-feather="file-text" class="feather-icon"></i><span class="hide-menu">Liste des stages</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{% url 'stages:ajouter_stage' %}">
+                                <i data-feather="plus-circle" class="feather-icon"></i><span class="hide-menu">Nouveau stage</span>
+                            </a>
+                        </li>
+                        <li class="list-divider"></li>
+                        <li class="nav-small-cap"><span class="hide-menu">GESTION DES STAGIAIRES</span></li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{% url 'stagiaire:liste_stagiaires' %}">
+                                <i data-feather="users" class="feather-icon"></i><span class="hide-menu">Liste des stagiaires</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <div class="page-wrapper">
+            <div class="page-breadcrumb">
+                <div class="row">
+                    <div class="col-7 align-self-center">
+                        <h3 class="page-title text-truncate text-dark font-weight-medium mb-1">Gestion des Stages</h3>
+                        <div class="d-flex align-items-center">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb m-0 p-0">
+                                    <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                                    <li class="breadcrumb-item active">Stages</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="col-5 align-self-center">
+                        <div class="customize-input float-end">
+                            <a href="{% url 'stages:liste_stages_front' %}" target="_blank" class="btn btn-info text-white me-2">
+                                <i data-feather="eye" class="feather-icon"></i> Voir page publique
+                            </a>
+                            <a href="{% url 'stages:ajouter_stage' %}" class="btn btn-primary">
+                                <i data-feather="plus" class="feather-icon"></i> Nouveau Stage
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid">
+                <!-- Messages -->
+                {% if messages %}
+                <div class="row">
+                    <div class="col-12">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Cartes de statistiques -->
+                <div class="row">
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card border-end">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <h2 class="text-dark mb-1 font-weight-medium">{{ stages|length }}</h2>
+                                        <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Total Stages</h6>
+                                    </div>
+                                    <div class="ms-auto mt-md-3 mt-lg-0">
+                                        <span class="opacity-7 text-muted"><i data-feather="briefcase"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card border-end">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <h2 class="text-dark mb-1 font-weight-medium">{{ stages|length|add:"-1" }}</h2>
+                                        <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">En Cours</h6>
+                                    </div>
+                                    <div class="ms-auto mt-md-3 mt-lg-0">
+                                        <span class="opacity-7 text-warning"><i data-feather="clock"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card border-end">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <h2 class="text-dark mb-1 font-weight-medium">0</h2>
+                                        <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Terminés</h6>
+                                    </div>
+                                    <div class="ms-auto mt-md-3 mt-lg-0">
+                                        <span class="opacity-7 text-success"><i data-feather="check-circle"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <h2 class="text-dark mb-1 font-weight-medium">{{ stages|length }}</h2>
+                                        <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Proposés</h6>
+                                    </div>
+                                    <div class="ms-auto mt-md-3 mt-lg-0">
+                                        <span class="opacity-7 text-info"><i data-feather="file-text"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tableau des stages -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-4">
+                                    <h4 class="card-title">Liste des Stages</h4>
+                                    <div class="ms-auto">
+                                        <a href="{% url 'stages:liste_stages_front' %}" target="_blank" class="btn btn-info text-white me-2">
+                                            <i data-feather="eye" style="width: 14px; height: 14px;"></i> Voir la page publique
+                                        </a>
+                                        <div class="dropdown sub-dropdown d-inline-block">
+                                            <button class="btn btn-link text-muted dropdown-toggle" type="button"
+                                                id="dd1" data-bs-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false">
+                                                <i data-feather="more-vertical"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd1">
+                                                <a class="dropdown-item" href="#" onclick="exportTableToExcel('stagesTable', 'Liste_Stages.xlsx')">
+    Exporter Excel
+</a>
+
+                                                <a class="dropdown-item" href="#">Imprimer</a>
+                                                <a class="dropdown-item" href="{% url 'stages:liste_stages' %}">Rafraîchir</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                
+
+<div class="d-flex mb-3 gap-2">
+    <!-- Filtre Type avec icône -->
+    <div class="input-group input-group-sm" style="width: 180px;">
+        <span class="input-group-text"><i class="fas fa-search"></i></span>
+        <select id="typeStageSelect" class="form-select form-select-sm">
+            <option value="">Tous les types</option>
+            {% for key, label in stages.model.TYPE_STAGE %}
+                <option value="{{ key }}">{{ label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Filtre Encadrant avec icône -->
+    <div class="input-group input-group-sm" style="width: 200px;">
+        <span class="input-group-text"><i class="fas fa-search"></i></span>
+        <input type="text" id="encadrantSearch" class="form-control form-control-sm" 
+               placeholder="Chercher par encadrant...">
+    </div>
+</div>
+
+
+
+
+                                <div class="table-responsive">
+                                    <table id="stagesTable" class="table no-wrap v-middle mb-0">
+                                        <thead>
+                                            <tr class="border-0">
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Stagiaire</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Carte Étudiant</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Université</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Spécialité</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Téléphone</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted text-center">Statut Stagiaire</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Intitulé</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Type</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Service</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Dates</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Durée</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Encadrant</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted text-center">Statut</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted text-center">Note</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for stage in stages %}
+                                            <tr>
+                                                <!-- Stagiaire -->
+                                                <td class="border-top-0 px-2 py-4">
+                                                    {% if stage.stagiaire %}
+                                                    <div class="d-flex no-block align-items-center">
+                                                        <div class="me-3">
+                                                            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" 
+                                                                 style="width: 45px; height: 45px;">
+                                                                <span class="text-primary font-weight-bold font-14">
+                                                                    {{ stage.stagiaire.user.prenom|first }}{{ stage.stagiaire.user.nom|first }}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="">
+                                                            <h5 class="text-dark mb-0 font-16 font-weight-medium">
+                                                                <a href="{% url 'stagiaire:liste_stagiaires' stage.stagiaire.user_id %}" 
+                                                                   class="text-dark text-decoration-none" 
+                                                                   style="transition: color 0.2s;">
+                                                                    {{ stage.stagiaire.user.prenom }} {{ stage.stagiaire.user.nom }}
+                                                                </a>
+                                                            </h5>
+                                                            <span class="text-muted font-14">{{ stage.stagiaire.user.email }}</span>
+                                                        </div>
+                                                    </div>
+                                                    {% else %}
+                                                    <span class="text-muted font-14">Aucun stagiaire assigné</span>
+                                                    {% endif %}
+                                                </td>
+                                                
+                                                <!-- Carte Étudiant -->
+                                                <td class="border-top-0 px-2 py-4">
+                                                    {% if stage.stagiaire %}
+                                                        <span class="font-14 text-dark font-weight-medium">{{ stage.stagiaire.numero_carte_etudiant }}</span>
+                                                    {% else %}
+                                                        <span class="text-muted font-14">-</span>
+                                                    {% endif %}
+                                                </td>
+                                                
+                                                <!-- Université -->
+                                                <td class="border-top-0 px-2 py-4">
+                                                    {% if stage.stagiaire %}
+                                                        <span class="font-14 text-muted">{{ stage.stagiaire.universite }}</span>
+                                                    {% else %}
+                                                        <span class="text-muted font-14">-</span>
+                                                    {% endif %}
+                                                </td>
+                                                
+                                                <!-- Spécialité -->
+                                                <td class="border-top-0 px-2 py-4">
+                                                    {% if stage.stagiaire %}
+                                                        <span class="font-14 text-muted">{{ stage.stagiaire.specialite|default:"-" }}</span>
+                                                    {% else %}
+                                                        <span class="text-muted font-14">-</span>
+                                                    {% endif %}
+                                                </td>
+                                                
+                                                <!-- Téléphone -->
+                                                <td class="border-top-0 px-2 py-4">
+                                                    {% if stage.stagiaire %}
+                                                        <span class="font-14 text-muted">{{ stage.stagiaire.user.tel|default:"-" }}</span>
+                                                    {% else %}
+                                                        <span class="text-muted font-14">-</span>
+                                                    {% endif %}
+                                                </td>
+                                                
+                                                <!-- Statut Stagiaire (Validé/Non validé) -->
+                                                <td class="border-top-0 text-center px-2 py-4">
+                                                    {% if stage.stagiaire %}
+                                                        {% if stage.stagiaire.valide %}
+                                                            <span class="badge bg-success text-white font-12">
+                                                                <i data-feather="check-circle" style="width: 12px; height: 12px;"></i> Validé
+                                                            </span>
+                                                        {% else %}
+                                                            <span class="badge bg-danger text-white font-12">
+                                                                <i data-feather="x-circle" style="width: 12px; height: 12px;"></i> Non validé
+                                                            </span>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <span class="text-muted font-14">-</span>
+                                                    {% endif %}
+                                                </td>
+                                                
+                                                <!-- Intitulé -->
+                                                <td class="border-top-0 px-2 py-4">
+                                                    <h6 class="text-dark mb-0 font-14">{{ stage.intitule }}</h6>
+                                                    <small class="text-muted">{{ stage.description|truncatewords:5 }}</small>
+                                                </td>
+                                                
+                                                <!-- Type -->
+                                                <td class="border-top-0 px-2 py-4">
+                                                    <span class="badge bg-light text-dark">{{ stage.get_type_stage_display }}</span>
+                                                </td>
+                                                
+                                                <!-- Service -->
+                                                <td class="border-top-0 px-2 py-4">
+                                                    <span class="font-14 text-muted">{{ stage.get_service_display }}</span>
+                                                </td>
+                                                
+                                                <!-- Dates -->
+                                                <td class="border-top-0 px-2 py-4">
+                                                    <div class="font-14">
+                                                        <div class="text-dark">{{ stage.date_debut|date:"d/m/Y" }}</div>
+                                                        <div class="text-muted">au {{ stage.date_fin|date:"d/m/Y" }}</div>
+                                                    </div>
+                                                </td>
+                                                
+                                                <!-- Durée -->
+                                                <td class="border-top-0 px-2 py-4">
+                                                    <span class="font-14 text-muted">{{ stage.duree_semaines }} semaines</span>
+                                                </td>
+                                                
+                                                <!-- Encadrant -->
+                                                <td class="border-top-0 px-2 py-4">
+                                                    {% if stage.encadrant %}
+                                                        <span class="font-14 text-dark">
+                                                        {{ stage.encadrant.first_name }} {{ stage.encadrant.last_name }}
+                                                        </span>
+                                                    {% else %}
+                                                        <span class="font-14 text-muted">Non assigné</span>
+                                                    {% endif %}
+                                                </td>
+
+                                                
+                                                <!-- Statut -->
+                                                <td class="border-top-0 text-center px-2 py-4">
+                                                    {% if stage.statut == 'propose' %}
+                                                    <span class="badge bg-info text-white font-12">Proposé</span>
+                                                    {% elif stage.statut == 'valide' %}
+                                                    <span class="badge bg-success text-white font-12">Validé</span>
+                                                    {% elif stage.statut == 'en_cours' %}
+                                                    <span class="badge bg-warning text-white font-12">En Cours</span>
+                                                    {% elif stage.statut == 'termine' %}
+                                                    <span class="badge bg-primary text-white font-12">Terminé</span>
+                                                    {% elif stage.statut == 'annule' %}
+                                                    <span class="badge bg-danger text-white font-12">Annulé</span>
+                                                    {% elif stage.statut == 'interrompu' %}
+                                                    <span class="badge bg-secondary text-white font-12">Interrompu</span>
+                                                    {% endif %}
+                                                    
+                                                    {% if stage.est_en_cours %}
+                                                    <div class="mt-1">
+                                                        <div class="progress" style="height: 5px;">
+                                                            <div class="progress-bar bg-success" 
+                                                                 style="width: {{ stage.pourcentage_realisation }}%">
+                                                            </div>
+                                                        </div>
+                                                        <small class="text-muted">{{ stage.pourcentage_realisation|floatformat:0 }}%</small>
+                                                    </div>
+                                                    {% endif %}
+                                                </td>
+                                                
+                                                <!-- Note -->
+                                                <td class="border-top-0 text-center px-2 py-4">
+                                                    {% if stage.note_finale %}
+                                                    <span class="badge bg-success text-white font-14">{{ stage.note_finale }}/20</span>
+                                                    {% else %}
+                                                    <span class="text-muted font-14">-</span>
+                                                    {% endif %}
+                                                </td>
+                                                
+                                                <!-- Actions -->
+                                                <td class="border-top-0 text-center px-2 py-4">
+                                                    <div class="btn-group-vertical btn-group-sm">
+                                                        <!-- Bouton Modifier -->
+                                                        <a href="{% url 'stages:modifier_stage' stage.pk %}" 
+                                                           class="btn btn-warning btn-action text-white"
+                                                           data-bs-toggle="tooltip" 
+                                                           title="Modifier le stage">
+                                                            <i data-feather="edit-2" class="feather-icon" style="width: 12px; height: 12px;"></i>
+                                                            Modifier
+                                                        </a>
+                                                        
+                                                        <!-- Bouton Supprimer -->
+                                                        <button type="button" 
+                                                                class="btn btn-danger btn-action"
+                                                                data-bs-toggle="modal" 
+                                                                data-bs-target="#deleteModal{{ stage.pk }}"
+                                                                data-bs-toggle="tooltip" 
+                                                                title="Supprimer le stage">
+                                                            <i data-feather="trash-2" class="feather-icon" style="width: 12px; height: 12px;"></i>
+                                                            Supprimer
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <!-- Modal de suppression pour chaque stage -->
+                                            <div class="modal fade" id="deleteModal{{ stage.pk }}" tabindex="-1">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header bg-danger text-white">
+                                                            <h5 class="modal-title">
+                                                                <i data-feather="alert-triangle" class="feather-icon"></i>
+                                                                Confirmer la suppression
+                                                            </h5>
+                                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <div class="modal-body text-center">
+                                                            <div class="mb-3">
+                                                                <i data-feather="trash-2" class="feather-icon text-danger" style="width: 48px; height: 48px;"></i>
+                                                            </div>
+                                                            <h5>Êtes-vous sûr de vouloir supprimer ce stage ?</h5>
+                                                            <p class="text-muted">
+                                                                <strong>{{ stage.intitule }}</strong><br>
+                                                                {% if stage.stagiaire %}
+                                                                Stagiaire: {{ stage.stagiaire.user.prenom }} {{ stage.stagiaire.user.nom }}<br>
+                                                                {% else %}
+                                                                Aucun stagiaire assigné<br>
+                                                                {% endif %}
+                                                                Service: {{ stage.get_service_display }}
+                                                            </p>
+                                                            <p class="text-danger small">
+                                                                <i data-feather="alert-circle" class="feather-icon"></i>
+                                                                Cette action est irréversible.
+                                                            </p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                            <form method="post" action="{% url 'stages:supprimer_stage' stage.pk %}" style="display: inline;">
+                                                                {% csrf_token %}
+                                                                <button type="submit" class="btn btn-danger">
+                                                                    <i data-feather="trash-2" class="feather-icon"></i>
+                                                                    Supprimer
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% empty %}
+                                            <tr>
+                                                <td colspan="11" class="text-center py-4">
+                                                    <div class="text-muted">
+                                                        <i data-feather="inbox" class="feather-icon" style="width: 48px; height: 48px;"></i>
+                                                        <p class="mt-2">Aucun stage trouvé</p>
+                                                        <a href="{% url 'stages:ajouter_stage' %}" class="btn btn-primary mt-2">
+                                                            <i data-feather="plus" class="feather-icon"></i>
+                                                            Ajouter le premier stage
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="footer text-center text-muted">
+                Clinique+ • Gestion des Stages © 2024
+            </footer>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{% static 'Back/src/assets/libs/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'Back/src/assets/libs/popper.js/dist/umd/popper.min.js' %}"></script>
+    <script src="{% static 'Back/src/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'Back/src/dist/js/app-style-switcher.js' %}"></script>
+    <script src="{% static 'Back/src/dist/js/feather.min.js' %}"></script>
+    <script src="{% static 'Back/src/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js' %}"></script>
+    <script src="{% static 'Back/src/dist/js/sidebarmenu.js' %}"></script>
+    <script src="{% static 'Back/src/dist/js/custom.min.js' %}"></script>
+    
+    <script>
+        // Initialiser Feather Icons
+        feather.replace();
+        
+        // Initialiser les tooltips Bootstrap
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+</body>
+</html>
+<!--teb3 recherche -->
+<script>
+    const typeSelect = document.getElementById('typeStageSelect');
+    const encadrantInput = document.getElementById('encadrantSearch');
+    const tableRows = document.querySelectorAll('tbody tr');
+
+    function filterTable() {
+        const typeValue = typeSelect.value.toLowerCase();
+        const encadrantValue = encadrantInput.value.toLowerCase();
+
+        tableRows.forEach(row => {
+            const typeText = row.cells[1].innerText.toLowerCase(); // Type
+            const encadrantText = row.cells[5].innerText.toLowerCase(); // Encadrant
+
+            if ((typeValue === "" || typeText.includes(typeValue)) &&
+                (encadrantValue === "" || encadrantText.includes(encadrantValue))) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    }
+
+    typeSelect.addEventListener('change', filterTable);
+    encadrantInput.addEventListener('keyup', filterTable);
+</script>
+<!--teb3 export excel -->
+<script>
+function exportTableToExcel(tableID, filename = ''){
+    const table = document.getElementById(tableID);
+    const wb = XLSX.utils.book_new();
+    // Convertir le tableau en JSON mais ignorer la dernière colonne (Actions)
+    const ws_data = [];
+    const rows = table.querySelectorAll('tr');
+
+    rows.forEach((row, rowIndex) => {
+        const rowData = [];
+        row.querySelectorAll('td, th').forEach((cell, colIndex) => {
+            // Ignorer la dernière colonne
+            if(colIndex < row.querySelectorAll('td, th').length - 1){
+                rowData.push(cell.innerText);
+            }
+        });
+        ws_data.push(rowData);
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+    XLSX.utils.book_append_sheet(wb, ws, 'Stages');
+    XLSX.writeFile(wb, filename || 'Stages.xlsx');
+}
+
+// Lier le bouton
+document.querySelector('a[href="#"]').addEventListener('click', function(e){
+    e.preventDefault();
+    exportTableToExcel('stagesTable', 'Liste_Stages.xlsx');
+});
+</script>

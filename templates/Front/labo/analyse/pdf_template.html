@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Bilan Médical - Analyse {{ analyse.nom_analyse }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 12px; margin: 20px; }
+        h1 { text-align: center; color: #1AB2B8; }
+        h2 { color: #1AB2B8; font-size: 14px; margin-top: 20px; border-bottom: 1px solid #000; padding-bottom: 3px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #000; padding: 5px; text-align: center; }
+        .checkbox { width: 12px; height: 12px; display: inline-block; border: 1px solid #000; margin-right: 5px; }
+        .section { margin-bottom: 15px; }
+        .stat { font-weight: bold; color: #1AB2B8; }
+        img { display: block; margin: 0 auto; }
+    </style>
+</head>
+<body>
+    <h1>BILAN SANTÉ - {{ analyse.nom_analyse }}</h1>
+    
+    <!-- Informations patient -->
+    <div class="section">
+        <table>
+            <tr>
+                <th>Médecin référent</th>
+                <th>Date consultation</th>
+            </tr>
+            <tr>
+                <td>{{ analyse.medecin_ref|default:"-" }}</td>
+                <td>{{ analyse.date_prelevement|date:"d/m/Y" }}</td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="section">
+        <table>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Date de naissance</th>
+            </tr>
+            <tr>
+                <td>{{ analyse.patient_nom|default:"-" }}</td>
+                <td>{{ analyse.patient_prenom|default:"-" }}</td>
+                <td>{{ analyse.patient_date_naissance|date:"d/m/Y"|default:"-" }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Antécédents -->
+    <h2>ANTÉCÉDENTS</h2>
+    <div class="section">
+        <p><span class="checkbox"></span> Antécédents médicaux (chirurgicaux, accidents, hospitalisations…)</p>
+        <p><span class="checkbox"></span> Allergies (médicaments, alimentaires, autres)</p>
+        <p><span class="checkbox"></span> Traitements en cours</p>
+    </div>
+
+    <!-- Statistiques de l'analyse -->
+    <h2>RÉSULTATS & STATISTIQUES</h2>
+    <div class="section">
+        <!-- Graphique généré -->
+        {% if graph %}
+        <div style="margin-bottom:15px; text-align:center;">
+            <img src="data:image/png;base64,{{ graph }}" alt="Graphique" style="width:100%; max-width:500px;" />
+        </div>
+        {% endif %}
+
+        <table>
+            <tr>
+                <th>Paramètre</th>
+                <th>Valeur</th>
+                <th>Référence</th>
+            </tr>
+            {% for stat in analyse.stats.all %}
+            <tr>
+                <td>{{ stat.nom }}</td>
+                <td>{{ stat.valeur }}</td>
+                <td>{{ stat.reference }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3">Aucune statistique disponible</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <!-- Observations -->
+    <h2>OBSERVATIONS</h2>
+    <div class="section">
+        <p>{{ analyse.commentaire|default:"Aucune observation" }}</p>
+    </div>
+
+    <!-- Signature -->
+    <div class="section" style="margin-top: 40px;">
+        <p style="text-align:right;">Signature du médecin: ____________________</p>
+    </div>
+</body>
+</html>

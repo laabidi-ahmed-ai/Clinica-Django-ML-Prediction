@@ -1,0 +1,372 @@
+{% extends 'back/products/base.html' %}
+{% load static %}
+
+{% block title %}Orders - Admin Panel{% endblock %}
+
+{% block page_title %}
+<div class="mb-4">
+    <h3 class="mb-1">Orders Management</h3>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Table animations */
+    .table tbody tr {
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+        transform: scale(1.01);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .table tbody tr:active {
+        transform: scale(0.99);
+    }
+    /* Card animation */
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    /* Button animations */
+    .btn {
+        transition: all 0.3s ease;
+    }
+    .btn-sm {
+        padding: 6px 16px;
+        font-size: 0.875rem;
+        min-width: 80px;
+    }
+    /* Status filter buttons */
+    .btn-outline-secondary,
+    .btn-outline-warning,
+    .btn-outline-success,
+    .btn-outline-danger {
+        transition: all 0.3s ease;
+        border-radius: 20px;
+    }
+    .btn-outline-secondary:hover,
+    .btn-outline-warning:hover,
+    .btn-outline-success:hover,
+    .btn-outline-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    /* Action buttons */
+    .btn-action-group {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .btn-confirm {
+        background: #28a745;
+        border: none;
+        color: white;
+        padding: 8px 18px;
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 6px rgba(40, 167, 69, 0.25);
+    }
+    
+    .btn-confirm:hover {
+        background: #218838;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(40, 167, 69, 0.35);
+    }
+    
+    .btn-reject {
+        background: #dc3545;
+        border: none;
+        color: white;
+        padding: 8px 18px;
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 6px rgba(220, 53, 69, 0.25);
+    }
+    
+    .btn-reject:hover {
+        background: #c82333;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(220, 53, 69, 0.35);
+    }
+    
+    .btn-confirm i,
+    .btn-reject i {
+        width: 14px;
+        height: 14px;
+        margin-right: 4px;
+    }
+    /* Modal animations */
+    .modal-content {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+    .modal-header {
+        border-radius: 15px 15px 0 0;
+        padding: 20px 25px;
+    }
+    .modal-header.confirm-header {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+    }
+    .modal-header.reject-header {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        color: white;
+    }
+    .modal-header .btn-close {
+        filter: brightness(0) invert(1);
+    }
+    .modal-body {
+        padding: 30px 25px;
+        text-align: center;
+    }
+    .modal-body .icon-wrapper {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+    }
+    .modal-body .icon-wrapper.confirm-icon {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+    }
+    .modal-body .icon-wrapper.reject-icon {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        color: white;
+    }
+    .modal-footer {
+        border-top: none;
+        padding: 20px 25px;
+        justify-content: center;
+        gap: 10px;
+    }
+    .modal-footer .btn {
+        min-width: 120px;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-4">
+                        <h4 class="card-title mb-0">All Orders</h4>
+                        <div class="ms-auto">
+                            <a href="{% url 'orders_list' %}" class="btn btn-sm btn-outline-secondary">All</a>
+                            <a href="{% url 'orders_list' %}?status=en_attente" class="btn btn-sm btn-outline-warning">Pending</a>
+                            <a href="{% url 'orders_list' %}?status=acceptee" class="btn btn-sm btn-outline-success">Accepted</a>
+                            <a href="{% url 'orders_list' %}?status=refusee" class="btn btn-sm btn-outline-danger">Rejected</a>
+                        </div>
+                        
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th>Customer</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders %}
+                                <tr id="order-{{ order.id }}">
+                                    <td>
+                                        <a href="#order-{{ order.id }}" class="text-dark fw-semibold">
+                                            #{{ order.id }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <div class="text-dark fw-semibold">{{ order.produit.nom }}</div>
+                                        <div class="text-muted small">{{ order.produit.get_category_display }}</div>
+                                    </td>
+                                    <td>{{ order.quantite }}</td>
+                                    <td>${{ order.total|floatformat:2 }}</td>
+                                    <td>
+                                        <div class="text-dark fw-semibold">{{ order.prenom_client }} {{ order.nom_client }}</div>
+                                        <div class="text-muted small">{{ order.telephone_client }}</div>
+                                    </td>
+                                    <td>{{ order.email_client }}</td>
+                                    <td>
+                                        <span class="badge bg-{% if order.statut == 'en_attente' %}warning{% elif order.statut == 'acceptee' %}success{% elif order.statut == 'refusee' %}danger{% else %}secondary{% endif %}">
+                                            {{ order.get_statut_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {{ order.date_creation|date:"M d" }}
+                                        <small class="text-muted d-block">{{ order.date_creation|time:"H:i" }}</small>
+                                    </td>
+                                    <td onclick="event.stopPropagation();">
+                                        {% if order.statut == 'en_attente' %}
+                                            <div class="btn-action-group">
+                                                <!-- Confirm button - Green -->
+                                                <button type="button" class="btn btn-confirm" 
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target="#confirmOrderModal{{ order.id }}"
+                                                        onclick="event.stopPropagation();">
+                                                    <i data-feather="check"></i> Confirm
+                                                </button>
+                                                
+                                                <!-- Reject button - Red -->
+                                                <button type="button" class="btn btn-reject" 
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target="#rejectOrderModal{{ order.id }}"
+                                                        onclick="event.stopPropagation();">
+                                                    <i data-feather="x"></i> Reject
+                                                </button>
+                                            </div>
+                                        {% else %}
+                                            <span class="text-muted small">No actions</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="9" class="text-center text-muted py-4">
+                                        No orders found.
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Confirm Order Modals -->
+{% for order in orders %}
+{% if order.statut == 'en_attente' %}
+<!-- Confirm Order Modal -->
+<div class="modal fade" id="confirmOrderModal{{ order.id }}" tabindex="-1" aria-labelledby="confirmOrderModalLabel{{ order.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header confirm-header">
+                <h5 class="modal-title" id="confirmOrderModalLabel{{ order.id }}">
+                    <i data-feather="check-circle" style="width: 20px; height: 20px; margin-right: 8px;"></i>
+                    Confirm Order
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="icon-wrapper confirm-icon">
+                    <i data-feather="check" style="width: 40px; height: 40px;"></i>
+                </div>
+                <h4 class="mb-3">Confirm this order?</h4>
+                <p class="text-muted mb-2">
+                    <strong>Order #{{ order.id }}</strong><br>
+                    Product: <strong>{{ order.produit.nom }}</strong><br>
+                    Quantity: <strong>{{ order.quantite }}</strong><br>
+                    Total: <strong>${{ order.total|floatformat:2 }}</strong><br>
+                    Customer: <strong>{{ order.prenom_client }} {{ order.nom_client }}</strong>
+                </p>
+                <p class="text-muted small mt-3">This action will accept the order and reduce the product stock.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form method="post" action="{% url 'confirm_order' order.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">
+                        <i data-feather="check" style="width: 16px; height: 16px; margin-right: 5px;"></i>
+                        Confirm Order
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reject Order Modal -->
+<div class="modal fade" id="rejectOrderModal{{ order.id }}" tabindex="-1" aria-labelledby="rejectOrderModalLabel{{ order.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header reject-header">
+                <h5 class="modal-title" id="rejectOrderModalLabel{{ order.id }}">
+                    <i data-feather="x-circle" style="width: 20px; height: 20px; margin-right: 8px;"></i>
+                    Reject Order
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="icon-wrapper reject-icon">
+                    <i data-feather="x" style="width: 40px; height: 40px;"></i>
+                </div>
+                <h4 class="mb-3">Reject this order?</h4>
+                <p class="text-muted mb-2">
+                    <strong>Order #{{ order.id }}</strong><br>
+                    Product: <strong>{{ order.produit.nom }}</strong><br>
+                    Quantity: <strong>{{ order.quantite }}</strong><br>
+                    Total: <strong>${{ order.total|floatformat:2 }}</strong><br>
+                    Customer: <strong>{{ order.prenom_client }} {{ order.nom_client }}</strong>
+                </p>
+                <p class="text-danger small mt-3">This action cannot be undone. The order will be marked as rejected.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form method="post" action="{% url 'reject_order' order.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        <i data-feather="x" style="width: 16px; height: 16px; margin-right: 5px;"></i>
+                        Reject Order
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Reinitialize Feather icons after modal is shown
+    document.addEventListener('DOMContentLoaded', function() {
+        var modals = document.querySelectorAll('.modal');
+        modals.forEach(function(modal) {
+            modal.addEventListener('shown.bs.modal', function() {
+                if (typeof feather !== 'undefined') {
+                    feather.replace();
+                }
+            });
+        });
+        
+        // Initialize icons on page load
+        if (typeof feather !== 'undefined') {
+            feather.replace();
+        }
+    });
+</script>
+{% endblock %}
+

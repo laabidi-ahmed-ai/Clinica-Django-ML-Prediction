@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Payer ma donation</title>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <h1>Payer ma donation à "{{ publication.title }}"</h1>
+    <p>Montant : <strong>{{ montant }} €</strong></p>
+
+    <form id="payment-form">
+      <div id="card-element"></div>
+      <button id="submit">Payer {{ montant }} €</button>
+      <div id="error-message" style="color:red"></div>
+    </form>
+    <div id="result-message" style="color:green"></div>
+
+    <script>
+      const stripe = Stripe("{{ stripe_public_key }}");
+      const elements = stripe.elements();
+      const card = elements.create("card");
+      card.mount("#card-element");
+
+      const form = document.getElementById("payment-form");
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        document.getElementById("error-message").textContent = "";
+        document.getElementById("result-message").textContent = "";
+
+        const result = await stripe.confirmCardPayment("{{ client_secret }}", {
+          payment_method: { card: card }
+        });
+        if (result.error) {
+          document.getElementById("error-message").textContent = result.error.message;
+        } else {
+          if (result.paymentIntent.status === "succeeded") {
+            // Appelle ton backend pour enregistrer le don
+            fetch("{% url 'donation:donation_stripe_success' %}", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+              },
+              body: "payment_intent_id=" + result.paymentIntent.id +
+                    "&pub_id={{ pub_id }}" +
+                    "&montant={{ montant }}" +
+                    "&user_id={{ user.id }}"
+            })
+            .then(resp => resp.json())
+            .then(data => {
+              if (data.status == "ok") {
+                  document.getElementById("result-message").textContent = "✅ Merci pour votre don !";
+                  setTimeout(() => { 
+    window.location.href = "{% url 'donation:user_donation_list' %}";
+}, 2000);
+              } else {
+                  document.getElementById("error-message").textContent = data.message;
+              }
+            });
+          }
+        }
+      });
+    </script>
+</body>
+</html>

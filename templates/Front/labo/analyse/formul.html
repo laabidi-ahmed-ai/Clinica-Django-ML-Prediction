@@ -1,0 +1,107 @@
+{% extends "Front/labo/analyse/base.html" %}
+
+{% block title %}
+  {% if object %}Modifier Analyse{% else %}Créer Analyse{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">
+    {% if object %}Modifier Analyse{% else %}Créer Analyse{% endif %}
+  </h2>
+
+  <!-- 🔥 Display form validation errors -->
+  {% if form.errors %}
+  <div class="alert alert-danger">
+    <strong>Erreur(s) :</strong>
+    <ul class="mb-0">
+      {% for field, errors in form.errors.items %}
+        <li><strong>{{ field }}:</strong> {{ errors|join:", " }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+  <!-- 🔥 End error block -->
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label for="{{ form.type.id_for_label }}" class="form-label">Type</label>
+        {{ form.type }}
+      </div>
+
+      <div class="col-md-6">
+        <label for="{{ form.category.id_for_label }}" class="form-label">Catégorie</label>
+        {{ form.category }}
+      </div>
+
+      <div class="col-md-6">
+        <label for="{{ form.echantillon_code.id_for_label }}" class="form-label">Code Échantillon</label>
+        {{ form.echantillon_code }}
+      </div>
+
+      <div class="col-md-6">
+        <label for="{{ form.patient_id.id_for_label }}" class="form-label">Patient ID</label>
+        {{ form.patient_id }}
+      </div>
+
+      <div class="col-md-6">
+        <label for="{{ form.technique_utilisee.id_for_label }}" class="form-label">Technique Utilisée</label>
+        {{ form.technique_utilisee }}
+      </div>
+
+      <div class="col-md-6">
+        <label for="{{ form.date_prelevement.id_for_label }}" class="form-label">Date de Prélèvement</label>
+        {{ form.date_prelevement }}
+      </div>
+
+      <div class="col-md-6">
+        <label for="{{ form.date_res.id_for_label }}" class="form-label">Date Résultat</label>
+        {{ form.date_res }}
+      </div>
+
+      <div class="col-md-6">
+        <label for="{{ form.etat.id_for_label }}" class="form-label">État</label>
+        {{ form.etat }}
+      </div>
+
+      <div class="col-md-6">
+        <label for="{{ form.cout.id_for_label }}" class="form-label">Coût</label>
+        {{ form.cout }}
+      </div>
+
+      <div class="col-12">
+        <label for="{{ form.commentaire.id_for_label }}" class="form-label">Commentaire</label>
+        {{ form.commentaire }}
+      </div>
+
+      <div class="col-md-4">
+        <label for="{{ form.equipement.id_for_label }}" class="form-label">Équipement</label>
+        {{ form.equipement }}
+      </div>
+
+      <div class="col-md-4">
+        <label for="{{ form.responsable.id_for_label }}" class="form-label">Responsable</label>
+        {{ form.responsable }}
+      </div>
+
+      <div class="col-md-4">
+        <label for="{{ form.responsable_analyse.id_for_label }}" class="form-label">Responsable Analyse</label>
+        {{ form.responsable_analyse }}
+      </div>
+
+      <div class="col-md-6">
+        <label for="{{ form.valide_par.id_for_label }}" class="form-label">Validé Par</label>
+        {{ form.valide_par }}
+      </div>
+
+      <div class="col-12 mt-3 text-center">
+        <button type="submit" class="btn btn-success px-4">
+          {% if object %}Modifier{% else %}Créer{% endif %}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,169 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Donation Receipt - Clinica+</title>
+
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #d7eaf5, #eef4ff);
+            font-family: 'Segoe UI', sans-serif;
+            padding: 40px 0;
+        }
+
+        .receipt-card {
+            width: 70%;
+            max-width: 750px;
+            margin: auto;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .receipt-header {
+            background: #3fbbc0;
+            padding: 40px 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .order-icon {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.25);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: auto;
+            margin-bottom: 15px;
+            font-size: 40px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 22px;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .status-valide { background: #28a745; color: white; }
+        .status-echec { background: #dc3545; color: white; }
+        .status-attente { background: #ffc107; color: black; }
+
+        .details-section {
+            padding: 30px 40px;
+        }
+
+        .details-section h4 {
+            font-weight: bold;
+            color: #3fbbc0;
+            margin-bottom: 20px;
+        }
+
+        .details-table td {
+            padding: 10px 0;
+        }
+
+        .download-btn {
+            display: block;
+            margin: 30px auto;
+            width: fit-content;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 15px;
+            border: none;
+            background: #ff5b72;
+            color: white;
+            transition: 0.3s;
+        }
+
+        .download-btn:hover {
+            background: #ff284c;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="receipt-card">
+
+    <!-- HEADER -->
+    <div class="receipt-header">
+        <div class="order-icon">
+            <i class="bi bi-receipt"></i>
+        </div>
+
+        <h2>Donation Receipt</h2>
+        <p style="opacity: 0.9;">Track and verify your donation details</p>
+
+        <!-- Status badge -->
+        {% if donation.statut == 'valide' %}
+            <span class="status-badge status-valide"><i class="bi bi-check-circle"></i> Confirmed</span>
+        {% elif donation.statut == 'echec' %}
+            <span class="status-badge status-echec"><i class="bi bi-x-circle"></i> Failed</span>
+        {% else %}
+            <span class="status-badge status-attente"><i class="bi bi-clock"></i> Pending</span>
+        {% endif %}
+    </div>
+
+    <!-- DETAILS -->
+    <div class="details-section">
+        <h4><i class="bi bi-info-circle"></i> Donation Details</h4>
+
+        <table class="table details-table">
+           
+            <tr>
+                <td><strong>Donor</strong></td>
+                <td>{{ donation.id_user.first_name }} {{ donation.id_user.last_name }}</td>
+            </tr>
+            <tr>
+                <td><strong>Publication</strong></td>
+                <td>{{ donation.id_publication.title }}</td>
+            </tr>
+            <tr>
+                <td><strong>Type</strong></td>
+                <td>{{ donation.type_donation }}</td>
+            </tr>
+            <tr>
+                <td><strong>Amount</strong></td>
+                <td>{{ donation.montant }} DT</td>
+            </tr>
+            <tr>
+                <td><strong>Description</strong></td>
+                <td>{{ donation.description|default:"—" }}</td>
+            </tr>
+            <tr>
+                <td><strong>Status</strong></td>
+                <td>{{ donation.statut }}</td>
+            </tr>
+            <tr>
+                <td><strong>Date</strong></td>
+                <td>{{ donation.date_donation }}</td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+
+<!-- PDF BUTTON -->
+<a href="{% url 'donation:donation_receipt_pdf' donation.id_donation %}" class="download-btn">
+    <i class="bi bi-file-earmark-pdf"></i> Télécharger PDF
+</a>
+
+</body>
+</html>

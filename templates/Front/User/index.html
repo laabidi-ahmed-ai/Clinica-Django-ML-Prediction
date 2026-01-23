@@ -1,0 +1,1439 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Products - Medicio</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+  
+  <style>
+    /* Modern Product Cards */
+    .modern-product-card {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      overflow: hidden;
+      border: 1px solid #f0f0f0;
+    }
+
+    .modern-product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .modern-product-card:hover .product-image {
+      transform: scale(1.05);
+    }
+
+    .modern-cart-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(63, 187, 192, 0.4) !important;
+    }
+
+    .modern-cart-btn:active {
+      transform: translateY(0);
+    }
+
+    /* Login/Logout Button Effects */
+    .nav-auth-btn {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-login-btn {
+      background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%);
+    }
+
+    .nav-login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(63, 187, 192, 0.4) !important;
+      background: linear-gradient(135deg, #2a9d9f 0%, #3fbbc0 100%);
+      color: white !important;
+    }
+
+    .nav-login-btn:active {
+      transform: translateY(0);
+    }
+
+    .nav-logout-btn {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    }
+
+    .nav-logout-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4) !important;
+      background: linear-gradient(135deg, #c82333 0%, #dc3545 100%);
+      color: white !important;
+    }
+
+    .nav-logout-btn:active {
+      transform: translateY(0);
+    }
+
+    /* Force navbar visibility on desktop */
+    @media (min-width: 1200px) {
+      .navmenu ul {
+        display: flex !important;
+      }
+    }
+    /* Ensure header is visible */
+    .header {
+      position: relative !important;
+      background-color: #ffffff !important;
+      display: block !important;
+    }
+    .header .branding {
+      display: flex !important;
+      align-items: center !important;
+    }
+    .header .topbar {
+      display: flex !important;
+    }
+    .navmenu ul li a:hover {
+      color: #3fbbc0 !important;
+    }
+    .navmenu ul li a.active {
+      color: #3fbbc0 !important;
+      font-weight: 600;
+    }
+    .team-member {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+    }
+    .team-member .member-img {
+      flex: 0 0 250px;
+    }
+    .team-member .member-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-bottom: 15px;
+    }
+    .team-member .member-info form {
+      margin-top: auto;
+    }
+    @media (max-width: 1199px) {
+      .navmenu ul {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+    /* Product card animations - Override default styles */
+    .team-member {
+      transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+      cursor: pointer !important;
+      border-radius: 8px !important;
+      overflow: hidden !important;
+      background: #fff !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+      height: 100% !important;
+    }
+    .team-member:hover {
+      transform: translateY(-10px) !important;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important;
+    }
+    .team-member .member-img {
+      overflow: hidden !important;
+      flex: 0 0 250px !important;
+      transition: transform 0.3s ease;
+    }
+    .team-member:hover .member-img img {
+      transform: scale(1.1) !important;
+      transition: transform 0.3s ease;
+    }
+    .team-member .member-img img {
+      transition: transform 0.3s ease !important;
+    }
+    .team-member .member-info {
+      padding: 15px !important;
+      transition: background-color 0.3s ease;
+      flex: 1 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+    }
+    .team-member:hover .member-info {
+      background-color: #f8f9fa !important;
+    }
+    /* Filter and search section */
+    .filter-section {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+    .filter-section .form-control,
+    .filter-section .form-select {
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 10px;
+    }
+    .filter-section .btn {
+      background-color: #3fbbc0;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+    .filter-section .btn:hover {
+      background-color: #35a5aa;
+    }
+    .product-card-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .add-to-cart-btn-wrapper {
+      padding: 0 15px 15px 15px;
+      margin-top: auto;
+      z-index: 10;
+      position: relative;
+    }
+    .add-to-cart-btn-wrapper button {
+      width: 100%;
+      cursor: pointer;
+    }
+    .modal-body img {
+      border-radius: 8px;
+    }
+    /* Company logos section */
+    .company-logo-container {
+      cursor: pointer;
+    }
+    .company-logo-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.15) !important;
+    }
+    .company-logo-container img {
+      max-width: 100%;
+      max-height: 80px;
+      object-fit: contain;
+      filter: grayscale(100%);
+      opacity: 0.7;
+      transition: all 0.3s ease;
+    }
+    .company-logo-container:hover img {
+      filter: grayscale(0%);
+      opacity: 1;
+    }
+    /* Hidden products styling */
+    .hidden-product {
+      display: none !important;
+    }
+    .product-item {
+      animation: fadeInUp 0.6s ease-out;
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    /* Load more button styling */
+    #load-more-btn {
+      transition: all 0.3s ease;
+    }
+    #load-more-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(63, 187, 192, 0.4) !important;
+      background-color: #35a5aa !important;
+    }
+    #load-more-btn:active {
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+
+<body class="index-page">
+
+  <header id="header" class="header sticky-top">
+
+    <div class="topbar d-flex align-items-center" style="background-color: #3fbbc0; color: white; padding: 8px 0;">
+      <div class="container d-flex justify-content-center justify-content-md-between">
+        <div class="d-none d-md-flex align-items-center" style="color: white;">
+          <i class="bi bi-clock me-1"></i> Monday - Saturday, 8AM to 10PM
+        </div>
+        <div class="d-flex align-items-center" style="color: white;">
+          <i class="bi bi-phone me-1"></i> Call us now +1 5589 55488 55
+        </div>
+      </div>
+    </div><!-- End Top Bar -->
+
+    <div class="branding d-flex align-items-center" style="background-color: #fff; padding: 15px 0; border-bottom: 1px solid #e5e5e5;">
+
+      <div class="container position-relative d-flex align-items-center justify-content-between">
+        <a href="{% url 'home' %}" class="logo d-flex align-items-center me-auto">
+          <img src="{% static 'assets/img/logo.png' %}" alt="" style="height: 40px;">
+          <span style="font-size: 24px; font-weight: bold; color: #333; margin-left: 10px;">MEDICIO</span>
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+          <ul style="display: flex; align-items: center; list-style: none; margin: 0; padding: 0; gap: 30px;">
+            <li><a href="{% url 'home' %}"  class="active" style="text-decoration: none; color: #3fbbc0; font-weight: 600;">HOME</a></li>
+            <li><a href="{% url 'home' %}#about" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">ABOUT</a></li>
+            <li><a href="{% url 'index' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;" >PRODUCTS</a></li>
+            <li><a href="{% url 'donation:front_publication_list' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">DONATION</a></li>
+            <li><a href="{% url 'stages:liste_stages_front' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">STAGE</a></li>
+            <li><a href="{% url 'Labapp:home' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">LABO</a></li>
+            <li><a href="{% url 'public_appointment' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">PATIENT</a></li>
+            {% if user.is_authenticated %}
+            <li>
+              <form method="post" action="{% url 'logout' %}" style="display: inline; margin: 0; padding: 0;">
+                {% csrf_token %}
+                <button type="submit" class="nav-auth-btn nav-logout-btn" style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); border: none; color: white; cursor: pointer; padding: 8px 20px; font-size: 0.9rem; font-weight: 600; text-decoration: none; display: inline-block; border-radius: 25px; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);">
+                  <i class="bi bi-box-arrow-right"></i> LOGOUT
+                </button>
+              </form>
+            </li>
+            {% else %}
+            <li><a href="{% url 'login' %}" class="nav-auth-btn nav-login-btn" style="text-decoration: none; background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%); color: white; font-weight: 600; padding: 8px 20px; border-radius: 25px; display: inline-block; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(63, 187, 192, 0.3);"><i class="bi bi-box-arrow-in-right"></i> LOGIN</a></li>
+            {% endif %}
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+
+      </div>
+
+    </div>
+
+  </header>
+
+  <!-- Cart Button Section -->
+  <div class="container mt-3 mb-3" style="display: flex; justify-content: flex-end;">
+    <a href="{% url 'panier' %}" class="btn" style="background-color: #3fbbc0; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: 500; transition: background-color 0.3s; position: relative;">
+      <i class="bi bi-cart3"></i> Cart
+      {% if nombre_articles_panier > 0 %}
+        <span class="badge bg-danger" style="position: absolute; top: -8px; right: -8px; font-size: 10px;">{{ nombre_articles_panier }}</span>
+      {% endif %}
+    </a>
+  </div>
+
+  <main class="main">
+    
+    <!-- Messages Django -->
+    {% if messages %}
+      <div class="container mt-3">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Achat Section -->
+    <section id="achat" class="doctors section light-background">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Products</h2>
+        <p>Discover our selection of available products</p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+        
+        <!-- Filter and Search Section -->
+        <div class="filter-section">
+          <form method="get" action="{% url 'index' %}" id="filterForm" class="row g-3 align-items-end">
+            <div class="col-md-4">
+              <label for="search" class="form-label">Search by name</label>
+              <input type="text" class="form-control" id="search" name="search" placeholder="Enter product name..." value="{{ search_query }}">
+            </div>
+            <div class="col-md-4">
+              <label for="category" class="form-label">Filter by category</label>
+              <select class="form-select" id="category" name="category">
+                <option value="">All Categories</option>
+                {% for value, label in categories %}
+                  <option value="{{ value }}" {% if category_filter == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label for="sort" class="form-label">Sort by price</label>
+              <select class="form-select" id="sort" name="sort">
+                <option value="">Latest first</option>
+                <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+              </select>
+            </div>
+          </form>
+        </div>
+
+
+        <div class="row gy-4" id="products-container">
+
+          {% for produit in produits %}
+          <div class="col-lg-4 col-md-4 col-sm-6 col-12 mb-4 product-item {% if forloop.counter > 8 %}hidden-product{% endif %}" data-aos="fade-up" data-aos-delay="{% if forloop.counter == 1 %}100{% elif forloop.counter == 2 %}200{% elif forloop.counter == 3 %}300{% else %}400{% endif %}">
+            <div class="modern-product-card" style="position: relative; cursor: pointer; height: 100%; display: flex; flex-direction: column;" data-bs-toggle="modal" data-bs-target="#modalDetail{{ produit.id }}">
+              <div class="product-card-content" style="flex: 1; display: flex; flex-direction: column;">
+                <div class="product-image-wrapper" style="position: relative; overflow: hidden; border-radius: 12px 12px 0 0; background: #f8f9fa;">
+                  {% if produit.image %}
+                    <img src="{{ produit.image.url }}" class="img-fluid product-image" alt="{{ produit.nom }}" style="height: 180px; object-fit: cover; width: 100%; transition: transform 0.3s ease;">
+                  {% else %}
+                    <div style="height: 180px; background: linear-gradient(135deg, #e9ecef 0%, #f8f9fa 100%); display: flex; align-items: center; justify-content: center;">
+                      <i class="bi bi-image" style="font-size: 3rem; color: #ccc;"></i>
+                    </div>
+                  {% endif %}
+                  {% with stock_status=produit.get_stock_status %}
+                    {% if stock_status.days_until_out is not None and stock_status.days_until_out < 30 %}
+                      <div style="position: absolute; top: 10px; left: 10px; background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); color: white; padding: 6px 12px; border-radius: 5px; font-size: 0.75rem; font-weight: 600; box-shadow: 0 2px 8px rgba(220, 53, 69, 0.4); z-index: 10; text-transform: uppercase; letter-spacing: 0.5px;">
+                          <i class="bi bi-fire"></i> Last items, product in demand
+                      </div>
+                    {% endif %}
+                  {% endwith %}
+                </div>
+                <div class="product-info-content" style="padding: 16px; flex: 1; display: flex; flex-direction: column;">
+                  <h5 style="font-size: 1.1rem; font-weight: 600; margin: 0 0 8px 0; color: #2c3e50; line-height: 1.3; min-height: 2.6em; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">{{ produit.nom }}</h5>
+                  {% if produit.description %}
+                    <p style="font-size: 0.85rem; margin: 0 0 12px 0; color: #6c757d; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; flex: 1;">{{ produit.description|truncatewords:12 }}</p>
+                  {% endif %}
+                  <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid #e9ecef;">
+                    <div>
+                      <span style="font-weight: 700; color: #3fbbc0; font-size: 1.3rem;">{{ produit.prix_vente }} DT</span>
+                      {% if produit.quantite > 0 %}
+                        <span style="color: #28a745; font-size: 0.75rem; display: block; margin-top: 4px; font-weight: 500;"><i class="bi bi-check-circle-fill"></i> {{ produit.quantite }} left</span>
+                      {% else %}
+                        <span style="color: #dc3545; font-size: 0.75rem; display: block; margin-top: 4px; font-weight: 500;"><i class="bi bi-x-circle-fill"></i> Out of stock</span>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="add-to-cart-btn-wrapper" onclick="event.stopPropagation();" style="padding: 0 16px 16px 16px;">
+                {% if produit.quantite > 0 %}
+                  <button type="button" class="btn btn-primary w-100 modern-cart-btn" data-bs-toggle="modal" data-bs-target="#modalAchat{{ produit.id }}" onclick="event.stopPropagation();" style="background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%); border: none; padding: 10px 16px; border-radius: 8px; color: white; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(63, 187, 192, 0.3); font-size: 0.9rem;">
+                    <i class="bi bi-cart-plus"></i> Add to cart
+                  </button>
+                {% else %}
+                  <button type="button" class="btn btn-secondary w-100" disabled style="padding: 10px 16px; border-radius: 8px; background: #e9ecef; color: #6c757d; font-weight: 600;">
+                    <i class="bi bi-x-circle"></i> Unavailable
+                  </button>
+                {% endif %}
+              </div>
+            </div>
+          </div><!-- End Product Item -->
+          
+          <!-- Modal pour afficher les détails du produit -->
+          <div class="modal fade" id="modalDetail{{ produit.id }}" tabindex="-1" aria-labelledby="modalDetailLabel{{ produit.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="modalDetailLabel{{ produit.id }}">{{ produit.nom }}</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      {% if produit.image %}
+                        <img src="{{ produit.image.url }}" class="img-fluid rounded" alt="{{ produit.nom }}" style="width: 100%; height: auto; max-height: 400px; object-fit: cover;">
+                      {% else %}
+                        <div style="height: 300px; background-color: #e9ecef; display: flex; align-items: center; justify-content: center; border-radius: 10px;">
+                          <span style="color: #999; font-size: 1.2rem;">No image available</span>
+                        </div>
+                      {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                      <h4 class="mb-3">{{ produit.nom }}</h4>
+                      <div class="mb-3">
+                        <span class="badge bg-info" style="background-color: #3fbbc0 !important; padding: 5px 15px; font-size: 0.9rem;">{{ produit.get_category_display }}</span>
+                      </div>
+                      <div class="mb-3">
+                        <h3 class="text-primary" style="color: #3fbbc0 !important;">{{ produit.prix_vente }} DT</h3>
+                      </div>
+                      {% if produit.quantite > 0 %}
+                        <div class="mb-3">
+                          <span class="text-success"><i class="bi bi-check-circle"></i> {{ produit.quantite }} units left</span>
+                        </div>
+                      {% else %}
+                        <div class="mb-3">
+                          <span class="text-danger"><i class="bi bi-x-circle"></i> Out of stock</span>
+                        </div>
+                      {% endif %}
+                      {% if produit.description %}
+                        <div class="mb-3">
+                          <h6>Description:</h6>
+                          <p style="line-height: 1.8; color: #666;">{{ produit.description|linebreaks }}</p>
+                        </div>
+                      {% else %}
+                        <div class="mb-3">
+                          <p class="text-muted">No description available for this product.</p>
+                        </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  {% if produit.quantite > 0 %}
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#modalAchat{{ produit.id }}" style="background-color: #3fbbc0; border: none; color: white;">
+                      <i class="bi bi-cart-plus"></i> Add to Cart
+                    </button>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Modal pour l'achat -->
+          {% if produit.quantite > 0 %}
+          <div class="modal fade" id="modalAchat{{ produit.id }}" tabindex="-1" aria-labelledby="modalAchatLabel{{ produit.id }}" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="modalAchatLabel{{ produit.id }}">Buy {{ produit.nom }}</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" action="{% url 'ajouter_au_panier' produit.id %}" id="addToCartForm{{ produit.id }}" class="add-to-cart-form" onsubmit="event.preventDefault(); event.stopPropagation(); return false;">
+                  {% csrf_token %}
+                  <div class="modal-body">
+                    <div class="mb-3">
+                      <label for="quantite{{ produit.id }}" class="form-label">Quantity</label>
+                      <input type="number" class="form-control" id="quantite{{ produit.id }}" name="quantite" min="1" max="{{ produit.quantite }}" value="1" required>
+                      <small class="form-text text-muted">{{ produit.quantite }} units left</small>
+                    </div>
+                    <div class="alert alert-info">
+                      <strong>Unit price:</strong> {{ produit.prix_vente }} DT<br>
+                      <strong>Total:</strong> <span id="total{{ produit.id }}">{{ produit.prix_vente }}</span> DT
+                    </div>
+                    <p class="text-muted"><small>You can complete your information when validating the cart.</small></p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="background-color: #3fbbc0; border: none; color: white; font-weight: bold;"><i class="bi bi-cart-plus"></i> Add to cart</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          
+          <script>
+            // Calculer le total dynamiquement
+            (function() {
+              var quantiteInput = document.getElementById('quantite{{ produit.id }}');
+              if (quantiteInput) {
+                quantiteInput.addEventListener('input', function() {
+                  const quantite = parseInt(this.value) || 1;
+                  const prix = parseFloat('{{ produit.prix_vente }}');
+                  var totalElement = document.getElementById('total{{ produit.id }}');
+                  if (totalElement) {
+                    totalElement.textContent = (quantite * prix).toFixed(2);
+                  }
+                });
+              }
+            })();
+          </script>
+          {% endif %}
+          {% empty %}
+          <div class="col-12">
+            <p class="text-center">No products available at the moment.</p>
+          </div>
+          {% endfor %}
+
+        </div>
+
+        <!-- Load More Button -->
+        {% if produits|length > 8 %}
+        <div class="text-center mt-4" id="load-more-container">
+          <button type="button" id="load-more-btn" class="btn btn-primary" style="background-color: #3fbbc0; border: none; padding: 12px 30px; border-radius: 25px; color: white; font-weight: 500; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(63, 187, 192, 0.3);">
+            <i class="bi bi-arrow-down-circle me-2"></i> Load More Products
+          </button>
+        </div>
+        {% endif %}
+
+      </div>
+
+    </section><!-- /Achat Section -->
+
+    <!-- Companies Section -->
+    <section id="companies" class="companies-section" style="padding: 60px 0; background-color: #f8f9fa;">
+      <div class="container">
+        <div class="section-title text-center" data-aos="fade-up">
+          <h2>Companies We Associate With</h2>
+          <p>Trusted partners in healthcare and medical supplies</p>
+        </div>
+        
+        <div class="row gy-4 align-items-center justify-content-center" style="margin-top: 40px;">
+          <!-- Pfizer -->
+          <!-- To add logo image: Replace the inner div below with: <img src="{% static 'assets/img/companies/pfizer.png' %}" alt="Pfizer" style="max-width: 100%; max-height: 80px; object-fit: contain;"> -->
+          <div class="col-lg-4 col-md-4 col-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="company-logo-container" style="background: white; padding: 30px 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); height: 120px; display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+              <div style="text-align: center; color: #0093d0; font-weight: bold; font-size: 1.5rem;">Pfizer</div>
+            </div>
+          </div>
+          
+          <!-- Johnson & Johnson -->
+          <!-- To add logo image: Replace the inner div below with: <img src="{% static 'assets/img/companies/jnj.png' %}" alt="Johnson & Johnson" style="max-width: 100%; max-height: 80px; object-fit: contain;"> -->
+          <div class="col-lg-4 col-md-4 col-6" data-aos="fade-up" data-aos-delay="200">
+            <div class="company-logo-container" style="background: white; padding: 30px 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); height: 120px; display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+              <div style="text-align: center; color: #d2232a; font-weight: bold; font-size: 1.3rem;">Johnson & Johnson</div>
+            </div>
+          </div>
+          
+          <!-- Cardinal Health -->
+          <!-- To add logo image: Replace the inner div below with: <img src="{% static 'assets/img/companies/cardinal.png' %}" alt="Cardinal Health" style="max-width: 100%; max-height: 80px; object-fit: contain;"> -->
+          <div class="col-lg-4 col-md-4 col-6" data-aos="fade-up" data-aos-delay="300">
+            <div class="company-logo-container" style="background: white; padding: 30px 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); height: 120px; display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+              <div style="text-align: center; color: #0066cc; font-weight: bold; font-size: 1.2rem;">Cardinal Health</div>
+            </div>
+          </div>
+          
+          <!-- B. Braun -->
+          <!-- To add logo image: Replace the inner div below with: <img src="{% static 'assets/img/companies/bbraun.png' %}" alt="B. Braun" style="max-width: 100%; max-height: 80px; object-fit: contain;"> -->
+          <div class="col-lg-4 col-md-4 col-6" data-aos="fade-up" data-aos-delay="400">
+            <div class="company-logo-container" style="background: white; padding: 30px 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); height: 120px; display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+              <div style="text-align: center; color: #009639; font-weight: bold; font-size: 1.5rem;">B. Braun</div>
+            </div>
+          </div>
+          
+          <!-- Philips Healthcare -->
+          <!-- To add logo image: Replace the inner div below with: <img src="{% static 'assets/img/companies/philips.png' %}" alt="Philips Healthcare" style="max-width: 100%; max-height: 80px; object-fit: contain;"> -->
+          <div class="col-lg-4 col-md-4 col-6" data-aos="fade-up" data-aos-delay="500">
+            <div class="company-logo-container" style="background: white; padding: 30px 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); height: 120px; display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+              <div style="text-align: center; color: #0e5fd8; font-weight: bold; font-size: 1.2rem;">Philips Healthcare</div>
+            </div>
+          </div>
+          
+          <!-- Medtronic -->
+          <!-- To add logo image: Replace the inner div below with: <img src="{% static 'assets/img/companies/medtronic.png' %}" alt="Medtronic" style="max-width: 100%; max-height: 80px; object-fit: contain;"> -->
+          <div class="col-lg-4 col-md-4 col-6" data-aos="fade-up" data-aos-delay="600">
+            <div class="company-logo-container" style="background: white; padding: 30px 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); height: 120px; display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+              <div style="text-align: center; color: #0066cc; font-weight: bold; font-size: 1.4rem;">Medtronic</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- End Companies Section -->
+
+  </main>
+
+  <footer id="footer" class="footer light-background">
+
+    <div class="container footer-top">
+      <div class="row gy-4">
+        <div class="col-lg-4 col-md-6 footer-about">
+          <a href="{% url 'home' %}" class="logo d-flex align-items-center">
+            <span class="sitename">Medicio</span>
+          </a>
+          <div class="footer-contact pt-3">
+            <p>A108 Adam Street</p>
+            <p>New York, NY 535022</p>
+            <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
+            <p><strong>Email:</strong> <span>info@example.com</span></p>
+          </div>
+          <div class="social-links d-flex mt-4">
+            <a href=""><i class="bi bi-twitter-x"></i></a>
+            <a href=""><i class="bi bi-facebook"></i></a>
+            <a href=""><i class="bi bi-instagram"></i></a>
+            <a href=""><i class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Useful Links</h4>
+          <ul>
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="#">About us</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Terms of service</a></li>
+            <li><a href="#">Privacy policy</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Our Services</h4>
+          <ul>
+            <li><a href="#">Web Design</a></li>
+            <li><a href="#">Web Development</a></li>
+            <li><a href="#">Product Management</a></li>
+            <li><a href="#">Marketing</a></li>
+            <li><a href="#">Graphic Design</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Hic solutasetp</h4>
+          <ul>
+            <li><a href="#">Molestiae accusamus iure</a></li>
+            <li><a href="#">Excepturi dignissimos</a></li>
+            <li><a href="#">Suscipit distinctio</a></li>
+            <li><a href="#">Dilecta</a></li>
+            <li><a href="#">Sit quas consectetur</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Nobis illum</h4>
+          <ul>
+            <li><a href="#">Ipsam</a></li>
+            <li><a href="#">Laudantium dolorum</a></li>
+            <li><a href="#">Dinera</a></li>
+            <li><a href="#">Trodelas</a></li>
+            <li><a href="#">Flexo</a></li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="container copyright text-center mt-4">
+      <p>© <span>Copyright</span> <strong class="px-1 sitename">Medicio</strong> <span>All Rights Reserved</span></p>
+      <div class="credits">
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed by <a href="https://themewagon.com">ThemeWagon</a>
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+
+  <!-- Main JS File -->
+  <script src="{% static 'assets/js/main.js' %}"></script>
+  
+  <!-- Custom Popup Modal -->
+  <div id="customPopup" class="custom-popup-overlay" style="display: none;">
+    <div class="custom-popup-container">
+      <div class="custom-popup-header">
+        <i class="bi bi-exclamation-triangle-fill custom-popup-icon"></i>
+        <button type="button" class="custom-popup-close" onclick="closeCustomPopup()" aria-label="Close">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="custom-popup-body">
+        <h4 class="custom-popup-title" id="customPopupTitle">Notification</h4>
+        <p class="custom-popup-message" id="customPopupMessage"></p>
+      </div>
+      <div class="custom-popup-footer" id="customPopupFooter">
+        <button type="button" class="custom-popup-btn" onclick="closeCustomPopup()">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .custom-popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .custom-popup-container {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      max-width: 450px;
+      width: 90%;
+      max-height: 90vh;
+      overflow: hidden;
+      animation: slideUp 0.3s ease;
+      position: relative;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .custom-popup-header {
+      background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%);
+      padding: 20px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    .custom-popup-icon {
+      font-size: 32px;
+      color: #ffffff;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+    }
+
+    .custom-popup-close {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: #ffffff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 0;
+    }
+
+    .custom-popup-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: rotate(90deg);
+    }
+
+    .custom-popup-body {
+      padding: 30px 25px;
+      text-align: center;
+    }
+
+    .custom-popup-title {
+      color: #333;
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .custom-popup-message {
+      color: #666;
+      font-size: 16px;
+      line-height: 1.6;
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    .custom-popup-footer {
+      padding: 20px 25px;
+      background: #f8f9fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-top: 1px solid #e9ecef;
+      gap: 10px;
+    }
+
+    .custom-popup-btn {
+      background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%);
+      color: #ffffff;
+      border: none;
+      padding: 12px 40px;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(63, 187, 192, 0.3);
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .custom-popup-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(63, 187, 192, 0.4);
+      background: linear-gradient(135deg, #2a9d9f 0%, #3fbbc0 100%);
+    }
+
+    .custom-popup-btn:active {
+      transform: translateY(0);
+    }
+
+    .custom-popup-btn-secondary {
+      background: #6c757d;
+      color: #ffffff;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-right: 10px;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .custom-popup-btn-secondary:hover {
+      background: #5a6268;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+    }
+
+    /* Error variant */
+    .custom-popup-container.error .custom-popup-header {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    }
+
+    .custom-popup-container.error .custom-popup-icon {
+      color: #ffffff;
+    }
+
+    .custom-popup-container.error .custom-popup-btn {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+    }
+
+    .custom-popup-container.error .custom-popup-btn:hover {
+      box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+      background: linear-gradient(135deg, #c82333 0%, #dc3545 100%);
+    }
+
+    /* Success variant */
+    .custom-popup-container.success .custom-popup-header {
+      background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+    }
+
+    .custom-popup-container.success .custom-popup-icon::before {
+      content: "\f26b"; /* checkmark icon */
+    }
+
+    .custom-popup-container.success .custom-popup-btn {
+      background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+      box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    }
+
+    .custom-popup-container.success .custom-popup-btn:hover {
+      box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+      background: linear-gradient(135deg, #218838 0%, #28a745 100%);
+    }
+  </style>
+
+  <script>
+    // Custom popup functions
+    function showCustomPopup(message, type, showLoginButton, title) {
+      type = type || 'info'; // info, error, success
+      showLoginButton = showLoginButton || false;
+      title = title || 'Notification';
+      var popup = document.getElementById('customPopup');
+      var container = popup.querySelector('.custom-popup-container');
+      var messageEl = document.getElementById('customPopupMessage');
+      var titleEl = document.getElementById('customPopupTitle');
+      var icon = popup.querySelector('.custom-popup-icon');
+      var footer = document.getElementById('customPopupFooter');
+      
+      // Remove previous type classes
+      container.classList.remove('error', 'success', 'info');
+      container.classList.add(type);
+      
+      // Update title and message
+      titleEl.textContent = title;
+      messageEl.textContent = message;
+      
+      // Update icon based on type
+      if (type === 'success') {
+        icon.className = 'bi bi-check-circle-fill custom-popup-icon';
+      } else if (type === 'error') {
+        icon.className = 'bi bi-exclamation-triangle-fill custom-popup-icon';
+      } else {
+        icon.className = 'bi bi-info-circle-fill custom-popup-icon';
+      }
+      
+      // Update footer buttons
+      if (showLoginButton) {
+        footer.innerHTML = '<button type="button" class="custom-popup-btn-secondary" onclick="closeCustomPopup()">Cancel</button><button type="button" class="custom-popup-btn" onclick="redirectToLogin()">Login</button>';
+      } else {
+        footer.innerHTML = '<button type="button" class="custom-popup-btn" onclick="closeCustomPopup()">OK</button>';
+      }
+      
+      // Show popup
+      popup.style.display = 'flex';
+      document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+
+    function redirectToLogin() {
+      closeCustomPopup();
+      window.location.href = '{% url "login" %}';
+    }
+
+    function closeCustomPopup() {
+      var popup = document.getElementById('customPopup');
+      popup.style.display = 'none';
+      document.body.style.overflow = ''; // Restore scrolling
+    }
+
+    // Close popup when clicking outside
+    document.addEventListener('DOMContentLoaded', function() {
+      var popup = document.getElementById('customPopup');
+      popup.addEventListener('click', function(e) {
+        if (e.target === popup) {
+          closeCustomPopup();
+        }
+      });
+
+      // Close popup with Escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && popup.style.display === 'flex') {
+          closeCustomPopup();
+        }
+      });
+      
+      // Check if we need to show purchase error popup after login
+      {% if purchase_error %}
+        showCustomPopup('You do not have the rights to buy these items. Only doctors and patients can make purchases.', 'error', false, 'Access Denied');
+        // Remove the parameter from URL
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState({}, '', window.location.pathname);
+        }
+      {% endif %}
+    });
+  </script>
+  
+  <script>
+    // Ensure navbar is initialized even if main.js fails
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileNavToggleBtn = document.querySelector('.mobile-nav-toggle');
+      if (mobileNavToggleBtn) {
+        mobileNavToggleBtn.addEventListener('click', function() {
+          document.querySelector('body').classList.toggle('mobile-nav-active');
+          this.classList.toggle('bi-list');
+          this.classList.toggle('bi-x');
+        });
+      }
+
+      // Auto-submit form when filters change
+      const filterForm = document.getElementById('filterForm');
+      const categorySelect = document.getElementById('category');
+      const sortSelect = document.getElementById('sort');
+      const searchInput = document.getElementById('search');
+
+      // Auto-submit on category change
+      if (categorySelect) {
+        categorySelect.addEventListener('change', function() {
+          filterForm.submit();
+        });
+      }
+
+      // Auto-submit on sort change
+      if (sortSelect) {
+        sortSelect.addEventListener('change', function() {
+          filterForm.submit();
+        });
+      }
+
+      // Auto-submit on search with debounce (wait 500ms after user stops typing)
+      if (searchInput) {
+        let searchTimeout;
+        searchInput.addEventListener('input', function() {
+          clearTimeout(searchTimeout);
+          searchTimeout = setTimeout(function() {
+            filterForm.submit();
+          }, 500);
+        });
+      }
+
+      // Load More Products functionality
+      const loadMoreBtn = document.getElementById('load-more-btn');
+      const hiddenProducts = document.querySelectorAll('.hidden-product');
+
+      // Handle load more button click
+      if (loadMoreBtn && hiddenProducts.length > 0) {
+        loadMoreBtn.addEventListener('click', function() {
+          // Show all hidden products with animation
+          hiddenProducts.forEach(function(product, index) {
+            setTimeout(function() {
+              product.classList.remove('hidden-product');
+              // Reinitialize AOS animation for the newly shown product
+              if (typeof AOS !== 'undefined') {
+                AOS.refresh();
+              }
+            }, index * 100); // Stagger the animations
+          });
+
+          // Hide the load more button after all products are shown
+          setTimeout(function() {
+            loadMoreBtn.style.display = 'none';
+          }, hiddenProducts.length * 100 + 300);
+
+          // Scroll to the newly loaded products smoothly
+          setTimeout(function() {
+            if (hiddenProducts.length > 0) {
+              hiddenProducts[0].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+          }, 200);
+        });
+      } else if (loadMoreBtn) {
+        // If no hidden products, hide the button
+        loadMoreBtn.style.display = 'none';
+      }
+
+      // Handle all add-to-cart form submissions with event delegation
+      var addToCartHandler = function(e) {
+        // Find the form - could be the target or the target's parent form
+        var form = e.target;
+        if (form.tagName !== 'FORM') {
+          form = e.target.closest('form');
+        }
+        
+        if (form && form.classList && form.classList.contains('add-to-cart-form')) {
+          // Aggressively prevent default behavior - MUST be first thing
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          
+          // Cancel the event completely
+          if (e.cancelable) {
+            e.preventDefault();
+          }
+          
+          // Also prevent default on the form itself
+          form.onsubmit = function(evt) {
+            if (evt) {
+              evt.preventDefault();
+              evt.stopPropagation();
+              evt.stopImmediatePropagation();
+            }
+            return false;
+          };
+          
+          // Get the modal element to close it later if needed
+          var modalElement = form.closest('.modal');
+          var modal = modalElement ? bootstrap.Modal.getInstance(modalElement) : null;
+          
+          // Check if user is authenticated (client-side check)
+          {% if user.is_authenticated %}
+            // Check user role
+            var userRole = '{{ user.role }}';
+            if (userRole !== 'Dr' && userRole !== 'patient') {
+              // Close modal and show popup for unauthorized users
+              if (modal) {
+                modal.hide();
+              }
+              showCustomPopup('You do not have the rights to buy these items. Only doctors and patients can make purchases.', 'error');
+              return false;
+            }
+          {% endif %}
+          
+          // Submit via AJAX
+          var formData = new FormData(form);
+          // Add ajax parameter to form data as well (in case URL params get lost)
+          formData.append('ajax', 'true');
+          var xhr = new XMLHttpRequest();
+          
+          // Build URL with ajax parameter - use original action if stored, otherwise use current action
+          var url = form.getAttribute('data-original-action') || form.action;
+          // Ensure we have a valid URL
+          if (!url || url === 'javascript:void(0);') {
+            // Try to get from the form's action attribute directly
+            url = form.getAttribute('action');
+          }
+          // Add ajax parameter
+          if (url && url.indexOf('?') === -1) {
+            url += '?ajax=true';
+          } else if (url && url.indexOf('ajax=true') === -1) {
+            url += '&ajax=true';
+          }
+          
+          xhr.open('POST', url, true);
+          xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+          
+          xhr.onload = function() {
+            try {
+              var response = JSON.parse(xhr.responseText);
+              
+              if (xhr.status === 200 && response.success) {
+                // Success - close modal and redirect to cart
+                if (modal) {
+                  modal.hide();
+                }
+                window.location.href = '{% url "panier" %}';
+              } else if (xhr.status === 401) {
+                // Not authenticated - close modal and show popup with login option
+                if (modal) {
+                  modal.hide();
+                }
+                showCustomPopup('Please login or register to add items to cart.', 'info', true);
+              } else if (xhr.status === 403) {
+                // Unauthorized role - close modal and show popup, stay on page
+                if (modal) {
+                  modal.hide();
+                }
+                showCustomPopup(response.error || 'You do not have the rights to buy these items. Only doctors and patients can make purchases.', 'error');
+              } else if (xhr.status === 400 || xhr.status >= 400) {
+                // Client errors (400, 404, etc.) - close modal and show error message, stay on page
+                if (modal) {
+                  modal.hide();
+                }
+                showCustomPopup(response.error || 'An error occurred. Please try again.', 'error');
+              } else {
+                // Other errors - close modal and show error
+                if (modal) {
+                  modal.hide();
+                }
+                showCustomPopup(response.error || 'An error occurred. Please try again.', 'error');
+              }
+            } catch (e) {
+              // If response is not JSON, it might be HTML (redirect happened)
+              console.error('Error parsing response:', e);
+              console.log('Response text:', xhr.responseText);
+              // Close modal and show error
+              if (modal) {
+                modal.hide();
+              }
+              showCustomPopup('An error occurred. Please try again.', 'error');
+            }
+          };
+          
+          xhr.onerror = function() {
+            // Network error - close modal and show error
+            if (modal) {
+              modal.hide();
+            }
+            showCustomPopup('Network error. Please check your connection and try again.', 'error');
+          };
+          
+          xhr.send(formData);
+          return false;
+        }
+      };
+      
+      // Attach event listener to document for event delegation (capture phase to catch early)
+      document.addEventListener('submit', addToCartHandler, true);
+      
+      // Also attach directly to all existing add-to-cart forms as a backup
+      // Use a more aggressive approach - attach to forms immediately and prevent default
+      function attachFormHandlers() {
+        var addToCartForms = document.querySelectorAll('.add-to-cart-form');
+        addToCartForms.forEach(function(form) {
+          // Check if handler is already attached
+          if (form.dataset.handlerAttached === 'true') {
+            return;
+          }
+          form.dataset.handlerAttached = 'true';
+          
+          // Attach handler with capture phase to catch early
+          form.addEventListener('submit', function(e) {
+            // Aggressively prevent default behavior - MUST be first thing
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            
+            // Cancel the event completely
+            if (e.cancelable) {
+              e.preventDefault();
+            }
+            
+            // Also set form onsubmit to prevent
+            form.onsubmit = function(evt) {
+              if (evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+                evt.stopImmediatePropagation();
+              }
+              return false;
+            };
+            
+            // Get the modal element to close it later if needed
+            var modalElement = form.closest('.modal');
+            var modal = modalElement ? bootstrap.Modal.getInstance(modalElement) : null;
+            
+            // Check if user is authenticated (client-side check)
+            {% if user.is_authenticated %}
+              // Check user role
+              var userRole = '{{ user.role }}';
+              if (userRole !== 'Dr' && userRole !== 'patient') {
+                // Close modal and show popup for unauthorized users
+                if (modal) {
+                  modal.hide();
+                }
+                showCustomPopup('You do not have the rights to buy these items. Only doctors and patients can make purchases.', 'error', false, 'Access Denied');
+                return false;
+              }
+            {% endif %}
+            
+            // Submit via AJAX
+            var formData = new FormData(form);
+            // Add ajax parameter to form data as well (in case URL params get lost)
+            formData.append('ajax', 'true');
+            var xhr = new XMLHttpRequest();
+            
+            // Build URL with ajax parameter - use original action if stored, otherwise use current action
+            var url = form.getAttribute('data-original-action') || form.action;
+            // Ensure we have a valid URL
+            if (!url || url === 'javascript:void(0);') {
+              // Try to get from the form's action attribute directly
+              url = form.getAttribute('action');
+            }
+            // Add ajax parameter
+            if (url && url.indexOf('?') === -1) {
+              url += '?ajax=true';
+            } else if (url && url.indexOf('ajax=true') === -1) {
+              url += '&ajax=true';
+            }
+            
+            xhr.open('POST', url, true);
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            
+            xhr.onload = function() {
+              try {
+                var response = JSON.parse(xhr.responseText);
+                
+                if (xhr.status === 200 && response.success) {
+                  // Success - close modal and redirect to cart
+                  if (modal) {
+                    modal.hide();
+                  }
+                  window.location.href = '{% url "panier" %}';
+                } else if (xhr.status === 401) {
+                  // Not authenticated - close modal and show popup with login option
+                  if (modal) {
+                    modal.hide();
+                  }
+                  showCustomPopup(response.error || 'Please login or register to add items to cart.', 'info', true);
+                } else if (xhr.status === 403) {
+                  // Unauthorized role - close modal and show popup, stay on page
+                  if (modal) {
+                    modal.hide();
+                  }
+                  showCustomPopup(response.error || 'You do not have the rights to buy these items. Only doctors and patients can make purchases.', 'error', false, 'Access Denied');
+                  // Ensure we stay on the products page
+                  if (window.location.pathname !== '/products/') {
+                    window.history.replaceState({}, '', '/products/');
+                  }
+                } else if (xhr.status === 400 || xhr.status >= 400) {
+                  // Client errors (400, 404, etc.) - close modal and show error message, stay on page
+                  if (modal) {
+                    modal.hide();
+                  }
+                  showCustomPopup(response.error || 'An error occurred. Please try again.', 'error');
+                } else {
+                  // Other errors - close modal and show error
+                  if (modal) {
+                    modal.hide();
+                  }
+                  showCustomPopup(response.error || 'An error occurred. Please try again.', 'error');
+                }
+              } catch (e) {
+                // If response is not JSON, it might be HTML (redirect happened)
+                console.error('Error parsing response:', e);
+                console.log('Response text:', xhr.responseText);
+                // Close modal and show error
+                if (modal) {
+                  modal.hide();
+                }
+                showCustomPopup('An error occurred. Please try again.', 'error');
+              }
+            };
+            
+            xhr.onerror = function() {
+              // Network error - close modal and show error
+              if (modal) {
+                modal.hide();
+              }
+              showCustomPopup('Network error. Please check your connection and try again.', 'error');
+              // Ensure we stay on the products page
+              if (window.location.pathname !== '/products/') {
+                window.history.pushState({}, '', '/products/');
+              }
+            };
+            
+            // Also handle the case where the request might redirect
+            xhr.onreadystatechange = function() {
+              if (xhr.readyState === 4) {
+                // Request completed - ensure we're still on products page
+                if (window.location.pathname.includes('/panier/ajouter/')) {
+                  window.history.replaceState({}, '', '/products/');
+                }
+              }
+            };
+            
+            xhr.send(formData);
+            return false;
+          }, true);
+          
+          // Store the original action URL for AJAX requests BEFORE removing it
+          var originalAction = form.action || form.getAttribute('action');
+          form.setAttribute('data-original-action', originalAction);
+          
+          // Remove the action attribute completely to prevent any navigation
+          form.removeAttribute('action');
+          
+          // Also ensure onsubmit always returns false
+          form.setAttribute('onsubmit', 'return false;');
+          
+          // Also set onsubmit handler programmatically
+          form.onsubmit = function(e) {
+            if (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              e.stopImmediatePropagation();
+            }
+            return false;
+          };
+        });
+      }
+      
+      // Attach handlers immediately
+      attachFormHandlers();
+      
+      // Also re-attach when modals are shown (in case forms are dynamically added)
+      document.addEventListener('shown.bs.modal', function(e) {
+        attachFormHandlers();
+      });
+    });
+  </script>
+
+</body>
+
+</html>
+

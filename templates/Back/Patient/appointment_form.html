@@ -1,0 +1,70 @@
+{% extends "Back/Patient/base.html" %}
+
+{% block title %}New appointment - Clinica{% endblock %}
+{% block page_title %}Create appointment{% endblock %}
+
+{% block breadcrumb_actions %}
+<a href="{% url 'appointment_list' %}" class="btn btn-outline-secondary">
+  <i data-feather="arrow-left" class="me-1" style="width:16px;height:16px;"></i>Back to list
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title mb-4">Appointment request</h4>
+        <form method="post" class="row g-3">
+          {% csrf_token %}
+          {% for field in form %}
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+            <div class="form-text">{{ field.help_text }}</div>
+            {% endif %}
+            {% for error in field.errors %}
+            <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+          {% endfor %}
+          {% if form.non_field_errors %}
+          <div class="col-12">
+            <div class="alert alert-danger">
+              {% for error in form.non_field_errors %}
+              <div>{{ error }}</div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+          <div class="col-12 d-flex gap-2">
+            <button type="submit" class="btn btn-primary">
+              <i data-feather="send" class="me-1" style="width:16px;height:16px;"></i>Submit request
+            </button>
+            <a href="{% url 'appointment_list' %}" class="btn btn-outline-secondary">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title mb-3">Tips</h4>
+        <p class="text-muted mb-2">
+          Use this form during staff intake if you need to capture an appointment manually for a patient who called or showed up at reception.
+        </p>
+        <ul class="list-unstyled mb-0 text-muted small">
+          <li class="mb-2"><i data-feather="check-circle" class="me-2" style="width:14px;height:14px;"></i>Fill the contact info carefully.</li>
+          <li class="mb-2"><i data-feather="check-circle" class="me-2" style="width:14px;height:14px;"></i>Assign the request to a patient later if needed.</li>
+          <li><i data-feather="check-circle" class="me-2" style="width:14px;height:14px;"></i>Track the status from the appointment list.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+

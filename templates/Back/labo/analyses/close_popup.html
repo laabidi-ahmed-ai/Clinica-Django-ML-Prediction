@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Updated</title>
+</head>
+<body>
+<script>
+    // Refresh parent window
+    if (window.opener) {
+        window.opener.location.href = window.opener.location.pathname + "?updated={{ updated_id }}";
+        window.close(); // close popup
+    }
+</script>
+<p>Analyse mise à jour...</p>
+</body>
+</html>

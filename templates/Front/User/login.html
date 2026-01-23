@@ -1,0 +1,486 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Clinica+</title>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css'>
+</head>
+
+<body>
+    <div class="container" id="container">
+        <div class="form-container sign-up-container">
+            <form action="{% url 'register_frontoffice' %}" method="POST">
+              {%csrf_token%}
+                <h1>Create Account</h1>
+                <div class="social-container">
+                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                </div>
+                <span>or use your email for registration</span>
+                <div class="form-row">
+                    <input type="text" name="first_name" placeholder="First Name" id="firstName" />
+                    <center><span id="firstName1" class="erreur"></span></center>
+                    <input type="text" name="last_name" placeholder="Last Name" id="lastName" />
+                    <center><span id="lastName1" class="erreur"></span></center>
+                </div>
+                <input type="date" name="birth_date" placeholder="Birth Date" id="birthDate" />
+                <center><span id="birthDate1" class="erreur"></span></center>
+                <input type="email" name="email" placeholder="Email" id="email"/>
+                <center><span id="email1" class="erreur"></span></center>
+                <div class="form-row">
+                    <input type="text" name="tel" placeholder="Tel" id="phone"/>
+                    <center><span id="tel1" class="erreur"></span></center>
+                    <input type="text" name="CIN" placeholder="CIN" id="CIN"/>
+                    <center><span id="position1" class="erreur"></span></center>
+                </div>
+                <input type="text" name="address" placeholder="Address" id="address" />
+                <center><span id="address1" class="erreur"></span></center>
+                <input type="password" name="password" placeholder="Password" id="password" />
+                <center><span id="password1" class="erreur"></span></center>
+                <select name="role" id="role" type="position">
+                            <option value="user" >User</option>
+                            <option value="doctor">Doctor</option>
+                            <option value="nurse">Nurse</option>
+                            <option value="patient">Patient</option>
+                            <option value="intern">Intern</option>
+                    </select>
+                <button>Sign Up</button>
+            </form>
+
+        </div>
+        <div class="form-container sign-in-container">
+        <form action="{% url 'loginFrontCheck' %}" method="POST">
+          {% csrf_token %}
+    <h1>Sign in</h1>
+    <div class="social-container">
+        <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+    </div>
+    <span>or use your account</span>
+    <input type="email" name="email" placeholder="Email" id="email"/>
+    <center><span id="email1" class="erreur"></span></center>
+    <input type="password" name="password" placeholder="Password" id="password"/>
+    <center><span id="password1" class="erreur"></span></center>
+    <a href="{% url 'forgot_password' %} ">Forgot your password?</a>
+    <button id="signIn">Sign In</button>
+        </form>
+
+        </div>
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <div><img src="{% static 'Front/assets/images/logo_site.png' %}" alt="logo" class="img-fluid" style="width: 120px; margin-top: 30px;"></div>
+                    <h1>Welcome to Clinica+!</h1>
+                    <p>To keep connected with us please login with your personal info</p>
+                    <button class="ghost" id="signInOverlay">Sign In</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <div><img src="{% static 'Front/assets/images/logo_site.png' %}" alt="logo" class="img-fluid" style="width: 120px; margin-top: 30px;"></div>
+                    <h1>Welcome to Clinica+!</h1>
+                    <p>Enter your personal details and start journey with us</p>
+                    <button class="ghost" id="signUp">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const signUpButton = document.getElementById('signUp');
+        const signInButton = document.getElementById('signInOverlay');
+        const container = document.getElementById('container');
+
+        signUpButton.addEventListener('click', () => {
+            container.classList.add("right-panel-active");
+        });
+
+        signInButton.addEventListener('click', () => {
+            container.classList.remove("right-panel-active");
+        });
+        
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function (e) {
+        let valid = true;
+
+        let firstName = document.getElementById("firstName").value.trim();
+        if (!firstName || firstName.length < 4) {
+        document.getElementById("firstName1").innerText = "First name must contain at least 4 characters.";
+        valid = false;
+        } 
+        else {
+            document.getElementById("firstName1").innerText = "Correct.";
+            document.getElementById("firstName1").classList.add("correct");
+        }
+
+        let lastName = document.getElementById("lastName").value.trim();
+        if (!lastName || lastName.length < 4) {
+            document.getElementById("lastName1").innerText = "Last name must contain at least 4 characters.";
+            valid = false;
+        } 
+        else {
+            document.getElementById("lastName1").innerText = "Correct.";
+            document.getElementById("lastName1").classList.add("correct");
+        }
+
+        let birthDate = document.getElementById("birthDate").value;
+        const birthLimit = new Date("2010-01-01");
+        if (!birthDate || new Date(birthDate) > birthLimit) {
+            document.getElementById("birthDate1").innerText = "Please enter a valid date before 2010.";
+            valid = false;
+        } 
+        else {
+            document.getElementById("birthDate1").innerText = "Correct.";
+            document.getElementById("birthDate1").classList.add("correct");
+        }
+
+        let email = document.getElementById("email").value.trim();
+        const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+        if (!email || !emailPattern.test(email)) {
+            document.getElementById("email1").innerText = "Please enter a valid email.";
+            valid = false;
+        } 
+        else {
+            document.getElementById("email1").innerText = "Correct.";
+        document.getElementById("email1").classList.add("correct");
+        }
+
+  let phone = document.getElementById("phone").value.trim();
+  const phonePattern = /^[0-9]{8}$/;
+  if (!phone || !phonePattern.test(phone)) {
+    document.getElementById("phone1").innerText = "Phone number must contain exactly 8 digits.";
+    valid = false;
+  } else {
+    document.getElementById("phone1").innerText = "Correct.";
+    document.getElementById("phone1").classList.add("correct");
+  }
+
+  let address = document.getElementById("address").value.trim();
+  if (!address || address.length < 4) {
+    document.getElementById("address1").innerText = "Address must contain at least 4 characters.";
+    valid = false;
+  } else {
+    document.getElementById("address1").innerText = "Correct.";
+    document.getElementById("address1").classList.add("correct");
+  }
+
+  let password = document.getElementById("password").value;
+  const passwordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=(?:.*\d){3,}).{8,}$/;
+  if (!password || !passwordValid.test(password)) {
+    document.getElementById("password1").innerText = "Password must contain 1 uppercase, lowercase letters, at least 3 digits, and be 8 characters minimum.";
+    valid = false;
+  } else {
+    document.getElementById("password1").innerText = "Correct.";
+    document.getElementById("password1").classList.add("correct");
+  }
+
+  if (!valid) {
+    e.preventDefault(); // Only prevent submission if there are errors
+  }
+});
+
+// Allow only numbers for phone
+document.getElementById("phone").addEventListener("keypress", function (e) {
+  if (!/[0-9]/.test(e.key)) {
+    e.preventDefault();
+  }
+});
+
+// Allow only letters for first and last name
+["firstName", "lastName"].forEach(function (id) {
+  document.getElementById(id).addEventListener("keypress", function (e) {
+    if (!/[a-zA-Z\s]/.test(e.key)) {
+      e.preventDefault();
+    }
+  });
+});
+
+// Limit phone number to 8 digits
+document.getElementById("phone").addEventListener("input", function () {
+  this.value = this.value.replace(/\D/g, '').slice(0, 8);
+});
+
+    </script>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+<style>
+    @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+    .form-row{
+        display: flex;
+        gap: 4px; /* spacing between inputs */
+        
+    }
+    .form-row input {
+        padding: 5px;
+        flex: 1;
+        height:40px;
+        width: 194px;
+    }
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        background: #f6f5f7;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        font-family: 'Montserrat', sans-serif;
+        height: 100vh;
+        margin: -20px 0 50px;
+    }
+
+    h1 {
+        font-weight: bold;
+        margin: 0;
+    }
+
+    h2 {
+        text-align: center;
+    }
+
+    p {
+        font-size: 14px;
+        font-weight: 100;
+        line-height: 20px;
+        letter-spacing: 0.5px;
+        margin: 20px 0 30px;
+    }
+
+    span {
+        font-size: 12px;
+    }
+
+    a {
+        color: #333;
+        font-size: 14px;
+        text-decoration: none;
+        margin: 15px 0;
+    }
+
+    button {
+        border-radius: 20px;
+        border: 1px solid #80d0c7;
+        background-color: #80d0c7;
+        color: #FFFFFF;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 12px 45px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: transform 80ms ease-in;
+
+    }
+    button:hover{
+        cursor:pointer;
+    }
+
+    button:active {
+        transform: scale(0.95);
+    }
+
+    button:focus {
+        outline: none;
+    }
+
+    button.ghost {
+        background-color: transparent;
+        border-color: #FFFFFF;
+    }
+
+    form {
+        background-color: #FFFFFF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding: 0 50px;
+        height: 100%;
+        text-align: center;
+    }
+
+    input {
+        background-color: #eee;
+        border: none;
+        padding: 12px 15px;
+        margin: 8px 0;
+        width: 100%;
+    }
+
+    .container {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
+            0 10px 10px rgba(0, 0, 0, 0.22);
+        position: relative;
+        overflow: hidden;
+        width: 1000px;
+        max-width: 100%;
+        height: 600px;
+    }
+
+    .form-container {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        transition: all 0.6s ease-in-out;
+    }
+
+    .sign-in-container {
+        left: 0;
+        width: 50%;
+        z-index: 2;
+    }
+
+    .container.right-panel-active .sign-in-container {
+        transform: translateX(100%);
+    }
+
+    .sign-up-container {
+        left: 0;
+        width: 50%;
+        opacity: 0;
+        z-index: 1;
+    }
+
+    .container.right-panel-active .sign-up-container {
+        transform: translateX(100%);
+        opacity: 1;
+        z-index: 5;
+        animation: show 0.6s;
+    }
+
+    @keyframes show {
+
+        0%,
+        49.99% {
+            opacity: 0;
+            z-index: 1;
+        }
+
+        50%,
+        100% {
+            opacity: 1;
+            z-index: 5;
+        }
+    }
+
+    .overlay-container {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 50%;
+        height: 100%;
+        overflow: hidden;
+        transition: transform 0.6s ease-in-out;
+        z-index: 100;
+    }
+
+    .container.right-panel-active .overlay-container {
+        transform: translateX(-100%);
+    }
+
+    .overlay {
+        background: #80d0c7;
+        background: -webkit-linear-gradient(to right, #80d0c7, #80d0c7);
+        background: linear-gradient(to right, #80d0c7, #80d0c7);
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: 0 0;
+        color: #FFFFFF;
+        position: relative;
+        left: -100%;
+        height: 100%;
+        width: 200%;
+        transform: translateX(0);
+        transition: transform 0.6s ease-in-out;
+    }
+
+    .container.right-panel-active .overlay {
+        transform: translateX(50%);
+    }
+
+    .overlay-panel {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding: 0 40px;
+        text-align: center;
+        top: 0;
+        height: 100%;
+        width: 50%;
+        transform: translateX(0);
+        transition: transform 0.6s ease-in-out;
+    }
+
+    .overlay-left {
+        transform: translateX(-20%);
+    }
+
+    .container.right-panel-active .overlay-left {
+        transform: translateX(0);
+    }
+
+    .overlay-right {
+        right: 0;
+        transform: translateX(0);
+    }
+
+    .container.right-panel-active .overlay-right {
+        transform: translateX(20%);
+    }
+
+    .social-container {
+        margin: 20px 0;
+    }
+
+    .social-container a {
+        border: 1px solid #DDDDDD;
+        border-radius: 50%;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 5px;
+        height: 40px;
+        width: 40px;
+    }
+
+    footer {
+        background-color: #222;
+        color: #fff;
+        font-size: 14px;
+        bottom: 0;
+        position: fixed;
+        left: 0;
+        right: 0;
+        text-align: center;
+        z-index: 999;
+    }
+
+    footer p {
+        margin: 10px 0;
+    }
+
+    footer i {
+        color: #121923;
+    }
+
+    footer a {
+        color: #3c97bf;
+        text-decoration: none;
+    }
+</style>

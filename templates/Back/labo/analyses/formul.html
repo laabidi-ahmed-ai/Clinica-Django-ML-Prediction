@@ -1,0 +1,15 @@
+{% extends "back/labo/base.html" %}
+
+{% block content %}
+<h2>{% if object %}Modifier{% else %}Créer{% endif %} une Analyse</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}  {# affiche les champs du formulaire avec des <p> #}
+
+    <button type="submit" class="btn btn-success">
+        {% if object %}Enregistrer{% else %}Créer{% endif %}
+    </button>
+    <a href="{% url 'Labapp:back_analyse_list' %}" class="btn btn-secondary">Annuler</a>
+</form>
+{% endblock %}

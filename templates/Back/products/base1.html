@@ -1,0 +1,606 @@
+{% load static %}
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Clinica+ • Back Office{% endblock %}</title>
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'assets/img/favicon.png' %}">
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Feather Icons -->
+  <script src="https://unpkg.com/feather-icons"></script>
+  
+  <style>
+    /* Modern clean design - Freedash Style */
+    :root {
+      --primary-blue: #4A90E2;
+      --success-green: #28a745;
+      --danger-red: #dc3545;
+      --warning-orange: #FF8C00;
+      --secondary-gray: #6c757d;
+      --purple: #667eea;
+    }
+    
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      overflow-x: hidden;
+    }
+    
+    /* Preloader */
+    .preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .lds-ripple {
+      display: inline-block;
+      position: relative;
+      width: 80px;
+      height: 80px;
+    }
+    
+    .lds-ripple .lds-pos {
+      position: absolute;
+      border: 4px solid #4A90E2;
+      opacity: 1;
+      border-radius: 50%;
+      animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+    }
+    
+    .lds-ripple .lds-pos:nth-child(2) {
+      animation-delay: -0.5s;
+    }
+    
+    @keyframes lds-ripple {
+      0% {
+        top: 36px;
+        left: 36px;
+        width: 0;
+        height: 0;
+        opacity: 1;
+      }
+      100% {
+        top: 0px;
+        left: 0px;
+        width: 72px;
+        height: 72px;
+        opacity: 0;
+      }
+    }
+    
+    /* Main Wrapper */
+    #main-wrapper {
+      min-height: 100vh;
+    }
+    
+    /* Topbar */
+    .topbar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      z-index: 1000;
+      background: #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      height: 70px;
+    }
+    
+    .topbar .navbar {
+      padding: 0 20px;
+      height: 70px;
+    }
+    
+    .navbar-brand img {
+      max-height: 50px;
+    }
+    
+    /* Hide MEDICIO text in navbar */
+    .navbar-brand {
+      font-size: 0 !important;
+      line-height: 0 !important;
+      color: transparent !important;
+    }
+    
+    .navbar-brand a {
+      font-size: 0 !important;
+      line-height: 0 !important;
+      color: transparent !important;
+    }
+    
+    .navbar-brand img {
+      font-size: initial !important;
+      display: block !important;
+    }
+    
+    /* Hide any text nodes in navbar */
+    .navbar-brand *:not(img) {
+      font-size: 0 !important;
+      display: none !important;
+    }
+    
+    /* Hide only MEDICIO text, not other navbar content */
+    .navbar-brand span,
+    .navbar-brand:not(:has(img))::after,
+    .navbar-brand:not(:has(img))::before {
+      display: none !important;
+      content: none !important;
+    }
+    
+    /* Sidebar */
+    .left-sidebar {
+      position: fixed;
+      top: 70px;
+      left: 0;
+      width: 260px;
+      height: calc(100vh - 70px);
+      background: #fff;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      overflow-y: auto;
+      z-index: 999;
+    }
+    
+    .scroll-sidebar {
+      height: 100%;
+      padding: 20px 0;
+    }
+    
+    .sidebar-nav {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .sidebar-item {
+      list-style: none;
+    }
+    
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      padding: 12px 25px;
+      color: #67757c;
+      text-decoration: none;
+      transition: all 0.3s;
+      border-left: 3px solid transparent;
+    }
+    
+    .sidebar-link:hover {
+      background: #f8f9fa;
+      color: #4A90E2;
+      border-left-color: #4A90E2;
+    }
+    
+    .sidebar-link.active {
+      background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+      color: #fff;
+      border-left-color: #4A90E2;
+    }
+    
+    .sidebar-link.active .feather-icon {
+      color: #fff;
+    }
+    
+    .feather-icon {
+      width: 18px;
+      height: 18px;
+      margin-right: 12px;
+    }
+    
+    .nav-small-cap {
+      padding: 15px 25px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #67757c;
+      letter-spacing: 1px;
+    }
+    
+    .list-divider {
+      height: 1px;
+      background: #e5e5e5;
+      margin: 10px 25px;
+    }
+    
+    /* Page Wrapper */
+    .page-wrapper {
+      margin-left: 260px;
+      margin-top: 70px;
+      padding: 30px;
+      min-height: calc(100vh - 70px);
+    }
+    
+    /* Cards */
+    .card {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      background: white;
+      margin-bottom: 20px;
+    }
+    
+    .card-body {
+      padding: 30px;
+    }
+    
+    .card-title {
+      font-weight: 600;
+      font-size: 1.25rem;
+      color: #1a1a1a;
+    }
+    
+    /* Tables */
+    .table {
+      margin-bottom: 0;
+      font-size: 0.875rem;
+    }
+    
+    .table thead th {
+      background-color: #f8f9fa;
+      border-bottom: 2px solid #e9ecef;
+      color: #495057;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+      padding: 16px 20px;
+    }
+    
+    .table tbody tr {
+      transition: all 0.2s ease;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .table tbody tr:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .table tbody td {
+      padding: 16px 20px;
+      vertical-align: middle;
+      color: #495057;
+    }
+    
+    /* Badges */
+    .badge-en-attente {
+      background: linear-gradient(135deg, #FF8C00 0%, #FF6347 100%);
+      color: white;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+    
+    .badge-valide {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      color: white;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+    
+    .badge-echec {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      color: white;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+    
+    /* Buttons */
+    .btn-add {
+      background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+      border: none;
+      color: white;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+    }
+    
+    .btn-add:hover {
+      background: linear-gradient(135deg, #357ABD 0%, #2868A8 100%);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
+    }
+    
+    /* Footer */
+    .footer {
+      padding: 20px 0;
+      color: #868e96;
+      font-size: 0.875rem;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .left-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s;
+      }
+      
+      .page-wrapper {
+        margin-left: 0;
+      }
+    }
+    
+    {% block extra_css %}{% endblock %}
+  </style>
+</head>
+
+<body>
+  <!-- Preloader -->
+  <div class="preloader">
+    <div class="lds-ripple"><div class="lds-pos"></div><div class="lds-pos"></div></div>
+  </div>
+
+  <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6"
+       data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed"
+       data-boxed-layout="full">
+
+    <!-- Topbar -->
+    <header class="topbar" data-navbarbg="skin6">
+      <nav class="navbar top-navbar navbar-expand-lg">
+        <div class="navbar-header" data-logobg="skin6">
+          <a class="nav-toggler d-block d-lg-none" href="javascript:void(0)">
+            <i class="ti-menu ti-close"></i>
+          </a>
+          <div class="navbar-brand">
+            <a href="{% url 'dashboard' %}" style="text-decoration: none;">
+              <img src="{% static 'assets/img/logo.png' %}" alt="logo" class="img-fluid" style="width: 120px; margin-top: 10px;" onerror="this.style.display='none'">
+            </a>
+          </div>
+          <a class="topbartoggler d-block d-lg-none" href="javascript:void(0)"
+             data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+             <i class="ti-more"></i>
+          </a>
+        </div>
+        <div class="navbar-collapse collapse">
+        </div>
+      </nav>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="left-sidebar" data-sidebarbg="skin6">
+  <div class="scroll-sidebar" data-sidebarbg="skin6">
+    <nav class="sidebar-nav">
+      <ul id="sidebarnav">
+        <!-- Dashboard Product -->
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'dashboard_products' %}">
+            <i data-feather="home" class="feather-icon"></i>
+            <span class="hide-menu">Product Dashboard</span>
+          </a>
+        </li>
+
+        <li class="list-divider"></li>
+
+        <!-- USER MANAGEMENT -->
+        <li class="nav-small-cap"><span class="hide-menu">USER MANAGEMENT</span></li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'dashboard' %}">
+            <i data-feather="users" class="feather-icon"></i>
+            <span class="hide-menu">Users Management</span>
+          </a>
+        </li>
+
+        <li class="list-divider"></li>
+
+        <!-- PRODUCTS -->
+        <li class="nav-small-cap"><span class="hide-menu">PRODUCTS</span></li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'products_list' %}">
+            <i data-feather="package" class="feather-icon"></i>
+            <span class="hide-menu">Products List</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'orders_list' %}">
+            <i data-feather="shopping-cart" class="feather-icon"></i>
+            <span class="hide-menu">Orders List</span>
+          </a>
+        </li>
+
+        <li class="list-divider"></li>
+
+        <!-- PUBLICATION -->
+        <li class="nav-small-cap"><span class="hide-menu">PUBLICATION</span></li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'publication:publication_list' %}">
+            <i data-feather="file-text" class="feather-icon"></i>
+            <span class="hide-menu">Publications List</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'publication:publication_form' %}">
+            <i data-feather="plus-circle" class="feather-icon"></i>
+            <span class="hide-menu">New Publication</span>
+          </a>
+        </li>
+
+        <li class="list-divider"></li>
+
+        <!-- DONATIONS -->
+        <li class="nav-small-cap"><span class="hide-menu">DONATIONS</span></li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'donation:back_index' %}">
+            <i data-feather="activity" class="feather-icon"></i>
+            <span class="hide-menu">Dashboard Donation</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'donation:admin_donation_list' %}">
+            <i data-feather="heart" class="feather-icon"></i>
+            <span class="hide-menu">Donations List</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</aside>
+
+    <!-- Page wrapper -->
+    <div class="page-wrapper">
+      <!-- Content -->
+      {% if messages %}
+        <div class="messages">
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      
+      {% block page_title %}{% endblock %}
+      {% block content %}
+      {% endblock %}
+
+      <!-- Footer -->
+      <footer class="footer text-center text-muted mt-4">
+        Clinica+ Back • Freedash UI
+      </footer>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Hide preloader
+      setTimeout(function() {
+        document.querySelector('.preloader').style.display = 'none';
+      }, 500);
+      
+      // Remove MEDICIO text from navbar - more aggressive approach
+      function removeMedicioText() {
+        // Remove from all navbar elements
+        var allElements = document.querySelectorAll('.navbar, .topbar, .navbar-brand, .navbar-header, .navbar-nav, header, nav');
+        allElements.forEach(function(element) {
+          // Get all text nodes
+          var walker = document.createTreeWalker(
+            element,
+            NodeFilter.SHOW_TEXT,
+            null,
+            false
+          );
+          var textNodes = [];
+          var node;
+          while (node = walker.nextNode()) {
+            textNodes.push(node);
+          }
+          
+          // Remove or clean text nodes containing MEDICIO
+          textNodes.forEach(function(textNode) {
+            if (textNode.textContent && textNode.textContent.toUpperCase().includes('MEDICIO')) {
+              var parent = textNode.parentNode;
+              if (parent) {
+                parent.removeChild(textNode);
+              }
+            }
+          });
+          
+          // Also check for any elements with text content
+          var children = element.childNodes;
+          for (var i = children.length - 1; i >= 0; i--) {
+            var child = children[i];
+            if (child.nodeType === 3 && child.textContent && child.textContent.toUpperCase().includes('MEDICIO')) {
+              element.removeChild(child);
+            }
+          }
+        });
+        
+        // Also hide any elements that might contain MEDICIO
+        var allText = document.body.innerText || document.body.textContent;
+        if (allText) {
+          var elements = document.querySelectorAll('*');
+          elements.forEach(function(el) {
+            if (el.children.length === 0 && el.textContent && el.textContent.trim().toUpperCase() === 'MEDICIO') {
+              el.style.display = 'none';
+            }
+          });
+        }
+      }
+      
+      // Run immediately and after delays
+      removeMedicioText();
+      setTimeout(removeMedicioText, 100);
+      setTimeout(removeMedicioText, 500);
+      setTimeout(removeMedicioText, 1000);
+      
+      // Also run after page fully loads
+      window.addEventListener('load', function() {
+        removeMedicioText();
+        setTimeout(removeMedicioText, 100);
+      });
+      
+      // Use MutationObserver to watch for dynamically added content
+      var observer = new MutationObserver(function(mutations) {
+        removeMedicioText();
+      });
+      
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        characterData: true
+      });
+      
+      // Also check specifically in navbar-brand
+      setInterval(function() {
+        var brand = document.querySelector('.navbar-brand');
+        if (brand) {
+          var text = brand.innerText || brand.textContent || '';
+          if (text.toUpperCase().includes('MEDICIO')) {
+            // Remove text nodes
+            var walker = document.createTreeWalker(brand, NodeFilter.SHOW_TEXT, null, false);
+            var node;
+            while (node = walker.nextNode()) {
+              if (node.textContent && node.textContent.toUpperCase().includes('MEDICIO')) {
+                node.textContent = node.textContent.replace(/MEDICIO/gi, '').trim();
+                if (!node.textContent.trim()) {
+                  node.parentNode && node.parentNode.removeChild(node);
+                }
+              }
+            }
+          }
+        }
+      }, 200);
+      
+      // Initialize Feather icons
+      if (window.feather) {
+        feather.replace();
+      }
+      
+      // Reinitialize icons in modals
+      var modals = document.querySelectorAll('.modal');
+      modals.forEach(function(modal) {
+        modal.addEventListener('shown.bs.modal', function() {
+          if (window.feather) feather.replace();
+        });
+      });
+    });
+  </script>
+  
+  {% block extra_js %}{% endblock %}
+</body>
+</html>
+

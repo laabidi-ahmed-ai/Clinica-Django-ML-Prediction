@@ -1,0 +1,216 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Clinica+ • Stages proposés</title>
+
+  <!-- Favicons -->
+  <link href="{% static 'Front/assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'Front/assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'Front/assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/assets/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'Front/assets/css/main.css' %}" rel="stylesheet">
+
+  <style>
+    .stage-card {
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      transition: transform 0.2s;
+      cursor: pointer;
+    }
+
+    .stage-card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    .stage-title {
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+
+    .modal-body p {
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+
+<body class="index-page">
+
+  <!-- Header / Navbar -->
+  <header id="header" class="header sticky-top">
+
+    <div class="topbar d-flex align-items-center">
+      <div class="container d-flex justify-content-center justify-content-md-between">
+        <div class="d-none d-md-flex align-items-center">
+          <i class="bi bi-clock me-1"></i> Monday - Saturday, 8AM to 10PM
+        </div>
+        <div class="d-flex align-items-center">
+          <i class="bi bi-phone me-1"></i> Call us now +1 5589 55488 55
+        </div>
+      </div>
+    </div><!-- End Top Bar -->
+
+    <div class="branding d-flex align-items-center">
+
+      <div class="container position-relative d-flex align-items-center justify-content-end">
+        <a href="index.html" class="logo d-flex align-items-center me-auto">
+          <img src="{% static 'Front/assets/images/logo_site.png' %}" alt="" style="width: 120px; height: 90px;">
+          <!-- Uncomment the line below if you also wish to use a text logo -->
+          <!-- <h1 class="sitename">Medicio</h1>  -->
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+         <ul style="display: flex; align-items: center; list-style: none; margin: 0; padding: 0; gap: 30px;">
+            <li><a href="{% url 'front_index' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">HOME</a></li>
+            <li><a href="#" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">ABOUT</a></li>
+            <li><a href="{% url 'index' %}" style="text-decoration: none; color: #333; font-weight: 500;">PRODUCTS</a></li>
+            <li><a href="{% url 'donation:front_publication_list' %}"  style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">DONATION</a></li>
+            <li><a href="{% url 'stages:liste_stages_front' %}" class="active" style="text-decoration: none; color: #3fbbc0; font-weight: 600;">STAGE</a></li>
+            <li><a href="{% url 'Labapp:home' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">LABO</a></li>
+            <li><a href="{% url 'public_appointment' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">PATIENT</a></li>
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+
+        <a class="cta-btn" href="{% url 'public_appointment' %}">Make an Appointment</a>
+        <ul class="navbar-nav ms-auto">
+                        {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle fa-lg" style="font-size: 34px;"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="{% url 'donation:donation_create' %}">
+                                    <i class="fas fa-heart" style="color: #13547a;"></i> My Donations
+                                </a></li>
+                                <li><a class="dropdown-item" href="#">
+                                    <i class="fas fa-sign-out-alt" style="color: #13547a;"></i> Logout
+                                </a></li>
+                            </ul>
+                        </li>
+                        {% else %}
+                        <li><a href="{% url 'loginFront' %}" class="nav-auth-btn nav-login-btn" style="text-decoration: none; background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%); color: white; font-weight: 600; padding: 8px 20px; border-radius: 25px; display: inline-block; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(63, 187, 192, 0.3);"><i class="bi bi-box-arrow-in-right"></i> LOGIN</a></li>
+                        {% endif %}
+                    </ul>
+      </div>
+
+    </div>
+
+  </header>
+
+  <!-- Main content -->
+  <main class="main">
+    <section class="section light-background">
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Stages proposés</h2>
+        <p>Choisissez un stage et postulez en remplissant vos informations</p>
+      </div>
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="row">
+          {% for stage in stages %}
+            <div class="col-md-6 col-lg-4">
+              <div class="stage-card" data-bs-toggle="modal" data-bs-target="#stageModal{{ stage.id }}">
+                <div class="stage-title">{{ stage.intitule }}</div>
+                <small class="text-muted">{{ stage.get_type_stage_display }} - {{ stage.service }}</small>
+                <p>Date: {{ stage.date_debut }} → {{ stage.date_fin }}</p>
+                <p>Statut: {{ stage.get_statut_display }}</p>
+              </div>
+            </div>
+
+            <!-- Modal pour détails -->
+            <div class="modal fade" id="stageModal{{ stage.id }}" tabindex="-1" aria-labelledby="stageModalLabel{{ stage.id }}" aria-hidden="true">
+              <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="stageModalLabel{{ stage.id }}">{{ stage.intitule }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <p><strong>Description:</strong> {{ stage.description }}</p>
+                    <p><strong>Objectifs:</strong> {{ stage.objectifs }}</p>
+                    <p><strong>Type:</strong> {{ stage.get_type_stage_display }}</p>
+                    <p><strong>Service:</strong> {{ stage.service }}</p>
+                    <p><strong>Date début:</strong> {{ stage.date_debut }}</p>
+                    <p><strong>Date fin:</strong> {{ stage.date_fin }}</p>
+                    <p><strong>Durée (semaines):</strong> {{ stage.duree_semaines }}</p>
+                    <p><strong>Horaires de travail:</strong> {{ stage.horaires_travail }}</p>
+                    <p><strong>Statut:</strong> {{ stage.get_statut_display }}</p>
+                  </div>
+                  <div class="modal-footer">
+                    <a href="{% url 'stages:liste_stages' %}?stage={{ stage.id }}" class="btn btn-primary">Je veux ce stage</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% empty %}
+            <p>Aucun stage proposé pour le moment.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer id="footer" class="footer light-background">
+    <div class="container footer-top">
+      <div class="row gy-4">
+        <div class="col-lg-4 col-md-6 footer-about">
+          <a href="{% url 'stages:liste_stages' %}" class="logo d-flex align-items-center">
+            <span class="sitename">Clinica+</span>
+          </a>
+          <div class="footer-contact pt-3">
+            <p>A108 Adam Street</p>
+            <p>New York, NY 535022</p>
+            <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
+            <p><strong>Email:</strong> <span>info@example.com</span></p>
+          </div>
+          <div class="social-links d-flex mt-4">
+            <a href="#"><i class="bi bi-twitter-x"></i></a>
+            <a href="#"><i class="bi bi-facebook"></i></a>
+            <a href="#"><i class="bi bi-instagram"></i></a>
+            <a href="#"><i class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container copyright text-center mt-4">
+      <p>© <span>Copyright</span> <strong class="px-1 sitename">Clinica+</strong> <span>All Rights Reserved</span></p>
+    </div>
+  </footer>
+
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+  </a>
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'Front/assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'Front/assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'Front/assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'Front/assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'Front/assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'Front/assets/js/main.js' %}"></script>
+</body>
+</html>

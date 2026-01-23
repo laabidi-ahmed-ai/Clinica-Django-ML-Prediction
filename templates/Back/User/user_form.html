@@ -1,0 +1,15 @@
+{% extends "Back/User/base.html" %}
+
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="card p-4">
+    <h4>{{ title }}</h4>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary mt-2">{{ title }}</button>
+        <a class="btn btn-secondary mt-2" href="{% url 'dashboard' %}">Cancel</a>
+    </form>
+</div>
+{% endblock %}

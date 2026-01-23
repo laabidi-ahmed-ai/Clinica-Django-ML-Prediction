@@ -1,0 +1,357 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Clinica+ • Inscription Stagiaire</title>
+
+  <!-- Favicons -->
+  <link href="{% static 'Front/assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'Front/assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'Front/assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/assets/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'Front/assets/css/main.css' %}" rel="stylesheet">
+
+  <style>
+    .form-section h4 {
+      font-weight: 600;
+      margin-top: 2rem;
+    }
+    .form-group .errorlist {
+      margin: 0.25rem 0 0;
+      padding: 0;
+      list-style: none;
+      color: #dc3545;
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+
+<body class="index-page">
+
+  <!-- Header repris de la landing page -->
+  <header id="header" class="header sticky-top">
+
+    <div class="topbar d-flex align-items-center">
+      <div class="container d-flex justify-content-center justify-content-md-between">
+        <div class="d-none d-md-flex align-items-center">
+          <i class="bi bi-clock me-1"></i> Monday - Saturday, 8AM to 10PM
+        </div>
+        <div class="d-flex align-items-center">
+          <i class="bi bi-phone me-1"></i> Call us now +1 5589 55488 55
+        </div>
+      </div>
+    </div><!-- End Top Bar -->
+
+    <div class="branding d-flex align-items-center">
+
+      <div class="container position-relative d-flex align-items-center justify-content-end">
+        <a href="index.html" class="logo d-flex align-items-center me-auto">
+          <img src="{% static 'Front/assets/images/logo_site.png' %}" alt="" style="width: 120px; height: 90px;">
+          <!-- Uncomment the line below if you also wish to use a text logo -->
+          <!-- <h1 class="sitename">Medicio</h1>  -->
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+         <ul style="display: flex; align-items: center; list-style: none; margin: 0; padding: 0; gap: 30px;">
+            <li><a href="{% url 'front_index' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">HOME</a></li>
+            <li><a href="#" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">ABOUT</a></li>
+            <li><a href="{% url 'index' %}" style="text-decoration: none; color: #333; font-weight: 500;">PRODUCTS</a></li>
+            <li><a href="{% url 'donation:front_publication_list' %}" class="active" style="text-decoration: none; color: #3fbbc0; font-weight: 600;">DONATION</a></li>
+            <li><a href="{% url 'stages:liste_stages_front' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">STAGE</a></li>
+            <li><a href="{% url 'Labapp:home' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">LABO</a></li>
+            <li><a href="{% url 'public_appointment' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">PATIENT</a></li>
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+
+        <a class="cta-btn" href="{% url 'public_appointment' %}">Make an Appointment</a>
+        <ul class="navbar-nav ms-auto">
+                        {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle fa-lg" style="font-size: 34px;"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="{% url 'donation:donation_create' %}">
+                                    <i class="fas fa-heart" style="color: #13547a;"></i> My Donations
+                                </a></li>
+                                <li><a class="dropdown-item" href="#">
+                                    <i class="fas fa-sign-out-alt" style="color: #13547a;"></i> Logout
+                                </a></li>
+                            </ul>
+                        </li>
+                        {% else %}
+                        <li><a href="{% url 'loginFront' %}" class="nav-auth-btn nav-login-btn" style="text-decoration: none; background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%); color: white; font-weight: 600; padding: 8px 20px; border-radius: 25px; display: inline-block; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(63, 187, 192, 0.3);"><i class="bi bi-box-arrow-in-right"></i> LOGIN</a></li>
+                        {% endif %}
+                    </ul>
+      </div>
+
+    </div>
+
+  </header>
+
+  <main class="main">
+    <section id="appointment" class="appointment section light-background">
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Inscription Stagiaire</h2>
+        <p>Remplissez ce formulaire pour soumettre votre candidature à Clinica+</p>
+      </div>
+
+      <div class="container form-section" data-aos="fade-up" data-aos-delay="100">
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data" class="php-email-form">
+          {% csrf_token %}
+
+          <h4>Informations personnelles</h4>
+          <div class="row">
+            <div class="col-md-6 form-group mt-3">
+              <label>{{ form.prenom.label }} *</label>
+              {{ form.prenom }}{{ form.prenom.errors }}
+            </div>
+            <div class="col-md-6 form-group mt-3">
+              <label>{{ form.nom.label }} *</label>
+              {{ form.nom }}{{ form.nom.errors }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 form-group mt-3">
+              <label>{{ form.email.label }} *</label>
+              {{ form.email }}{{ form.email.errors }}
+            </div>
+            <div class="col-md-6 form-group mt-3">
+              <label>{{ form.tel.label }}</label>
+              {{ form.tel }}{{ form.tel.errors }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 form-group mt-3">
+              <label>{{ form.CIN.label }} *</label>
+              {{ form.CIN }}{{ form.CIN.errors }}
+            </div>
+            <div class="col-md-6 form-group mt-3">
+              <label>{{ form.photo.label }}</label>
+              {{ form.photo }}{{ form.photo.errors }}
+            </div>
+          </div>
+          <div class="form-group mt-3">
+            <label>{{ form.adresse.label }}</label>
+            {{ form.adresse }}{{ form.adresse.errors }}
+          </div>
+
+          <h4>Parcours académique</h4>
+          <div class="row">
+            <div class="col-md-6 form-group mt-3">
+              <label>{{ form.specialite.label }} *</label>
+              {{ form.specialite }}{{ form.specialite.errors }}
+            </div>
+            <div class="col-md-6 form-group mt-3">
+              <label>{{ form.niveau_etudes.label }} *</label>
+              {{ form.niveau_etudes }}{{ form.niveau_etudes.errors }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 form-group mt-3">
+              <label>{{ form.universite.label }} *</label>
+              {{ form.universite }}{{ form.universite.errors }}
+            </div>
+            <div class="col-md-4 form-group mt-3">
+              <label>{{ form.faculte.label }}</label>
+              {{ form.faculte }}{{ form.faculte.errors }}
+            </div>
+            <div class="col-md-4 form-group mt-3">
+              <label>{{ form.annee_etudes.label }} *</label>
+              {{ form.annee_etudes }}{{ form.annee_etudes.errors }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 form-group mt-3">
+              <label>{{ form.numero_carte_etudiant.label }} *</label>
+              {{ form.numero_carte_etudiant }}{{ form.numero_carte_etudiant.errors }}
+            </div>
+            <div class="col-md-6 form-group mt-3">
+              <label>{{ form.assurance_maladie.label }}</label>
+              {{ form.assurance_maladie }}{{ form.assurance_maladie.errors }}
+            </div>
+          </div>
+
+          <h4>Informations complémentaires</h4>
+          <div class="row">
+            <div class="col-md-6 form-group mt-3">
+              <label>{{ form.numero_ordre.label }}</label>
+              {{ form.numero_ordre }}{{ form.numero_ordre.errors }}
+            </div>
+            <div class="col-md-6 form-group mt-3">
+              <label>{{ form.certifications.label }}</label>
+              {{ form.certifications }}{{ form.certifications.errors }}
+            </div>
+          </div>
+
+          <h4>Contact d'urgence</h4>
+          <div class="row">
+            <div class="col-md-4 form-group mt-3">
+              <label>{{ form.contact_urgence_nom.label }}</label>
+              {{ form.contact_urgence_nom }}{{ form.contact_urgence_nom.errors }}
+            </div>
+            <div class="col-md-4 form-group mt-3">
+              <label>{{ form.contact_urgence_tel.label }}</label>
+              {{ form.contact_urgence_tel }}{{ form.contact_urgence_tel.errors }}
+            </div>
+            <div class="col-md-4 form-group mt-3">
+              <label>{{ form.contact_urgence_lien.label }}</label>
+              {{ form.contact_urgence_lien }}{{ form.contact_urgence_lien.errors }}
+            </div>
+          </div>
+
+          <h4>Documents à joindre</h4>
+          <div class="row">
+            <div class="col-md-6 form-group mt-3">
+              <label>{{ form.cv_medical.label }}</label>
+              {{ form.cv_medical }}{{ form.cv_medical.errors }}
+            </div>
+            <div class="col-md-6 form-group mt-3">
+              <label>{{ form.attestation_scolarite.label }}</label>
+              {{ form.attestation_scolarite }}{{ form.attestation_scolarite.errors }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 form-group mt-3">
+              <label>{{ form.certificat_medical.label }}</label>
+              {{ form.certificat_medical }}{{ form.certificat_medical.errors }}
+            </div>
+            <div class="col-md-6 form-group mt-3">
+              <label>{{ form.carte_vaccination.label }}</label>
+              {{ form.carte_vaccination }}{{ form.carte_vaccination.errors }}
+            </div>
+          </div>
+
+          <h4>Sécurité</h4>
+          <div class="row">
+            <div class="col-md-6 form-group mt-3">
+              <label>{{ form.password.label }} *</label>
+              {{ form.password }}{{ form.password.errors }}
+            </div>
+            <div class="col-md-6 form-group mt-3">
+              <label>{{ form.password_confirm.label }} *</label>
+              {{ form.password_confirm }}{{ form.password_confirm.errors }}
+            </div>
+          </div>
+
+          <div class="mt-4 text-center">
+            <button type="submit">Envoyer ma candidature</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer repris de la landing page -->
+  <footer id="footer" class="footer light-background">
+    <div class="container footer-top">
+      <div class="row gy-4">
+        <div class="col-lg-4 col-md-6 footer-about">
+          <a href="{% url 'stages:liste_stages' %}" class="logo d-flex align-items-center">
+            <span class="sitename">Clinica+</span>
+          </a>
+          <div class="footer-contact pt-3">
+            <p>A108 Adam Street</p>
+            <p>New York, NY 535022</p>
+            <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
+            <p><strong>Email:</strong> <span>info@example.com</span></p>
+          </div>
+          <div class="social-links d-flex mt-4">
+            <a href="#"><i class="bi bi-twitter-x"></i></a>
+            <a href="#"><i class="bi bi-facebook"></i></a>
+            <a href="#"><i class="bi bi-instagram"></i></a>
+            <a href="#"><i class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Useful Links</h4>
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About us</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Terms of service</a></li>
+            <li><a href="#">Privacy policy</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Our Services</h4>
+          <ul>
+            <li><a href="#">Web Design</a></li>
+            <li><a href="#">Web Development</a></li>
+            <li><a href="#">Product Management</a></li>
+            <li><a href="#">Marketing</a></li>
+            <li><a href="#">Graphic Design</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Nobis illum</h4>
+          <ul>
+            <li><a href="#">Ipsam</a></li>
+            <li><a href="#">Laudantium</a></li>
+            <li><a href="#">Dinera</a></li>
+            <li><a href="#">Trodelas</a></li>
+            <li><a href="#">Flexo</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="container copyright text-center mt-4">
+      <p>© <span>Copyright</span> <strong class="px-1 sitename">Clinica+</strong> <span>All Rights Reserved</span></p>
+    </div>
+  </footer>
+
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+  </a>
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'Front/assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'Front/assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static 'Front/assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'Front/assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'Front/assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'Front/assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'Front/assets/js/main.js' %}"></script>
+
+  <script>
+    document.querySelector('.php-email-form').addEventListener('submit', function(e) {
+      const pass = document.getElementById('id_password').value;
+      const confirm = document.getElementById('id_password_confirm').value;
+      if (pass !== confirm) {
+        e.preventDefault();
+        alert('Les mots de passe doivent correspondre.');
+      } else if (pass.length < 8) {
+        e.preventDefault();
+        alert('Le mot de passe doit contenir au moins 8 caractères.');
+      }
+    });
+  </script>
+</body>
+</html>

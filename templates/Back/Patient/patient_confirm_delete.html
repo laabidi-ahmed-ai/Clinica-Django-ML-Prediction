@@ -1,0 +1,29 @@
+{% extends "Back/Patient/base.html" %}
+
+{% block title %}Delete patient - {{ object }}{% endblock %}
+{% block page_title %}Delete patient{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-6">
+    <div class="card border-danger">
+      <div class="card-body">
+        <h4 class="card-title text-danger">Are you sure?</h4>
+        <p class="mb-4">
+          This action will permanently remove <strong>{{ object.first_name }} {{ object.last_name }}</strong> and all linked data.
+        </p>
+        <form method="post" class="d-flex gap-2">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">
+            <i data-feather="trash-2" class="me-1" style="width:16px;height:16px;"></i>
+            Yes, delete
+          </button>
+          <a href="{% url 'patient_detail' object.id %}" class="btn btn-outline-secondary">No, go back</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+

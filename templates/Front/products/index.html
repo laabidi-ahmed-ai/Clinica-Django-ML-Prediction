@@ -1,0 +1,989 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Products - Medicio</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+  
+  <style>
+    /* Hide MEDICIO text in navbar */
+    .logo span,
+    .branding span,
+    .logo::after,
+    .logo::before,
+    .branding::after,
+    .branding::before {
+      display: none !important;
+      content: none !important;
+    }
+    
+    /* Force navbar visibility on desktop */
+    @media (min-width: 1200px) {
+      .navmenu ul {
+        display: flex !important;
+      }
+    }
+    /* Ensure header is visible */
+    .header {
+      position: relative !important;
+      background-color: #ffffff !important;
+      display: block !important;
+    }
+    .header .branding {
+      display: flex !important;
+      align-items: center !important;
+    }
+    .header .topbar {
+      display: flex !important;
+    }
+    .navmenu ul li a:hover {
+      color: #3fbbc0 !important;
+    }
+    .navmenu ul li a.active {
+      color: #3fbbc0 !important;
+      font-weight: 600;
+    }
+    .team-member {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+    }
+    .team-member .member-img {
+      flex: 0 0 250px;
+    }
+    .team-member .member-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-bottom: 15px;
+    }
+    .team-member .member-info form {
+      margin-top: auto;
+    }
+    @media (max-width: 1199px) {
+      .navmenu ul {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+    /* Product card animations - Override default styles */
+    .team-member {
+      transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+      cursor: pointer !important;
+      border-radius: 8px !important;
+      overflow: hidden !important;
+      background: #fff !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+      height: 100% !important;
+    }
+    .team-member:hover {
+      transform: translateY(-10px) !important;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important;
+    }
+    .team-member .member-img {
+      overflow: hidden !important;
+      flex: 0 0 250px !important;
+      transition: transform 0.3s ease;
+    }
+    .team-member:hover .member-img img {
+      transform: scale(1.1) !important;
+      transition: transform 0.3s ease;
+    }
+    .team-member .member-img img {
+      transition: transform 0.3s ease !important;
+    }
+    .team-member .member-info {
+      padding: 15px !important;
+      transition: background-color 0.3s ease;
+      flex: 1 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+    }
+    .team-member:hover .member-info {
+      background-color: #f8f9fa !important;
+    }
+    /* Filter and search section */
+    .filter-section {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+    .filter-section .form-control,
+    .filter-section .form-select {
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 10px;
+    }
+    .filter-section .btn {
+      background-color: #3fbbc0;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+    .filter-section .btn:hover {
+      background-color: #35a5aa;
+    }
+    .product-card-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .add-to-cart-btn-wrapper {
+      padding: 0 15px 15px 15px;
+      margin-top: auto;
+      z-index: 10;
+      position: relative;
+    }
+    .add-to-cart-btn-wrapper button {
+      width: 100%;
+      cursor: pointer;
+    }
+    .modal-body img {
+      border-radius: 8px;
+    }
+    /* Company logos section */
+    .company-logo-container {
+      cursor: pointer;
+    }
+    .company-logo-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.15) !important;
+    }
+    .company-logo-container img {
+      max-width: 100%;
+      max-height: 80px;
+      object-fit: contain;
+      filter: grayscale(100%);
+      opacity: 0.7;
+      transition: all 0.3s ease;
+    }
+    .company-logo-container:hover img {
+      filter: grayscale(0%);
+      opacity: 1;
+    }
+    /* Hidden products styling */
+    .hidden-product {
+      display: none !important;
+    }
+    .product-item {
+      animation: fadeInUp 0.6s ease-out;
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    /* Load more button styling */
+    #load-more-btn {
+      transition: all 0.3s ease;
+    }
+    #load-more-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(63, 187, 192, 0.4) !important;
+      background-color: #35a5aa !important;
+    }
+    #load-more-btn:active {
+      transform: translateY(-1px);
+    }
+    
+    /* Autocomplete styles */
+    .autocomplete-wrapper {
+      position: relative;
+    }
+    
+    .autocomplete-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #ddd;
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      max-height: 350px;
+      overflow-y: auto;
+      z-index: 1000;
+      display: none;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    
+    .autocomplete-dropdown.show {
+      display: block;
+    }
+    
+    .autocomplete-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      cursor: pointer;
+      border-bottom: 1px solid #f0f0f0;
+      transition: all 0.2s ease;
+    }
+    
+    .autocomplete-item:last-child {
+      border-bottom: none;
+    }
+    
+    .autocomplete-item:hover {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+    
+    .autocomplete-item.selected {
+      background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%);
+      color: white;
+    }
+    
+    .autocomplete-img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-right: 12px;
+      border: 2px solid #f0f0f0;
+    }
+    
+    .autocomplete-img-placeholder {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+      border-radius: 8px;
+      margin-right: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #adb5bd;
+      font-size: 20px;
+    }
+    
+    .item-info {
+      flex: 1;
+    }
+    
+    .item-name {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 2px;
+    }
+    
+    .autocomplete-item.selected .item-name,
+    .autocomplete-item.selected .item-category,
+    .autocomplete-item.selected .item-price,
+    .autocomplete-item.selected .item-stock {
+      color: white;
+    }
+    
+    .item-category {
+      font-size: 12px;
+      color: #888;
+    }
+    
+    .item-price {
+      font-weight: 700;
+      color: #3fbbc0;
+      font-size: 15px;
+    }
+    
+    .item-stock {
+      font-size: 11px;
+      color: #888;
+    }
+    
+    .autocomplete-no-results {
+      padding: 25px;
+      text-align: center;
+      color: #888;
+    }
+    
+    .autocomplete-loading {
+      padding: 25px;
+      text-align: center;
+      color: #888;
+    }
+    
+    .highlight {
+      background: #fff3cd;
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+    
+    .autocomplete-item.selected .highlight {
+      background: rgba(255,255,255,0.3);
+    }
+  </style>
+</head>
+
+<body class="index-page">
+
+  <header id="header" class="header sticky-top">
+
+    <div class="topbar d-flex align-items-center" style="background-color: #3fbbc0; color: white; padding: 8px 0;">
+      <div class="container d-flex justify-content-center justify-content-md-between">
+        <div class="d-none d-md-flex align-items-center" style="color: white;">
+          <i class="bi bi-clock me-1"></i> Monday - Saturday, 8AM to 10PM
+        </div>
+        <div class="d-flex align-items-center" style="color: white;">
+          <i class="bi bi-phone me-1"></i> Call us now +1 5589 55488 55
+        </div>
+      </div>
+    </div><!-- End Top Bar -->
+
+    <div class="branding d-flex align-items-center" style="background-color: #fff; padding: 15px 0; border-bottom: 1px solid #e5e5e5;">
+
+      <div class="container position-relative d-flex align-items-center justify-content-between">
+        <a href="{% url 'index' %}" class="logo d-flex align-items-center me-auto">
+          <img src="{% static 'Front/assets/images/logo_site.png' %}" alt="" style="width: 120px; height: 90px;">
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+         <ul style="display: flex; align-items: center; list-style: none; margin: 0; padding: 0; gap: 30px;">
+            <li><a href="{% url 'front_index' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">HOME</a></li>
+            <li><a href="#" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">ABOUT</a></li>
+            <li><a href="{% url 'index' %}" class="active" style="text-decoration: none; color: #3fbbc0; font-weight: 600;">PRODUCTS</a></li>
+            <li><a href="{% url 'donation:front_publication_list' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">DONATION</a></li>
+            <li><a href="{% url 'stages:liste_stages_front' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">STAGE</a></li>
+            <li><a href="{% url 'Labapp:home' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">LABO</a></li>
+            <li><a href="{% url 'my_patient_portal' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">PATIENT</a></li>
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+        <a class="cta-btn" href="{% url 'public_appointment' %}">Make an Appointment</a>
+            <ul class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user-circle fa-lg" style="font-size: 34px;"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{% url 'donation:user_donation_list' %}">
+                            <i class="fas fa-heart" style="color: #13547a;"></i> My Donations
+                        </a></li>
+                        <li><a class="dropdown-item" href="#">
+                            <i class="fas fa-sign-out-alt" style="color: #13547a;"></i> Logout
+                        </a></li>
+                    </ul>
+                </li>
+                {% else %}
+                <li><a href="{% url 'loginFront' %}" class="nav-auth-btn nav-login-btn" style="text-decoration: none; background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%); color: white; font-weight: 600; padding: 8px 20px; border-radius: 25px; display: inline-block; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(63, 187, 192, 0.3);"><i class="bi bi-box-arrow-in-right"></i> LOGIN</a></li>
+                {% endif %}
+            </ul>
+
+      </div>
+
+    </div>
+
+  </header>
+
+  <!-- Cart Button Section -->
+  <div class="container mt-3 mb-3" style="display: flex; justify-content: flex-end;">
+    <a href="{% url 'panier' %}" class="btn" style="background-color: #3fbbc0; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: 500; transition: background-color 0.3s; position: relative;">
+      <i class="bi bi-cart3"></i> Cart
+      {% if nombre_articles_panier > 0 %}
+        <span class="badge bg-danger" style="position: absolute; top: -8px; right: -8px; font-size: 10px;">{{ nombre_articles_panier }}</span>
+      {% endif %}
+    </a>
+  </div>
+
+  <main class="main">
+    
+    <!-- Messages Django -->
+    {% if messages %}
+      <div class="container mt-3">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Achat Section -->
+    <section id="achat" class="doctors section light-background">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Products</h2>
+        <p>Discover our selection of available products</p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+        
+        <!-- Filter and Search Section -->
+        <div class="filter-section">
+          <form method="get" action="{% url 'index' %}" id="filterForm" class="row g-3 align-items-end">
+            <div class="col-md-4">
+              <label for="search" class="form-label">Search by name</label>
+              <div class="autocomplete-wrapper">
+                <input type="text" class="form-control" id="search" name="search" placeholder="Enter product name..." value="{{ search_query }}" autocomplete="off">
+                <div class="autocomplete-dropdown" id="autocompleteDropdown"></div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label for="category" class="form-label">Filter by category</label>
+              <select class="form-select" id="category" name="category">
+                <option value="">All Categories</option>
+                {% for value, label in categories %}
+                  <option value="{{ value }}" {% if category_filter == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label for="sort" class="form-label">Sort by price</label>
+              <select class="form-select" id="sort" name="sort">
+                <option value="">Latest first</option>
+                <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+              </select>
+            </div>
+          </form>
+        </div>
+
+
+        <div class="row gy-4" id="products-container">
+
+          {% for produit in produits %}
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch product-item {% if forloop.counter > 8 %}hidden-product{% endif %}" data-aos="fade-up" data-aos-delay="{% if forloop.counter == 1 %}100{% elif forloop.counter == 2 %}200{% elif forloop.counter == 3 %}300{% else %}400{% endif %}">
+            <div class="team-member" style="position: relative; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modalDetail{{ produit.id }}">
+              <div class="product-card-content">
+                <div class="member-img" style="position: relative;">
+                  {% if produit.image %}
+                    <img src="{{ produit.image.url }}" class="img-fluid" alt="{{ produit.nom }}" style="height: 250px; object-fit: cover; width: 100%;">
+                  {% else %}
+                    <div style="height: 250px; background-color: #e9ecef; display: flex; align-items: center; justify-content: center; border-radius: 5px;">
+                      <span style="color: #999;">No image</span>
+                    </div>
+                  {% endif %}
+                  {% with stock_status=produit.get_stock_status %}
+                    {% if stock_status.days_until_out is not None and stock_status.days_until_out < 30 %}
+                      <div style="position: absolute; top: 10px; left: 10px; background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); color: white; padding: 6px 12px; border-radius: 5px; font-size: 0.75rem; font-weight: 600; box-shadow: 0 2px 8px rgba(220, 53, 69, 0.4); z-index: 10; text-transform: uppercase; letter-spacing: 0.5px;">
+                        <i class="bi bi-fire"></i> Last items, product in demand
+                      </div>
+                    {% endif %}
+                  {% endwith %}
+                </div>
+                <div class="member-info">
+                  <h4>{{ produit.nom }}</h4>
+                  {% if produit.description %}
+                    <p style="font-size: 0.9em; margin-top: 10px; color: #666;">{{ produit.description|truncatewords:15 }}</p>
+                  {% endif %}
+                  <div style="margin-top: 15px;">
+                    <span style="font-weight: bold; color: #3fbbc0; font-size: 1.2em;">{{ produit.prix_vente }} DT</span>
+                  </div>
+                  {% if produit.quantite > 0 %}
+                    <span style="color: green; font-size: 0.9em; display: block; margin-top: 5px;">✓ {{ produit.quantite }} units left</span>
+                  {% else %}
+                    <span style="color: red; font-size: 0.9em; display: block; margin-top: 5px;">✗ Out of stock</span>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="add-to-cart-btn-wrapper" onclick="event.stopPropagation();">
+                {% if produit.quantite > 0 %}
+                  <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modalAchat{{ produit.id }}" onclick="event.stopPropagation();" style="background-color: #3fbbc0; border: none; padding: 10px; border-radius: 5px; color: white; font-weight: bold; cursor: pointer;">
+                    <i class="bi bi-cart-plus"></i> Add to cart
+                  </button>
+                {% else %}
+                  <button type="button" class="btn btn-secondary w-100" disabled style="padding: 10px; border-radius: 5px;">
+                    Unavailable
+                  </button>
+                {% endif %}
+              </div>
+            </div>
+          </div><!-- End Product Item -->
+          
+          <!-- Modal pour afficher les détails du produit -->
+          <div class="modal fade" id="modalDetail{{ produit.id }}" tabindex="-1" aria-labelledby="modalDetailLabel{{ produit.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="modalDetailLabel{{ produit.id }}">{{ produit.nom }}</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      {% if produit.image %}
+                        <img src="{{ produit.image.url }}" class="img-fluid rounded" alt="{{ produit.nom }}" style="width: 100%; height: auto; max-height: 400px; object-fit: cover;">
+                      {% else %}
+                        <div style="height: 300px; background-color: #e9ecef; display: flex; align-items: center; justify-content: center; border-radius: 10px;">
+                          <span style="color: #999; font-size: 1.2rem;">No image available</span>
+                        </div>
+                      {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                      <h4 class="mb-3">{{ produit.nom }}</h4>
+                      <div class="mb-3">
+                        <span class="badge bg-info" style="background-color: #3fbbc0 !important; padding: 5px 15px; font-size: 0.9rem;">{{ produit.get_category_display }}</span>
+                      </div>
+                      <div class="mb-3">
+                        <h3 class="text-primary" style="color: #3fbbc0 !important;">{{ produit.prix_vente }} DT</h3>
+                      </div>
+                      {% if produit.quantite > 0 %}
+                        <div class="mb-3">
+                          <span class="text-success"><i class="bi bi-check-circle"></i> {{ produit.quantite }} units left</span>
+                        </div>
+                      {% else %}
+                        <div class="mb-3">
+                          <span class="text-danger"><i class="bi bi-x-circle"></i> Out of stock</span>
+                        </div>
+                      {% endif %}
+                      {% if produit.description %}
+                        <div class="mb-3">
+                          <h6>Description:</h6>
+                          <p style="line-height: 1.8; color: #666;">{{ produit.description|linebreaks }}</p>
+                        </div>
+                      {% else %}
+                        <div class="mb-3">
+                          <p class="text-muted">No description available for this product.</p>
+                        </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  {% if produit.quantite > 0 %}
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#modalAchat{{ produit.id }}" style="background-color: #3fbbc0; border: none; color: white;">
+                      <i class="bi bi-cart-plus"></i> Add to Cart
+                    </button>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Modal pour l'achat -->
+          {% if produit.quantite > 0 %}
+          <div class="modal fade" id="modalAchat{{ produit.id }}" tabindex="-1" aria-labelledby="modalAchatLabel{{ produit.id }}" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="modalAchatLabel{{ produit.id }}">Buy {{ produit.nom }}</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" action="{% url 'ajouter_au_panier' produit.id %}">
+                  {% csrf_token %}
+                  <div class="modal-body">
+                    <div class="mb-3">
+                      <label for="quantite{{ produit.id }}" class="form-label">Quantity</label>
+                      <input type="number" class="form-control" id="quantite{{ produit.id }}" name="quantite" min="1" max="{{ produit.quantite }}" value="1" required>
+                      <small class="form-text text-muted">{{ produit.quantite }} units left</small>
+                    </div>
+                    <div class="alert alert-info">
+                      <strong>Unit price:</strong> {{ produit.prix_vente }} DT<br>
+                      <strong>Total:</strong> <span id="total{{ produit.id }}">{{ produit.prix_vente }}</span> DT
+                    </div>
+                    <p class="text-muted"><small>You can complete your information when validating the cart.</small></p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="background-color: #3fbbc0; border: none; color: white; font-weight: bold;"><i class="bi bi-cart-plus"></i> Add to cart</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          
+          <script>
+            // Calculer le total dynamiquement
+            document.getElementById('quantite{{ produit.id }}').addEventListener('input', function() {
+              const quantite = parseInt(this.value) || 1;
+              const prix = parseFloat('{{ produit.prix_vente }}');
+              document.getElementById('total{{ produit.id }}').textContent = (quantite * prix).toFixed(2);
+            });
+          </script>
+          {% endif %}
+          {% empty %}
+          <div class="col-12">
+            <p class="text-center">No products available at the moment.</p>
+          </div>
+          {% endfor %}
+
+        </div>
+
+        <!-- Load More Button -->
+        {% if produits|length > 8 %}
+        <div class="text-center mt-4" id="load-more-container">
+          <button type="button" id="load-more-btn" class="btn btn-primary" style="background-color: #3fbbc0; border: none; padding: 12px 30px; border-radius: 25px; color: white; font-weight: 500; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(63, 187, 192, 0.3);">
+            <i class="bi bi-arrow-down-circle me-2"></i> Load More Products
+          </button>
+        </div>
+        {% endif %}
+
+      </div>
+
+    </section><!-- /Achat Section -->
+
+    <!-- Companies Section -->
+    <section id="companies" class="companies-section" style="padding: 60px 0; background-color: #f8f9fa;">
+      <div class="container">
+        <div class="section-title text-center" data-aos="fade-up">
+          <h2>Companies We Associate With</h2>
+          <p>Trusted partners in healthcare and medical supplies</p>
+        </div>
+        
+        <div class="row gy-4 align-items-center justify-content-center" style="margin-top: 40px;">
+          <!-- Pfizer -->
+          <!-- To add logo image: Replace the inner div below with: <img src="{% static 'assets/img/companies/pfizer.png' %}" alt="Pfizer" style="max-width: 100%; max-height: 80px; object-fit: contain;"> -->
+          <div class="col-lg-4 col-md-4 col-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="company-logo-container" style="background: white; padding: 30px 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); height: 120px; display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+              <div style="text-align: center; color: #0093d0; font-weight: bold; font-size: 1.5rem;">Pfizer</div>
+            </div>
+          </div>
+          
+          <!-- Johnson & Johnson -->
+          <!-- To add logo image: Replace the inner div below with: <img src="{% static 'assets/img/companies/jnj.png' %}" alt="Johnson & Johnson" style="max-width: 100%; max-height: 80px; object-fit: contain;"> -->
+          <div class="col-lg-4 col-md-4 col-6" data-aos="fade-up" data-aos-delay="200">
+            <div class="company-logo-container" style="background: white; padding: 30px 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); height: 120px; display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+              <div style="text-align: center; color: #d2232a; font-weight: bold; font-size: 1.3rem;">Johnson & Johnson</div>
+            </div>
+          </div>
+          
+          <!-- Cardinal Health -->
+          <!-- To add logo image: Replace the inner div below with: <img src="{% static 'assets/img/companies/cardinal.png' %}" alt="Cardinal Health" style="max-width: 100%; max-height: 80px; object-fit: contain;"> -->
+          <div class="col-lg-4 col-md-4 col-6" data-aos="fade-up" data-aos-delay="300">
+            <div class="company-logo-container" style="background: white; padding: 30px 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); height: 120px; display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+              <div style="text-align: center; color: #0066cc; font-weight: bold; font-size: 1.2rem;">Cardinal Health</div>
+            </div>
+          </div>
+          
+          <!-- B. Braun -->
+          <!-- To add logo image: Replace the inner div below with: <img src="{% static 'assets/img/companies/bbraun.png' %}" alt="B. Braun" style="max-width: 100%; max-height: 80px; object-fit: contain;"> -->
+          <div class="col-lg-4 col-md-4 col-6" data-aos="fade-up" data-aos-delay="400">
+            <div class="company-logo-container" style="background: white; padding: 30px 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); height: 120px; display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+              <div style="text-align: center; color: #009639; font-weight: bold; font-size: 1.5rem;">B. Braun</div>
+            </div>
+          </div>
+          
+          <!-- Philips Healthcare -->
+          <!-- To add logo image: Replace the inner div below with: <img src="{% static 'assets/img/companies/philips.png' %}" alt="Philips Healthcare" style="max-width: 100%; max-height: 80px; object-fit: contain;"> -->
+          <div class="col-lg-4 col-md-4 col-6" data-aos="fade-up" data-aos-delay="500">
+            <div class="company-logo-container" style="background: white; padding: 30px 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); height: 120px; display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+              <div style="text-align: center; color: #0e5fd8; font-weight: bold; font-size: 1.2rem;">Philips Healthcare</div>
+            </div>
+          </div>
+          
+          <!-- Medtronic -->
+          <!-- To add logo image: Replace the inner div below with: <img src="{% static 'assets/img/companies/medtronic.png' %}" alt="Medtronic" style="max-width: 100%; max-height: 80px; object-fit: contain;"> -->
+          <div class="col-lg-4 col-md-4 col-6" data-aos="fade-up" data-aos-delay="600">
+            <div class="company-logo-container" style="background: white; padding: 30px 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); height: 120px; display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+              <div style="text-align: center; color: #0066cc; font-weight: bold; font-size: 1.4rem;">Medtronic</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- End Companies Section -->
+
+  </main>
+
+  <footer id="footer" class="footer light-background">
+
+    <div class="container footer-top">
+      <div class="row gy-4">
+        <div class="col-lg-4 col-md-6 footer-about">
+          <a href="{% url 'index' %}" class="logo d-flex align-items-center">
+            <span class="sitename">Medicio</span>
+          </a>
+          <div class="footer-contact pt-3">
+            <p>A108 Adam Street</p>
+            <p>New York, NY 535022</p>
+            <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
+            <p><strong>Email:</strong> <span>info@example.com</span></p>
+          </div>
+          <div class="social-links d-flex mt-4">
+            <a href=""><i class="bi bi-twitter-x"></i></a>
+            <a href=""><i class="bi bi-facebook"></i></a>
+            <a href=""><i class="bi bi-instagram"></i></a>
+            <a href=""><i class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Useful Links</h4>
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About us</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Terms of service</a></li>
+            <li><a href="#">Privacy policy</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Our Services</h4>
+          <ul>
+            <li><a href="#">Web Design</a></li>
+            <li><a href="#">Web Development</a></li>
+            <li><a href="#">Product Management</a></li>
+            <li><a href="#">Marketing</a></li>
+            <li><a href="#">Graphic Design</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Hic solutasetp</h4>
+          <ul>
+            <li><a href="#">Molestiae accusamus iure</a></li>
+            <li><a href="#">Excepturi dignissimos</a></li>
+            <li><a href="#">Suscipit distinctio</a></li>
+            <li><a href="#">Dilecta</a></li>
+            <li><a href="#">Sit quas consectetur</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Nobis illum</h4>
+          <ul>
+            <li><a href="#">Ipsam</a></li>
+            <li><a href="#">Laudantium dolorum</a></li>
+            <li><a href="#">Dinera</a></li>
+            <li><a href="#">Trodelas</a></li>
+            <li><a href="#">Flexo</a></li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="container copyright text-center mt-4">
+      <p>© <span>Copyright</span> <strong class="px-1 sitename">Medicio</strong> <span>All Rights Reserved</span></p>
+      <div class="credits">
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed by <a href="https://themewagon.com">ThemeWagon</a>
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+
+  <!-- Main JS File -->
+  <script src="{% static 'assets/js/main.js' %}"></script>
+  
+  <script>
+    // Ensure navbar is initialized even if main.js fails
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileNavToggleBtn = document.querySelector('.mobile-nav-toggle');
+      if (mobileNavToggleBtn) {
+        mobileNavToggleBtn.addEventListener('click', function() {
+          document.querySelector('body').classList.toggle('mobile-nav-active');
+          this.classList.toggle('bi-list');
+          this.classList.toggle('bi-x');
+        });
+      }
+
+      // Auto-submit form when filters change
+      const filterForm = document.getElementById('filterForm');
+      const categorySelect = document.getElementById('category');
+      const sortSelect = document.getElementById('sort');
+      const searchInput = document.getElementById('search');
+
+      // Auto-submit on category change
+      if (categorySelect) {
+        categorySelect.addEventListener('change', function() {
+          filterForm.submit();
+        });
+      }
+
+      // Auto-submit on sort change
+      if (sortSelect) {
+        sortSelect.addEventListener('change', function() {
+          filterForm.submit();
+        });
+      }
+
+      // Autocomplete for search with debounce
+      if (searchInput) {
+        const autocompleteDropdown = document.getElementById('autocompleteDropdown');
+        let searchTimeout;
+        let selectedIndex = -1;
+        
+        searchInput.addEventListener('input', function() {
+          const query = this.value.trim();
+          clearTimeout(searchTimeout);
+          
+          if (query.length < 1) {
+            autocompleteDropdown.classList.remove('show');
+            autocompleteDropdown.innerHTML = '';
+            return;
+          }
+          
+          autocompleteDropdown.innerHTML = '<div class="autocomplete-loading"><i class="bi bi-arrow-repeat"></i> Searching...</div>';
+          autocompleteDropdown.classList.add('show');
+          
+          searchTimeout = setTimeout(function() {
+            fetch('/api/product-suggestions/?q=' + encodeURIComponent(query))
+              .then(response => response.json())
+              .then(data => {
+                if (data.suggestions.length === 0) {
+                  autocompleteDropdown.innerHTML = '<div class="autocomplete-no-results"><i class="bi bi-search"></i> No products found</div>';
+                } else {
+                  let html = '';
+                  data.suggestions.forEach((item, index) => {
+                    const highlightedName = item.name.replace(new RegExp('(' + query + ')', 'gi'), '<span class="highlight">$1</span>');
+                    html += `
+                      <div class="autocomplete-item" data-index="${index}" data-name="${item.name}">
+                        ${item.image 
+                          ? `<img src="${item.image}" class="autocomplete-img" alt="${item.name}">` 
+                          : '<div class="autocomplete-img-placeholder"><i class="bi bi-box"></i></div>'}
+                        <div class="item-info">
+                          <div class="item-name">${highlightedName}</div>
+                          <div class="item-category">${item.category}</div>
+                        </div>
+                        <div class="text-end">
+                          <div class="item-price">${item.price.toFixed(2)} DT</div>
+                          <div class="item-stock ${item.stock < 10 ? 'text-warning' : ''}">${item.stock} in stock</div>
+                        </div>
+                      </div>
+                    `;
+                  });
+                  autocompleteDropdown.innerHTML = html;
+                  
+                  // Add click handlers
+                  document.querySelectorAll('.autocomplete-item').forEach(item => {
+                    item.addEventListener('click', function() {
+                      searchInput.value = this.dataset.name;
+                      autocompleteDropdown.classList.remove('show');
+                      filterForm.submit();
+                    });
+                  });
+                }
+                selectedIndex = -1;
+              })
+              .catch(err => {
+                autocompleteDropdown.innerHTML = '<div class="autocomplete-no-results">Error loading suggestions</div>';
+              });
+          }, 200);
+        });
+        
+        // Keyboard navigation
+        searchInput.addEventListener('keydown', function(e) {
+          const items = document.querySelectorAll('.autocomplete-item');
+          
+          if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+            updateSelection(items);
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            selectedIndex = Math.max(selectedIndex - 1, -1);
+            updateSelection(items);
+          } else if (e.key === 'Enter' && selectedIndex >= 0) {
+            e.preventDefault();
+            searchInput.value = items[selectedIndex].dataset.name;
+            autocompleteDropdown.classList.remove('show');
+            filterForm.submit();
+          } else if (e.key === 'Escape') {
+            autocompleteDropdown.classList.remove('show');
+            selectedIndex = -1;
+          }
+        });
+        
+        function updateSelection(items) {
+          items.forEach((item, index) => {
+            if (index === selectedIndex) {
+              item.classList.add('selected');
+              item.scrollIntoView({ block: 'nearest' });
+            } else {
+              item.classList.remove('selected');
+            }
+          });
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+          if (!searchInput.contains(e.target) && !autocompleteDropdown.contains(e.target)) {
+            autocompleteDropdown.classList.remove('show');
+            selectedIndex = -1;
+          }
+        });
+      }
+
+      // Load More Products functionality
+      const loadMoreBtn = document.getElementById('load-more-btn');
+      const hiddenProducts = document.querySelectorAll('.hidden-product');
+
+      // Handle load more button click
+      if (loadMoreBtn && hiddenProducts.length > 0) {
+        loadMoreBtn.addEventListener('click', function() {
+          // Show all hidden products with animation
+          hiddenProducts.forEach(function(product, index) {
+            setTimeout(function() {
+              product.classList.remove('hidden-product');
+              // Reinitialize AOS animation for the newly shown product
+              if (typeof AOS !== 'undefined') {
+                AOS.refresh();
+              }
+            }, index * 100); // Stagger the animations
+          });
+
+          // Hide the load more button after all products are shown
+          setTimeout(function() {
+            loadMoreBtn.style.display = 'none';
+          }, hiddenProducts.length * 100 + 300);
+
+          // Scroll to the newly loaded products smoothly
+          setTimeout(function() {
+            if (hiddenProducts.length > 0) {
+              hiddenProducts[0].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+          }, 200);
+        });
+      } else if (loadMoreBtn) {
+        // If no hidden products, hide the button
+        loadMoreBtn.style.display = 'none';
+      }
+    });
+    
+  </script>
+
+</body>
+
+</html>
+

@@ -1,0 +1,124 @@
+{% extends "Back/Patient/base.html" %}
+
+{% block title %}Patients - Clinica{% endblock %}
+{% block page_title %}Patients{% endblock %}
+
+{% block breadcrumb_actions %}
+<a href="{% url 'patient_add' %}" class="btn btn-primary d-flex align-items-center gap-2">
+  <i data-feather="user-plus"></i>
+  <span>Add patient</span>
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex flex-wrap align-items-center mb-4 gap-3">
+          <div>
+            <h4 class="card-title mb-1">Total patients</h4>
+            <span class="badge bg-primary-subtle text-primary fs-6">{{ total_patients }}</span>
+          </div>
+          <form method="get" class="ms-auto d-flex gap-2">
+            <input type="text" name="name" class="form-control" placeholder="Search by name" value="{{ current_name }}" style="max-width: 220px;">
+            <button type="submit" class="btn btn-outline-primary">Search</button>
+            <a href="{% url 'patient_list' %}" class="btn btn-outline-secondary">Clear</a>
+            <a href="{% url 'appointment_list' %}" class="btn btn-outline-primary btn-sm">
+              <i data-feather="calendar" class="me-2" style="width:16px;height:16px;"></i>Appointments
+            </a>
+            <a href="{% url 'appointment_create' %}" class="btn btn-outline-secondary btn-sm">
+              <i data-feather="external-link" class="me-2" style="width:16px;height:16px;"></i>Add appointment
+            </a>
+          </form>
+        </div>
+
+        {% if patients %}
+        <div class="table-responsive">
+          <table class="table align-middle table-hover">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>CIN</th>
+                <th>Hospitalisation</th>
+                <th>Type</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Last update</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for patient in patients %}
+              <tr>
+                <td class="fw-semibold">{{ patient.id }}</td>
+                <td>
+                  <a href="{% url 'patient_detail' patient.id %}" class="fw-semibold text-dark">
+                    {{ patient.first_name }} {{ patient.last_name }}
+                  </a>
+                </td>
+                <td>{{ patient.cin|default:"?" }}</td>
+                <td>
+                  <span class="badge {% if patient.hospitalisation == 'oui' %}bg-danger-subtle text-danger{% else %}bg-success-subtle text-success{% endif %}">
+                    {{ patient.get_hospitalisation_display }}
+                  </span>
+                </td>
+                <td>{{ patient.get_type_hosp_display|default:"?" }}</td>
+                <td>{{ patient.phone }}</td>
+                <td>{{ patient.email }}</td>
+                <td>{{ patient.date_derniere_mise_a_jour|date:"Y-m-d H:i" }}</td>
+                <td class="text-end">
+                  <div class="btn-group">
+                    <a class="btn btn-sm btn-outline-primary" href="{% url 'patient_detail' patient.id %}">View</a>
+                    <a class="btn btn-sm btn-outline-secondary" href="{% url 'patient_edit' patient.id %}">Edit</a>
+                    <a class="btn btn-sm btn-outline-danger" href="{% url 'patient_delete' patient.id %}">Delete</a>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        {% if is_paginated %}
+        <nav class="mt-3">
+          <ul class="pagination justify-content-center mb-0">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">Previous</span></li>
+            {% endif %}
+
+            <li class="page-item active">
+              <span class="page-link">
+                {{ page_obj.number }}
+                <span class="visually-hidden">(current)</span>
+              </span>
+            </li>
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">Next</span></li>
+            {% endif %}
+          </ul>
+        </nav>
+        {% endif %}
+        {% else %}
+        <div class="text-center py-5 text-muted">
+          <i data-feather="users" class="mb-3" style="width:48px;height:48px;"></i>
+          <p class="mb-0">No patients yet.</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+

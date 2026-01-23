@@ -1,0 +1,131 @@
+{%load static%}
+<html lang="en">
+
+<head>
+  <title>Login | Clinica</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{% static 'css/loginBack.css' %}">
+</head>
+
+<body>
+  <div class="section">
+    <div class="container">
+      <div class="row full-height justify-content-center">
+        <div class="col-12 text-center align-self-center py-5">
+          <div class="section pb-5 pt-5 pt-sm-2 text-center">
+            <h6 class="mb-0 pb-3" style="color:white;"><span>Sign Up </span><span>Log In</span></h6>
+            <input class="checkbox" type="checkbox" id="reg-log" name="reg-log" />
+            <label for="reg-log"></label>
+            <div class="card-3d-wrap mx-auto">
+              <div class="card-3d-wrapper">
+                <div class="card-front">
+                  <div class="center-wrap">
+                    <div class="section text-center">
+                      <h4 class="mb-3 pb-3">Sign Up</h4>
+                      <form method="post" action="{% url 'register_backoffice' %}">
+                        {% csrf_token %}
+                        <div class="form-row">
+                          <div class="form-group col-md-6">
+                            <input type="text" class="form-style" placeholder="First Name" name="first_name"
+                              id="firstName" >
+                            <i class="input-icon uil uil-user"></i>
+                            <center><span id="firstName1" class="erreur"></span></center>
+                          </div>
+
+                          <div class="form-group col-md-6">
+                            <input type="text" class="form-style" placeholder="Last Name" name="last_name" id="lastName" >
+                            <i class="input-icon uil uil-user"></i>
+                            <center><span id="lastName1" class="erreur"></span></center>
+                          </div>
+                        </div>
+
+                        <div class="form-row">
+                          <div class="form-group col-md-6">
+                            <input type="date" class="form-style" placeholder="Birth Date" name="birth_date"
+                              id="birthDate" >
+                            <i class="input-icon uil uil-user"></i>
+                            <center><span id="birthDate1" class="erreur"></span></center>
+                          </div>
+
+                          <div class="form-group col-md-6">
+                            <input type="tel" class="form-style" placeholder="Phone Number" name="tel" id="phone" >
+                            <i class="input-icon uil uil-phone"></i>
+                            <center><span id="phone1" class="erreur"></span></center>
+                          </div>
+                        </div>
+
+
+                        <div class="form-row">
+                          <div class="form-group col-md-6">
+                            <input type="email" class="form-style" placeholder="Email" name="email" id="email" >
+                            <i class="input-icon uil uil-at"></i>
+                            <center><span id="email1" class="erreur"></span></center>
+                          </div>
+                          <div class="form-group col-md-6">
+                            <input type="text" class="form-style" placeholder="CIN" name="CIN" id="CIN" >
+                            <i class="input-icon uil uil-user"></i>
+                            <center><span id="address1" class="erreur"></span></center>
+                          </div>
+                        </div>
+
+                        <div class="form-row">
+                          <div class="form-group col-md-6">
+                            <input type="text" class="form-style" placeholder="Address" name="address" id="address" >
+                            <i class="input-icon uil uil-user"></i>
+                            <center><span id="address1" class="erreur"></span></center>
+                          </div>
+
+                          <div class="form-group col-md-6">
+                            <input type="text" class="form-style" placeholder="Password" name="password" id="password">
+                            <i class="input-icon uil uil-lock-alt"></i>
+                            <center><span id="password1" class="erreur"></span></center>
+                          </div>
+                        </div>
+
+                        <div class="text-center">
+                          <button type="submit" class="btn mt-4">Register</button>
+                        </div>
+                      </form>
+
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card-back">
+
+                  <div class="center-wrap">
+                    <div class="section text-center">
+                      <h4 class="mb-3 pb-3">Log In</h4>
+                      <form action="{% url 'loginBackCheck' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group mt-2">
+                          <input type="email" class="form-style" placeholder="Email" id="email" name="email">
+                          <i class="input-icon uil uil-at"></i>
+                          <center><span id="email1" class="erreur"></span></center>
+                        </div>
+                        <div class="form-group mt-2">
+                          <input type="password" class="form-style" placeholder="Password" id="password"
+                            name="password">
+                          <i class="input-icon uil uil-lock-alt"></i>
+                          <center><span id="password1" class="erreur"></span></center>
+                        </div>
+                        <button class="btn mt-4">Log In</button>
+                      </form>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,451 @@
+{% extends "Front/labo/analyse/base.html" %}
+
+{% block title %}Mes Analyses{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* --- COULEURS THÈME --- */
+    :root {
+        /* Couleur dominante (Teal/Cyan utilisée dans le bandeau et les boutons View) */
+        --teal-main: #1AB2B8; 
+        /* Fond clair pour le glassmorphism */
+        --teal-light: #d1eff3; 
+        /* Vert clair pour le succès (Terminée) */
+        --success-light: #d4edda; 
+        /* Bleu clair pour le primaire (En cours) */
+        --primary-light: #cce5ff; 
+        --text-dark: #333;
+        --border-color: rgba(255, 255, 255, 0.4);
+        /* Couleurs pour les statuts */
+        --color-terminee: #155724;
+        --color-en-cours: #83bdde;
+        
+    }
+
+    /* --- EFFET GLASSMORPHISM GÉNÉRAL --- */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--border-color);
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        transition: box-shadow 0.3s, transform 0.3s;
+        height: 100%; /* S'assure que les cartes sont de hauteur égale */
+    }
+    .glass-card:hover {
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+    }
+
+    /* --- STATS CARDS (EN HAUT) --- */
+    .stat-card {
+        padding: 20px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+    .stat-number {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+    /* Couleurs spécifiques pour les chiffres des stats */
+    .stat-total .stat-number { color: #2c93b6; }
+    .stat-pending .stat-number { color: #007bff; }
+    .stat-done .stat-number { color: #4CAF50; }
+
+    .stat-label {
+        font-size: 1rem;
+        color: #777;
+        font-weight: 500;
+    }
+
+    /* --- ANALYSE CARDS (GRILLE PRINCIPALE) --- */
+    .analyse-card {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-code {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+    }
+
+    /* --- PASTILLES (BADGES) --- */
+    .badge-status {
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .status-terminee {
+        background-color: var(--success-light);
+        color: var(--color-terminee);
+    }
+
+    .status-en-cours {
+        background-color: var(--primary-light);
+        color: var(--color-en-cours);
+    }
+    
+    .badge-category {
+        background-color: var(--teal-light);
+        color: var(--teal-main);
+        font-size: 0.8rem;
+        margin-top: 5px;
+        align-self: flex-start; /* Aligne la pastille à gauche */
+    }
+
+    /* --- INFOS DÉTAILS --- */
+    .detail-item {
+        font-size: 0.95rem;
+        color: #555;
+        margin-top: 5px;
+    }
+    .detail-item i {
+        color: var(--teal-main);
+        margin-right: 5px;
+        width: 20px; /* Alignement des icônes */
+        text-align: center;
+    }
+
+    /* --- FOOTER/ACTIONS --- */
+    .card-actions {
+        margin-top: auto;
+        padding-top: 15px;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    /* Bouton View */
+    .btn-view {
+        background-color: var(--teal-main);
+        border-color: var(--teal-main);
+        color: white;
+        font-weight: 500;
+    }
+    .btn-view:hover {
+        background-color: var(--color-en-cours); /* Un bleu plus foncé au survol */
+        border-color: var(--color-en-cours);
+    }
+    /* ========================== */
+/* Beaker Animation */
+/* ========================== */
+.beaker {
+    width: 70px;
+    height: 84px;
+    position: relative;
+    animation: float 3s ease-in-out infinite 0.5s;
+}
+
+.beaker-body {
+    width: 56px;
+    height: 70px;
+    border: 4px solid #2ecc71;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    position: absolute;
+    bottom: 0;
+    left: 7px;
+    background: linear-gradient(to bottom, rgba(46, 204, 113, 0.1) 0%, rgba(46, 204, 113, 0.3) 100%);
+    overflow: hidden;
+}
+
+.beaker-top {
+    width: 70px;
+    height: 7px;
+    background: #2ecc71;
+    position: absolute;
+    top: 7px;
+    border-radius: 4px;
+}
+
+.beaker-liquid {
+    width: 100%;
+    height: 60%;
+    background: linear-gradient(to bottom, rgba(46, 204, 113, 0.6), rgba(46, 204, 113, 0.8));
+    position: absolute;
+    bottom: 0;
+    animation: bubble 2s ease-in-out infinite;
+}
+
+.bubble {
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    position: absolute;
+    animation: rise 2s ease-in-out infinite;
+}
+
+.bubble:nth-child(1) { left: 20%; animation-delay: 0s; }
+.bubble:nth-child(2) { left: 50%; animation-delay: 0.7s; }
+.bubble:nth-child(3) { left: 70%; animation-delay: 1.4s; }
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+}
+
+@keyframes bubble {
+    0%, 100% { height: 60%; }
+    50% { height: 65%; }
+}
+
+@keyframes rise {
+    0% { bottom: 0; opacity: 0; }
+    50% { opacity: 1; }
+    100% { bottom: 100%; opacity: 0; }
+}
+.highlight-updated {
+    animation: highlightFade 2s ease-out;
+    box-shadow: 0 0 25px rgba(48, 204, 225, 0.7);
+    border: 2px solid rgba(0, 255, 0, 0.8) !important;
+}
+
+@keyframes highlightFade {
+    0% {
+        box-shadow: 0 0 25px rgba(0, 255, 0, 0.9);
+        border-color: rgba(0, 255, 0, 1);
+        transform: scale(1.02);
+    }
+    100% {
+        box-shadow: none;
+        border-color: rgba(0, 255, 0, 0);
+        transform: scale(1);
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Popup for sorting -->
+<div class="modal fade" id="sortModal" tabindex="-1" aria-labelledby="sortModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="get">
+        <div class="modal-header">
+          <h5 class="modal-title" id="sortModalLabel">Trier les analyses</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <select name="sort" class="form-select">
+            <option value="id" {% if sort == "id" %}selected{% endif %}>Tri par défaut</option>
+            <option value="nom_analyse" {% if sort == "nom_analyse" %}selected{% endif %}>Nom A→Z</option>
+            <option value="-nom_analyse" {% if sort == "-nom_analyse" %}selected{% endif %}>Nom Z→A</option>
+            <option value="date_deb" {% if sort == "date_deb" %}selected{% endif %}>Date début ↑</option>
+            <option value="-date_deb" {% if sort == "-date_deb" %}selected{% endif %}>Date début ↓</option>
+            <option value="etat" {% if sort == "etat" %}selected{% endif %}>État A→Z</option>
+            <option value="-etat" {% if sort == "-etat" %}selected{% endif %}>État Z→A</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Appliquer</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Button to open sort popup -->
+<button type="button" class="btn btn-outline-secondary mb-3" data-bs-toggle="modal" data-bs-target="#sortModal">
+  Trier
+</button>
+
+<!-- Search bar -->
+<form method="get" class="mb-4 d-flex gap-2">
+  <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Rechercher...">
+  <input type="hidden" name="sort" value="{{ sort }}">
+  <button type="submit" class="btn btn-primary">Rechercher</button>
+</form>
+
+<!-- List of analyses -->
+<div class="row g-4">
+  {% for analyse in analyses %}
+  <div class="col-lg-4 col-md-6">
+    <div class="glass-card analyse-card h-100 {% if updated_id == analyse.id %}highlight-updated{% endif %}">
+      <div class="card-code">
+        <span>{{ analyse.nom_analyse }}</span>
+        <span class="badge-status {% if analyse.etat == 'Terminée' %}status-terminee{% elif analyse.etat == 'En cours' %}status-en-cours{% endif %}">
+          {{ analyse.etat }}
+        </span>
+      </div>
+      <!-- other card details here, like type, responsable, dates... -->
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12">
+    <div class="alert alert-info text-center glass-card">Aucune analyse n'a été trouvée.</div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="container py-4">
+    <h2 class="mb-5 text-center" style="color: var(--text-dark);">Tableau de Bord des Analyses</h2>
+    
+    <div class="row g-4 mb-5">
+        
+        <div class="col-md-4">
+            <div class="glass-card stat-card stat-total">
+                <div class="stat-number">10</div>
+                <div class="stat-label">Total analyses</div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="glass-card stat-card stat-pending">
+                <div class="stat-number">5</div>
+                <div class="stat-label">En cours</div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="glass-card stat-card stat-done">
+                <div class="stat-number">4</div>
+                <div class="stat-label">Terminées</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row g-4">
+        {% for analyse in analyses %}
+        
+        <div class="col-lg-4 col-md-6">
+            <div class="glass-card analyse-card {% if updated_id == analyse.id %}highlight-updated{% endif %}">
+                <div class="detail-item d-flex align-items-center justify-content-between">
+        <div>
+            <i class="fas fa-microscope"></i> {{ analyse.technique_utilisee|default:'Technique N/A' }}
+                </div>
+                     <!-- Beaker -->
+                        <div class="beaker">
+                         <div class="beaker-top"></div>
+                         <div class="beaker-body">
+                          <div class="beaker-liquid">
+                            <div class="bubble"></div>
+                            <div class="bubble"></div>
+                            <div class="bubble"></div>
+                            </div>
+                        </div>
+                        </div>
+        </div>
+                <div class="card-code">
+                    <span class="text-uppercase">{{ analyse.echantillon_code }}</span>
+                    {% if analyse.etat == 'Terminée' %}
+                        <span class="badge-status status-terminee">Terminée</span>
+                    {% elif analyse.etat == 'En cours' %}
+                        <span class="badge-status status-en-cours">En cours</span>
+                    {% else %}
+                        <span class="badge-status bg-secondary text-white">{{ analyse.get_etat_display }}</span>
+                    {% endif %}
+                </div>
+                
+                <span class="badge-status badge-category mb-2">
+                    <i class="fas fa-cubes me-1"></i> {{ analyse.category|default:'Non catégorisée' }}
+                </span>
+                
+                <div class="detail-item">
+                    <i class="fas fa-file-alt"></i> {{ analyse.get_type_display }}
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-user-injured"></i> Patient: <strong>{{ analyse.patient_id }}</strong>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-microscope"></i> {{ analyse.technique_utilisee|default:'Technique N/A' }}
+                </div>
+
+                <div class="card-actions d-flex justify-content-between">
+                    <div class="detail-info d-flex flex-column align-items-start">
+                        <span class="text-muted small">Prélèvement</span>
+                        <strong>{{ analyse.date_prelevement|date:"d/m/Y" }}</strong>
+                    </div>
+                    <div class="detail-info d-flex flex-column align-items-end">
+                        <span class="text-muted small">Coût</span>
+                        <strong style="color: var(--teal-main);">{{ analyse.cout|default:'0.00' }} €</strong>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-3">
+                    <button type="button" class="btn btn-sm btn-view" data-bs-toggle="modal" data-bs-target="#analyseModal{{ analyse.id }}">
+                        <i class="fas fa-eye"></i> View
+                    </button>
+                    <a href="{% url 'Labapp:analyse_update' analyse.id %}" class="btn btn-sm btn-view">
+                        <i class="fas fa-edit"></i> Update
+                    </a>
+                    <button type="button" class="btn btn-sm btn-view" data-bs-toggle="modal" data-bs-target="#deleteAnalyseModal{{ analyse.id }}">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </button>
+                    <a href="{% url 'Labapp:analyse_pdf' analyse.id %}" class="btn btn-sm btn-danger">
+                         <i class="fas fa-file-pdf"></i> PDF
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="analyseModal{{ analyse.id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: var(--teal-main); color: white;">
+                        <h5 class="modal-title">{{ analyse.echantillon_code }} - Détails</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" style="filter: invert(1);"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Type:</strong> {{ analyse.get_type_display }}</p>
+                        <p><strong>Category:</strong> {{ analyse.category }}</p>
+                        <p><strong>Patient ID:</strong> {{ analyse.patient_id }}</p>
+                        <p><strong>Technique utilisée:</strong> {{ analyse.technique_utilisee }}</p>
+                        <p><strong>Date prélèvement:</strong> {{ analyse.date_prelevement }}</p>
+                        {% if analyse.date_res %}
+                        <p><strong>Date résultat:</strong> {{ analyse.date_res }}</p>
+                        {% endif %}
+                        <p><strong>Etat:</strong> {{ analyse.get_etat_display }}</p>
+                        <p><strong>Coût:</strong> {{ analyse.cout }}</p>
+                        <p><strong>Commentaire:</strong> {{ analyse.commentaire }}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="deleteAnalyseModal{{ analyse.id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" action="{% url 'Labapp:analyse_delete' analyse.id %}">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h5 class="modal-title">Supprimer "{{ analyse.echantillon_code }}" ?</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            <p>Cette action est irréversible. Êtes-vous sûr de vouloir supprimer cette analyse ?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-danger">Oui, supprimer</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

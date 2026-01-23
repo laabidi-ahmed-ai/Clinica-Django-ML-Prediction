@@ -1,0 +1,986 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <link rel="icon" type="image/x-icon" href="{% static 'Front/assets/images/logo_site.ico' %}" />
+    <title>Donation Page - Clinica+</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans&display=swap" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="{% static 'Front/assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'Front/assets/img/apple-touch-icon.png % '}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'Front/assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/assets/vendor/aos/aos.css '%}" rel="stylesheet">
+  <link href="{% static 'Front/assets/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'Front/assets/css/main.css' %}" rel="stylesheet">
+    <style>
+        .section-title {
+            color: #2CA4B4;
+            text-align: center;
+            font-size: 50px;
+            font-family: 'Georgia', serif;
+            margin-bottom: 30px;
+        }
+        
+        .hero-section {
+            position: relative;
+            background-image: url('{% static "Front/assets/images/imagePub.jpg" %}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 62vh;
+            z-index: 1;
+        }
+        
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 2;
+        }
+        
+        .hero-section .container {
+            position: relative;
+            z-index: 3;
+        }
+        
+        .hero-section h1 {
+            font-size: 2.5rem;
+        }
+        
+        .cta-overlay-section {
+            background-image: linear-gradient(15deg, #13547a 0%, #80d0c7 100%);
+            padding: 55px 0;
+            color: white;
+        }
+        
+        .cta-overlay-section .btn {
+            padding: 12px 30px;
+            font-weight: bold;
+            border-radius: 25px;
+        }
+        
+        /* Service Section */
+        /* Service Section - Couleurs Variées */
+/* Service Section - Couleurs Variées */
+/* Service Section - Couleurs Variées */
+.service {
+    padding: 60px 0;
+    background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+}
+
+.service-item {
+    background-color: #f1f0fe;
+    border-radius: 20px;
+    padding: 60px 20px 30px 20px;
+    margin: 60px 0 20px;
+    position: relative;
+    text-align: center;
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease-in-out;
+    border: 2px solid transparent;
+}
+
+.service-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.12);
+}
+
+/* Icônes */
+.service-item .service-icon {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 40px;
+    transition: all 0.4s ease-in-out;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.service-item:hover .service-icon {
+    transform: translateX(-50%) translateY(-8px) scale(1.1);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* Couleur 1 - Bleu Turquoise (Medical Supplies) */
+.service-item-1 .service-icon {
+    background: linear-gradient(135deg, #50ccd3 0%, #3ab5bd 100%);
+    color: white;
+}
+.service-item-1:hover {
+    border-color: rgba(80, 204, 211, 0.3);
+}
+.service-item-1:hover .service-text h3 {
+    color: #50ccd3;
+}
+
+/* Couleur 2 - Rouge/Rose (Health Care) */
+.service-item-2 .service-icon {
+    background: linear-gradient(135deg, #ff6b9d 0%, #c94b7c 100%);
+    color: white;
+}
+.service-item-2:hover {
+    border-color: rgba(255, 107, 157, 0.3);
+}
+.service-item-2:hover .service-text h3 {
+    color: #ff6b9d;
+}
+
+/* Couleur 3 - Vert (Medical Equipment) */
+.service-item-3 .service-icon {
+    background: linear-gradient(135deg, #45d39c 0%, #2ecc71 100%);
+    color: white;
+}
+.service-item-3:hover {
+    border-color: rgba(46, 204, 113, 0.3);
+}
+.service-item-3:hover .service-text h3 {
+    color: #45d39c;
+}
+
+/* Couleur 4 - Orange (Volunteer Support) */
+.service-item-4 .service-icon {
+    background: linear-gradient(135deg, #ffa94d 0%, #f77f00 100%);
+    color: white;
+}
+.service-item-4:hover {
+    border-color: rgba(255, 169, 77, 0.3);
+}
+.service-item-4:hover .service-text h3 {
+    color: #ffa94d;
+}
+
+/* Couleur 5 - Violet (Emergency Aid) */
+.service-item-5 .service-icon {
+    background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+    color: white;
+}
+.service-item-5:hover {
+    border-color: rgba(155, 89, 182, 0.3);
+}
+.service-item-5:hover .service-text h3 {
+    color: #9b59b6;
+}
+
+/* Couleur 6 - Bleu Foncé (Community Health) */
+.service-item-6 .service-icon {
+    background: linear-gradient(135deg, #5b7dff 0%, #3b5bdb 100%);
+    color: white;
+}
+.service-item-6:hover {
+    border-color: rgba(91, 125, 255, 0.3);
+}
+.service-item-6:hover .service-text h3 {
+    color: #5b7dff;
+}
+
+/* Texte */
+.service-item .service-text h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #2d2d2d;
+    margin: 0;
+    transition: color 0.3s ease;
+}
+
+/* Titre principal */
+.section-title {
+    color: #2CA4B4;
+    text-align: center;
+    font-size: 42px;
+    font-family: 'Georgia', serif;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 32px;
+    }
+}
+
+        /* Featured Blocks */
+        .featured-block {
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .featured-block:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .featured-block-image {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin: auto;
+        }
+        
+        .featured-block-text {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #333;
+        }
+        
+        /* Upcoming Publications */
+        /* Upcoming Publications - Version Améliorée */
+/* Upcoming Publications - Hauteur réduite */
+.upcoming {
+    padding: 60px 0;
+    background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+}
+
+.upcoming .item {
+    background: linear-gradient(135deg, #f1f0fe 0%, #faf9ff 100%);
+    border-radius: 25px;
+    position: relative;
+    padding: 30px 40px 30px 240px;  /* ← Réduit padding vertical */
+    margin-bottom: 70px;  /* ← Réduit margin bottom */
+    min-height: 160px;  /* ← Définit une hauteur minimale */
+    box-shadow: 0 8px 30px rgba(19, 84, 122, 0.08);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: visible;
+}
+
+/* Effet hover sur la carte */
+.upcoming .item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 45px rgba(19, 84, 122, 0.15);
+}
+
+/* Image plus petite */
+.upcoming .item .image {
+    position: absolute;
+    left: 20px;
+    top: -35px;  /* ← Ajusté */
+    width: 200px;  /* ← Réduit de 260px à 200px */
+    height: 200px;  /* ← Réduit de 260px à 200px */
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+    transition: all 0.5s ease;
+}
+
+.upcoming .item:hover .image {
+    transform: scale(1.05) rotate(2deg);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.3);
+}
+
+.upcoming .item .image img {
+    position: static;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+    transition: transform 0.6s ease;
+}
+
+.upcoming .item:hover .image img {
+    transform: scale(1.1);
+}
+
+/* Liste avec espacement réduit */
+.upcoming .item ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.upcoming .item ul li {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 25px;
+    margin-bottom: 8px;  /* ← Réduit */
+}
+
+.upcoming .item ul li:first-child {
+    width: 100%;
+    margin-bottom: 12px;  /* ← Réduit */
+}
+
+/* Badge category */
+.upcoming .item span.category {
+    font-size: 12px;  /* ← Légèrement réduit */
+    text-transform: uppercase;
+    color: #13547a;
+    background-color: #fff;
+    padding: 6px 16px;  /* ← Réduit padding */
+    border-radius: 20px;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 10px;  /* ← Réduit */
+    box-shadow: 0 4px 12px rgba(19, 84, 122, 0.12);
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+}
+
+.upcoming .item:hover span.category {
+    transform: translateX(5px);
+    box-shadow: 0 6px 18px rgba(19, 84, 122, 0.2);
+}
+
+/* Titres plus compacts */
+.upcoming .item h4 {
+    font-size: 20px;  /* ← Réduit de 24px */
+    font-weight: 700;
+    color: #2d2d2d;
+    margin-bottom: 12px;  /* ← Réduit */
+    line-height: 1.3;
+    transition: color 0.3s ease;
+}
+
+.upcoming .item:hover h4 {
+    color: #2CA4B4;
+}
+
+.upcoming .item ul li span {
+    font-size: 13px;  /* ← Légèrement réduit */
+    color: #666;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 3px;
+}
+
+.upcoming .item h6 {
+    font-size: 15px;  /* ← Réduit de 16px */
+    color: #13547a;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Icônes avant les labels */
+.upcoming .item ul li span::before {
+    content: '📅';
+    margin-right: 5px;
+}
+
+.upcoming .item ul li:nth-child(2) span::before {
+    content: '📅';
+}
+
+.upcoming .item ul li:nth-child(3) span::before {
+    content: '📍';
+}
+
+/* Bouton Donate Now - Plus compact */
+.upcoming .item a {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(135deg, #8fd8d1 0%, #2CA4B4 100%);
+    width: 150px;  /* ← Réduit de 180px */
+    height: 110px;  /* ← Réduit de 140px */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;  /* ← Réduit de 18px */
+    font-weight: 700;
+    color: #fff;
+    border-radius: 55px 0px 0px 55px;  /* ← Ajusté */
+    text-decoration: none;
+    box-shadow: -10px 0 30px rgba(44, 164, 180, 0.3);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    overflow: hidden;
+    z-index: 10;
+}
+
+/* Effet de vague au survol */
+.upcoming .item a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: left 0.5s ease;
+}
+
+.upcoming .item a:hover::before {
+    left: 100%;
+}
+
+/* Animation du bouton */
+.upcoming .item a:hover {
+    width: 170px;  /* ← Ajusté */
+    padding-right: 15px;
+    box-shadow: -15px 0 40px rgba(44, 164, 180, 0.5);
+    transform: translateY(-50%) translateX(10px);
+}
+
+/* Icône dans le bouton */
+.upcoming .item a i {
+    font-size: 28px;  /* ← Réduit de 32px */
+    margin-bottom: 5px;
+    transition: transform 0.4s ease;
+}
+
+.upcoming .item a:hover i {
+    transform: translateX(10px) rotate(15deg);
+    animation: bounce 0.6s ease infinite;
+}
+
+/* Animation bounce pour l'icône */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateX(10px) rotate(15deg) translateY(0);
+    }
+    50% {
+        transform: translateX(10px) rotate(15deg) translateY(-8px);
+    }
+}
+
+/* Animation de pulsation */
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: -10px 0 30px rgba(44, 164, 180, 0.3);
+    }
+    50% {
+        box-shadow: -10px 0 40px rgba(44, 164, 180, 0.6);
+    }
+}
+
+.upcoming .item a {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .upcoming .item {
+        padding: 220px 20px 25px 20px;
+    }
+    
+    .upcoming .item .image {
+        left: 50%;
+        transform: translateX(-50%);
+        top: -35px;
+    }
+    
+    .upcoming .item a {
+        position: static;
+        width: 100%;
+        border-radius: 20px;
+        margin-top: 15px;
+        transform: none;
+        height: 60px;
+    }
+    
+    .upcoming .item a:hover {
+        transform: translateY(-5px);
+    }
+}
+
+/* Titre de section */
+.section-heading {
+    margin-bottom: 50px;
+}
+
+.section-title {
+    font-size: 48px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #2CA4B4 0%, #13547a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+}
+
+        
+        /* Event Cards */
+        .event-card {
+            position: relative;
+            width: 100%;
+            max-width: 300px;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            margin: 15px;
+        }
+        
+        .event-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .event-details {
+            padding: 15px;
+        }
+        
+        .event-details h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #01d6a3;
+        }
+        
+        .card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.3s ease;
+        }
+        
+        .event-card:hover .card-overlay {
+            opacity: 1;
+        }
+        
+        .card-overlay a {
+            background-color: #ffffff;
+            color: #2CA4B4;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+        
+        .card-overlay a:hover {
+            background-color: #2CA4B4;
+            color: #ffffff;
+        }
+        
+        .pagination .page-item.active .page-link {
+            background-color: #8fd8d1;
+            color: #fff;
+            border-color: #8fd8d1;
+        }
+        
+        .navbar {
+            position: fixed !important;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            background-color: white !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+
+        
+    </style>
+</head>
+<header id="header" class="header sticky-top">
+
+    <div class="topbar d-flex align-items-center">
+      <div class="container d-flex justify-content-center justify-content-md-between">
+        <div class="d-none d-md-flex align-items-center">
+          <i class="bi bi-clock me-1"></i> Monday - Saturday, 8AM to 10PM
+        </div>
+        <div class="d-flex align-items-center">
+          <i class="bi bi-phone me-1"></i> Call us now +1 5589 55488 55
+        </div>
+      </div>
+    </div><!-- End Top Bar -->
+
+    <div class="branding d-flex align-items-center">
+
+      <div class="container position-relative d-flex align-items-center justify-content-end">
+        <a href="index.html" class="logo d-flex align-items-center me-auto">
+          <img src="{% static 'Front/assets/images/logo_site.png' %}" alt="" style="width: 120px; height: 90px;">
+          <!-- Uncomment the line below if you also wish to use a text logo -->
+          <!-- <h1 class="sitename">Medicio</h1>  -->
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+         <ul style="display: flex; align-items: center; list-style: none; margin: 0; padding: 0; gap: 30px;">
+            <li><a href="{% url 'front_index' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">HOME</a></li>
+            <li><a href="#" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">ABOUT</a></li>
+            <li><a href="{% url 'index' %}" style="text-decoration: none; color: #333; font-weight: 500;">PRODUCTS</a></li>
+            <li><a href="{% url 'donation:front_publication_list' %}" class="active" style="text-decoration: none; color: #3fbbc0; font-weight: 600;">DONATION</a></li>
+            <li><a href="{% url 'stages:liste_stages_front' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">STAGE</a></li>
+            <li><a href="{% url 'Labapp:home' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">LABO</a></li>
+            <li><a href="{% url 'my_patient_portal' %}" style="text-decoration: none; color: #333; font-weight: 500; transition: color 0.3s;">PATIENT</a></li>
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+
+        <a class="cta-btn" href="{% url 'public_appointment' %}">Make an Appointment</a>
+        <ul class="navbar-nav ms-auto">
+                        {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle fa-lg" style="font-size: 34px;"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="{% url 'donation:donation_create' %}">
+                                    <i class="fas fa-heart" style="color: #13547a;"></i> My Donations
+                                </a></li>
+                                <li><a class="dropdown-item" href="#">
+                                    <i class="fas fa-sign-out-alt" style="color: #13547a;"></i> Logout
+                                </a></li>
+                            </ul>
+                        </li>
+                        {% else %}
+                        <li><a href="{% url 'loginFront' %}" class="nav-auth-btn nav-login-btn" style="text-decoration: none; background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%); color: white; font-weight: 600; padding: 8px 20px; border-radius: 25px; display: inline-block; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(63, 187, 192, 0.3);"><i class="bi bi-box-arrow-in-right"></i> LOGIN</a></li>
+                        {% endif %}
+                    </ul>
+      </div>
+
+    </div>
+
+  </header>
+
+<body class="topics-listing-page" id="top">
+    <main>
+       
+        
+        <div style="height: 5px;"></div>
+        
+        <!-- Hero Section -->
+        <section class="hero-section d-flex justify-content-center align-items-center">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-12 mx-auto">
+                        <h1 class="text-white text-center">Your donation, <br> Is others inspiration.</h1>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- CTA Section -->
+        <center>
+        <section class="cta-overlay-section">
+            <div class="container">
+                <div class="row align-items-center justify-content-between">
+                    <div class="col-md-8">
+                        <h2 class="text-white mb-2">Ready to make a change?</h2>
+                        <p class="text-light mb-0">Join us in our mission to bring hope and support to those in need. Every effort counts!</p>
+                    </div>
+                    <div class="col-md-4 text-md-end text-center mt-3 mt-md-0">
+                        <a href="#options" class="btn btn-light">Donate Now</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        </center>
+        
+        <div style="height: 110px;"></div>
+        
+        <!-- Service Section -->
+        <!-- Service Section - Our Mission -->
+         <!-- Service Section - Our Mission -->
+<div class="service">
+    <div class="container">
+        <div class="section-header text-center">
+            <h2 class="section-title">We believe that we can save more lives with you</h2>
+        </div>
+        
+        <div class="row">
+            <!-- Medical Supplies -->
+            <div class="col-lg-4 col-md-6">
+                <div class="service-item service-item-1">
+                    <div class="service-icon">
+                        <i class="fas fa-medkit"></i>
+                    </div>
+                    <div class="service-text">
+                        <h3>Medical Supplies</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Health Care -->
+            <div class="col-lg-4 col-md-6">
+                <div class="service-item service-item-2">
+                    <div class="service-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <div class="service-text">
+                        <h3>Health Care</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Medical Equipment -->
+            <div class="col-lg-4 col-md-6">
+                <div class="service-item service-item-3">
+                    <div class="service-icon">
+                        <i class="fas fa-stethoscope"></i>
+                    </div>
+                    <div class="service-text">
+                        <h3>Medical Equipment</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <!-- Volunteer Support -->
+            <div class="col-lg-4 col-md-6">
+                <div class="service-item service-item-4">
+                    <div class="service-icon">
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
+                    <div class="service-text">
+                        <h3>Volunteer Support</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Emergency Aid -->
+            <div class="col-lg-4 col-md-6">
+                <div class="service-item service-item-5">
+                    <div class="service-icon">
+                        <i class="fas fa-ambulance"></i>
+                    </div>
+                    <div class="service-text">
+                        <h3>Emergency Aid</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Community Health -->
+            <div class="col-lg-4 col-md-6">
+                <div class="service-item service-item-6">
+                    <div class="service-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="service-text">
+                        <h3>Community Health</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+        
+        <!-- Featured Options -->
+        <section class="section-padding" id="options">
+            <div class="container">
+                <div class="row" style="justify-content: center;">
+                    <div class="col-lg-10 col-12 text-center mx-auto">
+                        <h2 class="mb-5 section-title">Welcome to Clinica+ Charity</h2>
+                    </div>
+                    
+                    <div class="col-lg-3 col-md-6 col-12 mb-4">
+                        <div class="featured-block d-flex justify-content-center align-items-center">
+                            <a href="#explore" class="d-block">
+                                <img src="{% static 'Front/assets/images/icons/hands.png' %}" class="featured-block-image img-fluid" alt="">
+                                <p class="featured-block-text">Become a <strong>Volunteer</strong></p>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-3 col-md-6 col-12 mb-4">
+                        <div class="featured-block d-flex justify-content-center align-items-center">
+                            <a href="#explore" class="d-block">
+                                <img src="{% static 'Front/assets/images/icons/receive.png' %}" class="featured-block-image img-fluid" alt="">
+                                <p class="featured-block-text">Make a <strong>Donation</strong></p>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-3 col-md-6 col-12 mb-4">
+                        <div class="featured-block d-flex justify-content-center align-items-center">
+                            <a href="{% url 'donation:donation_create' %}" class="d-block">
+                                <img src="{% static 'Front/assets/images/icons/my donations.png' %}" class="featured-block-image img-fluid" alt="">
+                                <p class="featured-block-text">My <strong>Donations</strong></p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+       <!-- Upcoming Publications -->
+<section class="upcoming" style="margin-top: 60px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="section-heading">
+                    <h6 class="section-title">Upcoming Publications</h6>
+                    <h5 style="color:#2CA4B4; font-family: 'Georgia', serif;">In 10 Days</h5>
+                </div>
+            </div>
+            
+            {% for pub in upcoming_publications %}
+            <div class="col-lg-12 col-md-6 mb-4">
+                <div class="item">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="image">
+                                {% if pub.pubPicture %}
+                                <img src="{{ pub.pubPicture.url }}" alt="publication">
+                                {% else %}
+                                <img src="{% static 'Front/assets/images/default.jpg' %}" alt="publication">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-lg-9">
+                            <ul class="list-unstyled">
+                                <li>
+                                    <span class="category">Clinica+</span>
+                                    <h4>{{ pub.title }}</h4>
+                                </li>
+                                <li>
+                                    <span>Date:</span>
+                                    <h6>{{ pub.deadline|date:"d M Y" }}</h6>
+                                </li>
+                                <li>
+                                    <span>Address:</span>
+                                    <h6>{{ pub.address }}</h6>
+                                </li>
+                            </ul>
+                            <a href="{% url 'donation:front_publication_detail' pub.pk %}">
+                                <i class="fa fa-angle-right"></i> <strong>Donate Now</strong>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center">No upcoming publications in the next 10 days.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+        
+        <!-- All Publications -->
+        <section id="events">
+            <center>
+                <h2 class="section-title section-padding" id="explore">Explore Some Hot <em>Publications</em></h2>
+            </center>
+            
+            <div class="container">
+                <div id="publications-container" class="d-flex flex-wrap justify-content-center">
+                    {% for pub in publications %}
+                    <div class="event-card m-2">
+                        {% if pub.pubPicture %}
+                        <img src="{{ pub.pubPicture.url }}" alt="Publication Image">
+                        {% else %}
+                        <img src="{% static 'Front/assets/images/default.jpg' %}" alt="Publication Image">
+                        {% endif %}
+                        
+                        <div class="event-details">
+                            <center><h3 class="section-title">{{ pub.title }}</h3></center>
+                            <p><strong>Date:</strong> {{ pub.deadline|date:"d M Y" }}</p>
+                            <p><strong>Address:</strong> {{ pub.address }}</p>
+                            <p><strong>Description:</strong> {{ pub.description|truncatewords:20 }}</p>
+                        </div>
+                        <div class="card-overlay">
+                            <a href="{% url 'donation:front_publication_detail' pub.pk %}">More Details</a>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-center">No publications available.</p>
+                    {% endfor %}
+                </div>
+                
+                <!-- Pagination -->
+                {% if is_paginated %}
+                <nav>
+                    <ul class="pagination justify-content-center mt-3">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                        </li>
+                        {% endif %}
+                        
+                        {% for num in page_obj.paginator.page_range %}
+                        <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+            </div>
+        </section>
+        
+        <div style="height: 110px;"></div>
+        
+        <!-- Footer -->
+        <footer class="site-footer section-padding bg-dark text-white">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 col-md-4 col-6 mb-4 mb-lg-0">
+                        <h6 class="mb-3">Information</h6>
+                        <p class="d-flex mb-1">
+                            <a href="tel:+21699654322" class="text-white">+216 99 654 322</a>
+                        </p>
+                        <p class="d-flex">
+                            <a href="mailto:clinica@gmail.com" class="text-white">clinica@gmail.com</a>
+                        </p>
+                    </div>
+                    
+                    <div class="col-lg-2 col-12 ms-auto">
+                        <ul class="social-icon mt-lg-5 mt-3 mb-4 list-unstyled">
+                            <li class="d-inline-block me-2">
+                                <a href="#" class="text-white"><i class="bi bi-instagram"></i></a>
+                            </li>
+                            <li class="d-inline-block me-2">
+                                <a href="#" class="text-white"><i class="bi bi-twitter"></i></a>
+                            </li>
+                            <li class="d-inline-block">
+                                <a href="#" class="text-white"><i class="bi bi-whatsapp"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <p class="text-center">Copyright © 2025 Clinica+. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </main>
+    
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

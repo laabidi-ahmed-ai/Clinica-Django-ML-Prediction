@@ -1,0 +1,800 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>My Info - Medicio Patient Portal</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'Front/Patient/assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/Patient/assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/Patient/assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/Patient/assets/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/Patient/assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'Front/Patient/assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'Front/Patient/assets/css/main.css' %}" rel="stylesheet">
+
+  <style>
+    .hero-section {
+      background: linear-gradient(135deg, #3fbbc0 0%, #2c9fa5 100%);
+      color: white;
+      padding: 100px 0 60px;
+      margin-top: 70px;
+    }
+    
+    .section-nav {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+    
+    .section-nav .nav-link {
+      color: #6c757d;
+      border-bottom: 2px solid transparent;
+      padding: 10px 20px;
+      transition: all 0.3s;
+    }
+    
+    .section-nav .nav-link:hover,
+    .section-nav .nav-link.active {
+      color: #3fbbc0;
+      border-bottom-color: #3fbbc0;
+    }
+    
+    .timeline-item {
+      border-left: 3px solid #3fbbc0;
+      padding-left: 30px;
+      position: relative;
+      margin-bottom: 40px;
+    }
+    
+    .timeline-marker {
+      position: absolute;
+      left: -12px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #3fbbc0;
+      border: 3px solid white;
+      box-shadow: 0 0 0 3px #3fbbc0;
+    }
+    
+    .timeline-date {
+      font-weight: 600;
+      color: #3fbbc0;
+      margin-bottom: 10px;
+    }
+    
+    .timeline-card {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 15px;
+    }
+    
+    .badge-history { background-color: #3fbbc0; }
+    .badge-appointment { background-color: #6c757d; }
+    .badge-hospitalization { background-color: #dc3545; }
+    .badge-emergency { background-color: #ffc107; }
+    
+    .stats-card {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    
+    .stats-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #3fbbc0;
+    }
+    
+    .stats-label {
+      color: #6c757d;
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+    
+    .info-card {
+      background: white;
+      border-radius: 10px;
+      padding: 25px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    
+    .info-card h4 {
+      color: #3fbbc0;
+      border-bottom: 2px solid #3fbbc0;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .coming-soon {
+      text-align: center;
+      padding: 60px 20px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+    
+    .coming-soon i {
+      font-size: 4rem;
+      color: #3fbbc0;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body class="index-page">
+
+  <header id="header" class="header sticky-top">
+    <div class="topbar d-flex align-items-center">
+      <div class="container d-flex justify-content-center justify-content-md-between">
+        <div class="contact-info d-flex align-items-center">
+          <i class="bi bi-envelope d-flex align-items-center"><a href="mailto:contact@example.com">contact@example.com</a></i>
+          <i class="bi bi-phone d-flex align-items-center ms-4"><span>+1 5589 55488 55</span></i>
+        </div>
+        <div class="social-links d-none d-md-flex align-items-center">
+          <a href="#" class="twitter"><i class="bi bi-twitter-x"></i></a>
+          <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="branding d-flex align-items-center">
+      <div class="container position-relative d-flex align-items-center justify-content-between">
+        <a href="{% url 'front_index' %}" class="logo d-flex align-items-center me-auto">
+                    <img src="{% static 'Front/assets/images/logo_site.png' %}" alt="" style="width: 120px; height: 90px;">
+          </a>
+
+        <nav id="navmenu" class="navmenu">
+          <ul>
+            <li><a href="{% url 'site_home' %}">Home</a></li>
+            <li><a href="{% url 'my_patient_portal' %}" class="active">My Info</a></li>
+            <li><a href="{% url 'public_appointment' %}">Make Appointment</a></li>
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+
+        <ul class="navbar-nav ms-auto">
+                        {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle fa-lg" style="font-size: 34px;"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="{% url 'donation:donation_create' %}">
+                                    <i class="fas fa-heart" style="color: #13547a;"></i> My Donations
+                                </a></li>
+                                <li><a class="dropdown-item" href="#">
+                                    <i class="fas fa-sign-out-alt" style="color: #13547a;"></i> Logout
+                                </a></li>
+                            </ul>
+                        </li>
+                        {% else %}
+                        <li><a href="{% url 'loginFront' %}" class="nav-auth-btn nav-login-btn" style="text-decoration: none; background: linear-gradient(135deg, #3fbbc0 0%, #2a9d9f 100%); color: white; font-weight: 600; padding: 8px 20px; border-radius: 25px; display: inline-block; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(63, 187, 192, 0.3);"><i class="bi bi-box-arrow-in-right"></i> LOGIN</a></li>
+                        {% endif %}
+                    </ul>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-8">
+            {% if patient %}
+            <h1 class="mb-3">My Patient Portal</h1>
+            <h3>{{ patient.first_name }} {{ patient.last_name }}</h3>
+            <p class="mb-0">
+              <i class="bi bi-calendar3"></i> Born: {{ patient.date_of_birth }}
+              {% if patient.cin %} | CIN: {{ patient.cin }}{% endif %}
+            </p>
+            {% else %}
+            <h1 class="mb-3">My Patient Portal</h1>
+            <p>Welcome to your personal healthcare portal</p>
+            {% endif %}
+          </div>
+          {% if patient %}
+          <div class="col-lg-4">
+            <div class="row g-3">
+              <div class="col-6">
+                <div class="stats-card">
+                  <div class="stats-number">{{ total_appointments }}</div>
+                  <div class="stats-label">Appointments</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="stats-card">
+                  <div class="stats-number">{{ total_entries }}</div>
+                  <div class="stats-label">Medical Records</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="py-5">
+      <div class="container">
+        {% if no_patient_record %}
+        <div class="alert alert-info" role="alert">
+          <h4 class="alert-heading"><i class="bi bi-info-circle me-2"></i>No Patient Record Found</h4>
+          <p>We couldn't find a patient record associated with your account ({{ user.email }}).</p>
+          <hr>
+          <p class="mb-0">Please contact the clinic to set up your patient profile, or <a href="{% url 'public_appointment' %}">make an appointment</a> to get started.</p>
+        </div>
+        {% else %}
+        
+        <!-- Navigation Tabs -->
+        <div class="section-nav">
+          <ul class="nav nav-pills" id="portalTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="overview-tab" data-bs-toggle="pill" data-bs-target="#overview" type="button" role="tab">
+                <i class="bi bi-speedometer2"></i> Overview
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="history-tab" data-bs-toggle="pill" data-bs-target="#history" type="button" role="tab">
+                <i class="bi bi-clipboard-pulse"></i> Medical History
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="tests-tab" data-bs-toggle="pill" data-bs-target="#tests" type="button" role="tab">
+                <i class="bi bi-file-medical"></i> Medical Tests
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="messages-tab" data-bs-toggle="pill" data-bs-target="#messages" type="button" role="tab">
+                <i class="bi bi-chat-dots"></i> Messages
+                {% if unread_messages_count > 0 %}
+                <span class="badge bg-danger ms-1">{{ unread_messages_count }}</span>
+                {% endif %}
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="appointments-tab" data-bs-toggle="pill" data-bs-target="#appointments" type="button" role="tab">
+                <i class="bi bi-calendar-check"></i> Appointments
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="payments-tab" data-bs-toggle="pill" data-bs-target="#payments" type="button" role="tab">
+                <i class="bi bi-credit-card"></i> Payments
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="portalTabsContent">
+          
+          <!-- Overview Tab -->
+          <div class="tab-pane fade show active" id="overview" role="tabpanel">
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="info-card">
+                  <h4><i class="bi bi-person-badge"></i> Personal Information</h4>
+                  <table class="table table-borderless">
+                    <tr>
+                      <td><strong>Full Name:</strong></td>
+                      <td>{{ patient.first_name }} {{ patient.last_name }}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Date of Birth:</strong></td>
+                      <td>{{ patient.date_of_birth }}</td>
+                    </tr>
+                    {% if patient.cin %}
+                    <tr>
+                      <td><strong>CIN:</strong></td>
+                      <td>{{ patient.cin }}</td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                      <td><strong>Email:</strong></td>
+                      <td>{{ patient.email }}</td>
+                    </tr>
+                    {% if patient.phone %}
+                    <tr>
+                      <td><strong>Phone:</strong></td>
+                      <td>{{ patient.phone }}</td>
+                    </tr>
+                    {% endif %}
+                  </table>
+                </div>
+              </div>
+              
+              <div class="col-lg-6">
+                <div class="info-card">
+                  <h4><i class="bi bi-graph-up"></i> Quick Stats</h4>
+                  <div class="row text-center">
+                    <div class="col-6 mb-3">
+                      <div class="stats-number">{{ total_appointments }}</div>
+                      <div class="stats-label">Total Appointments</div>
+                    </div>
+                    <div class="col-6 mb-3">
+                      <div class="stats-number">{{ total_entries }}</div>
+                      <div class="stats-label">Medical Records</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="info-card">
+                  <h4><i class="bi bi-bell"></i> Quick Actions</h4>
+                  <div class="d-grid gap-2">
+                    <a href="{% url 'public_appointment' %}" class="btn btn-primary">
+                      <i class="bi bi-calendar-plus"></i> Book New Appointment
+                    </a>
+                    <button class="btn btn-outline-primary" onclick="document.getElementById('history-tab').click()">
+                      <i class="bi bi-clipboard-pulse"></i> View Medical History
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Medical History Tab -->
+          <div class="tab-pane fade" id="history" role="tabpanel">
+            {% if not timeline_items %}
+            <div class="text-center py-5">
+              <i class="bi bi-calendar-check" style="font-size: 4rem; color: #3fbbc0;"></i>
+              <h3 class="mt-3">No Medical History Yet</h3>
+              <p class="text-muted">Your medical records will appear here.</p>
+              <a href="{% url 'public_appointment' %}" class="btn btn-primary mt-3">Make Your First Appointment</a>
+            </div>
+            {% else %}
+            <h3 class="mb-4">Medical Timeline</h3>
+            
+            {% for item in timeline_items %}
+            <div class="timeline-item">
+              <div class="timeline-marker"></div>
+              <div class="timeline-date">{{ item.date|date:"F d, Y" }}</div>
+              
+              {% if item.type == 'history_entry' %}
+              <!-- Medical History Entry -->
+              <div class="timeline-card">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                  <div>
+                    <h5 class="mb-1">
+                      <span class="badge {% if item.object.is_hospitalization %}badge-hospitalization{% elif item.object.entry_type == 'emergency' %}badge-emergency{% else %}badge-history{% endif %}">
+                        {{ item.object.get_entry_type_display }}
+                      </span>
+                      {% if item.object.is_hospitalization %}
+                      <span class="badge badge-hospitalization ms-1">Hospitalization</span>
+                      {% endif %}
+                    </h5>
+                    {% if item.object.doctor %}
+                    <p class="text-muted mb-0"><i class="bi bi-person-badge"></i> Dr. {{ item.object.doctor }}</p>
+                    {% endif %}
+                  </div>
+                </div>
+
+                {% if item.object.is_hospitalization and item.object.hospitalization_start %}
+                <div class="alert alert-warning mb-3">
+                  <strong><i class="bi bi-hospital"></i> Hospitalization:</strong><br>
+                  <i class="bi bi-box-arrow-in-right"></i> Entry: {{ item.object.hospitalization_start }}
+                  {% if item.object.hospitalization_end %}
+                  | <i class="bi bi-box-arrow-right"></i> Exit: {{ item.object.hospitalization_end }}
+                  | Duration: {{ item.object.get_duration_days }} days
+                  {% else %}
+                  | <span class="text-danger">Currently hospitalized</span>
+                  {% endif %}
+                </div>
+                {% endif %}
+
+                {% if item.object.diagnosis %}
+                <div class="mb-3">
+                  <strong><i class="bi bi-clipboard-pulse"></i> Diagnosis:</strong>
+                  <p class="mb-0 ms-4">{{ item.object.diagnosis }}</p>
+                </div>
+                {% endif %}
+
+                {% if item.object.symptoms %}
+                <div class="mb-3">
+                  <strong><i class="bi bi-thermometer-half"></i> Symptoms:</strong>
+                  <p class="mb-0 ms-4">{{ item.object.symptoms }}</p>
+                </div>
+                {% endif %}
+
+                {% if item.object.treatment %}
+                <div class="mb-3">
+                  <strong><i class="bi bi-prescription2"></i> Treatment:</strong>
+                  <p class="mb-0 ms-4">{{ item.object.treatment }}</p>
+                </div>
+                {% endif %}
+
+                {% if item.object.medications %}
+                <div class="mb-3">
+                  <strong><i class="bi bi-capsule"></i> Medications:</strong>
+                  <p class="mb-0 ms-4">{{ item.object.medications }}</p>
+                </div>
+                {% endif %}
+              </div>
+
+              {% elif item.type == 'appointment' %}
+              <!-- Appointment -->
+              <div class="timeline-card">
+                <div class="d-flex justify-content-between align-items-start">
+                  <div>
+                    <h5 class="mb-1">
+                      <span class="badge badge-appointment">Appointment</span>
+                      <span class="badge bg-{% if item.object.status == 'pending' %}warning{% elif item.object.status == 'confirmed' %}success{% elif item.object.status == 'cancelled' %}danger{% else %}secondary{% endif %} ms-1">
+                        {{ item.object.get_status_display }}
+                      </span>
+                    </h5>
+                    <p class="text-muted mb-2">
+                      <i class="bi bi-clock"></i> {{ item.object.requested_time|time:"H:i" }}
+                      | <i class="bi bi-building"></i> {{ item.object.get_department_display }}
+                      {% if item.object.doctor_name %}
+                      | <i class="bi bi-person-badge"></i> Dr. {{ item.object.doctor_name }}
+                      {% endif %}
+                    </p>
+                  </div>
+                </div>
+
+                {% if item.object.get_patient_notes %}
+                <div class="mb-2">
+                  <strong>Your Notes:</strong>
+                  <p class="mb-0 ms-4">{{ item.object.get_patient_notes }}</p>
+                </div>
+                {% endif %}
+
+                {% if item.object.get_doctor_notes %}
+                <div class="alert alert-info mb-0 mt-2">
+                  <strong>Doctor's Notes:</strong>
+                  <p class="mb-0 ms-4">{{ item.object.get_doctor_notes }}</p>
+                </div>
+                {% endif %}
+                
+                {% if item.object.prescriptions.exists %}
+                <div class="mt-3 p-3" style="background-color: #f0f8ff; border-left: 4px solid #0d6efd; border-radius: 4px;">
+                  <strong><i class="bi bi-capsule-pill"></i> Prescriptions:</strong>
+                  <div class="mt-2">
+                    {% for prescription in item.object.prescriptions.all %}
+                    <div class="card mb-2" style="border-left: 3px solid #0d6efd;">
+                      <div class="card-body p-2">
+                        <div class="row align-items-center">
+                          <div class="col-md-3">
+                            <strong class="text-primary">{{ prescription.medication_name }}</strong>
+                          </div>
+                          <div class="col-md-2">
+                            <small class="text-muted">
+                              <i class="bi bi-prescription2"></i> {{ prescription.dosage }}
+                            </small>
+                          </div>
+                          <div class="col-md-3">
+                            <small class="text-muted">
+                              <i class="bi bi-clock"></i> {{ prescription.frequency }}
+                            </small>
+                          </div>
+                          <div class="col-md-2">
+                            <small class="text-muted">
+                              <i class="bi bi-calendar3"></i> {{ prescription.duration }}
+                            </small>
+                          </div>
+                          <div class="col-md-2 text-end">
+                            <small class="text-muted">
+                              <i class="bi bi-person-badge"></i> Dr. {{ prescription.prescribed_by.get_full_name|default:prescription.prescribed_by.user_id }}
+                            </small>
+                          </div>
+                        </div>
+                        {% if prescription.instructions %}
+                        <div class="row mt-2">
+                          <div class="col-12">
+                            <small class="text-muted">
+                              <i class="bi bi-info-circle"></i> <strong>Instructions:</strong> {{ prescription.instructions }}
+                            </small>
+                          </div>
+                        </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </div>
+                </div>
+                {% endif %}
+              </div>
+              {% endif %}
+            </div>
+            {% endfor %}
+            {% endif %}
+          </div>
+
+          <!-- Medical Tests Tab -->
+          <div class="tab-pane fade" id="tests" role="tabpanel">
+            <div class="info-card">
+              <h4><i class="bi bi-file-medical"></i> Medical Tests & Analyses</h4>
+              {% if medical_tests %}
+              <p class="mb-4">Your doctor has requested the following medical tests and analyses:</p>
+              <div class="timeline">
+                {% for test in medical_tests %}
+                <div class="timeline-item mb-4 pb-4 border-bottom">
+                  <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>
+                      <h5 class="mb-1">{{ test.test_name }}</h5>
+                      <span class="badge bg-{% if test.test_type == 'xray' %}primary{% elif test.test_type == 'blood_test' %}danger{% elif test.test_type == 'ultrasound' %}info{% else %}secondary{% endif %}">
+                        {{ test.get_test_type_display }}
+                      </span>
+                      <span class="badge bg-{% if test.status == 'completed' %}success{% elif test.status == 'scheduled' %}info{% elif test.status == 'cancelled' %}danger{% else %}warning{% endif %} ms-2">
+                        {{ test.get_status_display }}
+                      </span>
+                    </div>
+                    <small class="text-muted">{{ test.requested_at|date:"M d, Y" }}</small>
+                  </div>
+                  
+                  <div class="mb-2">
+                    <strong>Reason:</strong> {{ test.reason }}
+                  </div>
+                  
+                  {% if test.instructions %}
+                  <div class="alert alert-info mb-2">
+                    <i class="bi bi-info-circle"></i>
+                    <strong>Instructions:</strong> {{ test.instructions }}
+                  </div>
+                  {% endif %}
+                  
+                  {% if test.scheduled_date %}
+                  <div class="mb-2">
+                    <i class="bi bi-calendar"></i>
+                    <strong>Scheduled for:</strong> {{ test.scheduled_date }}
+                  </div>
+                  {% endif %}
+                  
+                  {% if test.results %}
+                  <div class="alert alert-success mb-2">
+                    <i class="bi bi-check-circle"></i>
+                    <strong>Results:</strong> {{ test.results }}
+                  </div>
+                  {% endif %}
+                  
+                  <small class="text-muted">
+                    <i class="bi bi-person"></i> Requested by: {{ test.requested_by.get_full_name|default:test.requested_by.user_id }}
+                  </small>
+                </div>
+                {% endfor %}
+              </div>
+              {% else %}
+              <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i>
+                No medical tests have been requested yet.
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Messages Tab -->
+          <div class="tab-pane fade" id="messages" role="tabpanel">
+            <div class="info-card">
+              <h4><i class="bi bi-chat-dots"></i> Messages with Your Doctor</h4>
+              
+              <!-- Send Message Form -->
+              <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                  <h5 class="mb-0"><i class="bi bi-send"></i> Send New Message</h5>
+                </div>
+                <div class="card-body">
+                  <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                      <label for="{{ message_form.subject.id_for_label }}" class="form-label">Subject (Optional)</label>
+                      {{ message_form.subject }}
+                    </div>
+                    <div class="mb-3">
+                      <label for="{{ message_form.message.id_for_label }}" class="form-label">Message *</label>
+                      {{ message_form.message }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                      <i class="bi bi-send"></i> Send Message
+                    </button>
+                  </form>
+                </div>
+              </div>
+
+              <!-- Message History -->
+              <h5 class="mt-4 mb-3">Conversation History</h5>
+              {% if messages %}
+              <div class="timeline">
+                {% for message in messages %}
+                <div class="timeline-item mb-4 pb-4 {% if not forloop.last %}border-bottom{% endif %}">
+                  <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>
+                      <span class="badge bg-{% if message.sender_type == 'patient' %}primary{% else %}success{% endif %}">
+                        {% if message.sender_type == 'patient' %}You{% else %}Doctor{% endif %}
+                      </span>
+                      {% if message.subject %}
+                      <strong class="ms-2">{{ message.subject }}</strong>
+                      {% endif %}
+                      {% if message.sender_type == 'doctor' and not message.is_read %}
+                      <span class="badge bg-danger ms-2">New</span>
+                      {% endif %}
+                    </div>
+                    <small class="text-muted">{{ message.created_at|date:"M d, Y H:i" }}</small>
+                  </div>
+                  <div class="message-content p-3 bg-light rounded">
+                    {{ message.message|linebreaks }}
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+              {% else %}
+              <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i>
+                No messages yet. Use the form above to send your first message to your doctor.
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Appointments Tab -->
+          <div class="tab-pane fade" id="appointments" role="tabpanel">
+            <div class="info-card">
+              <h4><i class="bi bi-calendar-check"></i> My Appointments</h4>
+              {% if timeline_items %}
+              <p>You have <strong>{{ total_appointments }}</strong> appointment(s) on record. View them in the Medical History tab above.</p>
+              <button class="btn btn-primary" onclick="document.getElementById('history-tab').click()">
+                <i class="bi bi-clipboard-pulse"></i> View All in Timeline
+              </button>
+              {% else %}
+              <p>No appointments yet.</p>
+              {% endif %}
+              <a href="{% url 'public_appointment' %}" class="btn btn-success mt-2">
+                <i class="bi bi-calendar-plus"></i> Book New Appointment
+              </a>
+            </div>
+          </div>
+
+          <!-- Payments Tab -->
+          <div class="tab-pane fade" id="payments" role="tabpanel">
+            <div class="row">
+              <!-- Summary Cards -->
+              <div class="col-md-4 mb-3">
+                <div class="info-card text-center">
+                  <h3 class="text-primary mb-1">{{ total_amount|default:0 }} TND</h3>
+                  <p class="text-muted mb-0">Total Bills</p>
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <div class="info-card text-center">
+                  <h3 class="text-danger mb-1">{{ unpaid_amount|default:0 }} TND</h3>
+                  <p class="text-muted mb-0">Amount Due</p>
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <div class="info-card text-center">
+                  <h3 class="text-success mb-1">{{ paid_amount|default:0 }} TND</h3>
+                  <p class="text-muted mb-0">Paid</p>
+                </div>
+              </div>
+            </div>
+
+            {% if unpaid_appointments %}
+            <div class="info-card">
+              <h4><i class="bi bi-exclamation-circle text-warning"></i> Unpaid Bills</h4>
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Department</th>
+                      <th>Doctor</th>
+                      <th>Amount</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for appointment in unpaid_appointments %}
+                    <tr>
+                      <td>{{ appointment.requested_date }}</td>
+                      <td>{{ appointment.get_department_display }}</td>
+                      <td>{{ appointment.doctor_name|default:"TBD" }}</td>
+                      <td><strong>{{ appointment.price }} TND</strong></td>
+                      <td>
+                        <span class="badge bg-warning">
+                          {{ appointment.get_payment_status_display }}
+                        </span>
+                      </td>
+                      <td>
+                        <form method="post" action="{% url 'mark_payment' appointment.id %}" style="display:inline;">
+                          {% csrf_token %}
+                          <input type="hidden" name="payment_method" value="online">
+                          <button type="submit" class="btn btn-sm btn-success">
+                            <i class="bi bi-credit-card"></i> Pay Now
+                          </button>
+                        </form>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            {% endif %}
+
+            <div class="info-card mt-3">
+              <h4><i class="bi bi-receipt"></i> All Appointments</h4>
+              <div class="table-responsive">
+                <table class="table table-sm">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Department</th>
+                      <th>Amount</th>
+                      <th>Payment Status</th>
+                      <th>Payment Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in timeline_items %}
+                      {% if item.type == 'appointment' %}
+                      <tr>
+                        <td>{{ item.object.requested_date }}</td>
+                        <td>{{ item.object.get_department_display }}</td>
+                        <td>{{ item.object.price }} TND</td>
+                        <td>
+                          <span class="badge bg-{% if item.object.payment_status == 'paid' %}success{% else %}warning{% endif %}">
+                            {{ item.object.get_payment_status_display }}
+                          </span>
+                        </td>
+                        <td>
+                          {% if item.object.payment_date %}
+                            {{ item.object.payment_date|date:"Y-m-d" }}
+                          {% else %}
+                            -
+                          {% endif %}
+                        </td>
+                      </tr>
+                      {% endif %}
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        {% endif %}
+      </div>
+    </section>
+  </main>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'Front/Patient/assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'Front/Patient/assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'Front/Patient/assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'Front/Patient/assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+
+  <!-- Main JS File -->
+  <script src="{% static 'Front/Patient/assets/js/main.js' %}"></script>
+
+  <script>
+    AOS.init();
+  </script>
+
+</body>
+</html>

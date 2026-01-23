@@ -1,0 +1,41 @@
+{
+    "name": "admin",
+    "version": "1.0.0",
+    "description": "This is the Admin template with the bootstrap 4",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "admin",
+        "templates",
+        "boostrap5",
+        "admin",
+        "dashboard"
+    ],
+    "author": "Nirav joshi",
+    "license": "ISC",
+    "devDependencies": {
+        "gulp": "^4.0.2",
+        "gulp-clean-css": "^4.3.0",
+        "gulp-npm-dist": "^1.0.3",
+        "gulp-rename": "^2.0.0",
+        "gulp-sass": "^5.0.0",
+        "gulp-uglify": "^3.0.2",
+        "sass": "~1.26.5"
+    },
+    "dependencies": {
+        "bootstrap": "^4.1.0",
+        "chart.js": "^2.7.2",
+        "chartist": "^0.11.0",
+        "chartist-plugin-tooltips": "^0.0.17",
+        "datatables.net-bs4": "^1.10.16",
+        "fullcalendar": "^3.10.0",
+        "jquery": "^3.3.1",
+        "moment": "^2.22.1",
+        "morris.js": "^0.5.0",
+        "perfect-scrollbar": "^0.7.1",
+        "popper.js": "^1.14.3",
+        "raphael": "^2.2.7"
+    }
+}

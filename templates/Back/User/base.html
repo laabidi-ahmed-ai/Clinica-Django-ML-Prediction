@@ -1,0 +1,393 @@
+{% load static %}
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Clinica+ • Back Office{% endblock %}</title>
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'Back/src/assets/images/favicon.png' %}">
+  <!-- Freedash core CSS -->
+  <link href="{% static 'Back/src/dist/css/style.min.css' %}" rel="stylesheet">
+  
+  <style>
+    /* Modern clean design */
+    :root {
+      --primary-blue: #4A90E2;
+      --success-green: #28a745;
+      --danger-red: #dc3545;
+      --warning-orange: #FF8C00;
+      --secondary-gray: #6c757d;
+    }
+    
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    
+    /* Page header */
+    .page-header {
+      background: white;
+      padding: 24px 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      margin-bottom: 24px;
+    }
+    
+    .page-title {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin: 0;
+    }
+    
+    /* Add button - Blue gradient */
+    .btn-add {
+      background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+      border: none;
+      color: white;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+    }
+    .btn-add:hover {
+      background: linear-gradient(135deg, #357ABD 0%, #2868A8 100%);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
+    }
+    .btn-add i {
+      margin-right: 6px;
+    }
+    
+    /* Cards */
+    .card {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      background: white;
+      margin-bottom: 20px;
+    }
+    
+    .card-body {
+      padding: 30px;
+    }
+    
+    /* Tables */
+    .table {
+      margin-bottom: 0;
+      font-size: 0.875rem;
+    }
+    
+    .table thead th {
+      background-color: #f8f9fa;
+      border-bottom: 2px solid #e9ecef;
+      color: #495057;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+      padding: 16px 20px;
+      border-top: none;
+    }
+    
+    .table tbody tr {
+      transition: all 0.2s ease;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .table tbody tr:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .table tbody td {
+      padding: 16px 20px;
+      vertical-align: middle;
+      color: #495057;
+    }
+    
+    /* Footer */
+    .footer {
+      padding: 20px 0;
+      color: #868e96;
+      font-size: 0.875rem;
+    }
+    
+    /* Dashboard Link */
+    .sidebar-dashboard-link {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      color: #67757c;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-size: 0.875rem;
+      font-weight: 400;
+    }
+    
+    .sidebar-dashboard-link:hover {
+      color: #4A90E2;
+    }
+    
+    .sidebar-dashboard-link.active {
+      background-color: #f8f9fa;
+      color: #1a1a1a;
+      padding: 10px 15px;
+      margin: 0 -15px;
+      border-radius: 6px;
+    }
+    
+    .sidebar-dashboard-link .feather-icon {
+      width: 18px;
+      height: 18px;
+      margin-right: 12px;
+      color: inherit;
+    }
+    
+    {% block extra_css %}{% endblock %}
+  </style>
+</head>
+
+<body>
+  <!-- Preloader -->
+  <div class="preloader">
+    <div class="lds-ripple"><div class="lds-pos"></div><div class="lds-pos"></div></div>
+  </div>
+
+  <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6"
+       data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed"
+       data-boxed-layout="full">
+
+    <!-- Topbar -->
+    <header class="topbar" data-navbarbg="skin6">
+      <nav class="navbar top-navbar navbar-expand-lg">
+        <div class="navbar-header" data-logobg="skin6">
+          <a class="nav-toggler d-block d-lg-none" href="javascript:void(0)"><i class="ti-menu ti-close"></i></a>
+          <div class="navbar-brand">
+            <a href="{% url 'dashboard' %}">
+              <img src="{% static 'Front/assets/images/logo_site.png' %}" alt="logo" class="img-fluid" style="width: 120px; margin-top: 30px;">
+            </a>
+          </div>
+          <a class="topbartoggler d-block d-lg-none" href="javascript:void(0)"
+             data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+             <i class="ti-more"></i>
+          </a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="navbar-nav float-end">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-bs-toggle="dropdown">
+                <img src="{% static 'Back/src/assets/images/users/profile-pic.jpg' %}" alt="user" class="rounded-circle" width="40">
+                <span class="ms-2 d-none d-lg-inline-block">
+                  <span class="text-dark">{{ user.first_name|default:"Admin" }}</span>
+                  <i data-feather="chevron-down" class="svg-icon"></i>
+                </span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-end">
+                <a class="dropdown-item" href="{% url 'admin:logout' %}">
+                  <i data-feather="power" class="svg-icon me-2"></i>Logout
+                </a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="left-sidebar" data-sidebarbg="skin6">
+  <div class="scroll-sidebar" data-sidebarbg="skin6">
+    <nav class="sidebar-nav">
+      <ul id="sidebarnav">
+        
+
+        <li class="list-divider"></li>
+
+        <!-- USER MANAGEMENT -->
+        <li class="nav-small-cap"><span class="hide-menu">USER MANAGEMENT</span></li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'dashboard' %}">
+            <i data-feather="users" class="feather-icon"></i>
+            <span class="hide-menu">Users Management</span>
+          </a>
+        </li>
+
+        <li class="list-divider"></li>
+        <li class="nav-small-cap"><span class="hide-menu">PATIENT</span></li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'dashboard_home' %}" aria-expanded="false">
+            <i data-feather="home" class="feather-icon"></i>
+            <span class="hide-menu">Patient Dashboard</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'appointment_list' %}">
+            <i data-feather="calendar" class="feather-icon"></i>
+            <span class="hide-menu">Appointments List</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'patient_list' %}">
+            <i data-feather="users" class="feather-icon"></i>
+            <span class="hide-menu">Patients List</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'appointment_create' %}">
+            <i data-feather="plus-circle" class="feather-icon"></i>
+            <span class="hide-menu">New Appointment</span>
+            </a>
+        </li>
+         <li class="list-divider"></li>
+        <!-- PRODUCTS -->
+        <li class="nav-small-cap"><span class="hide-menu">PRODUCTS</span></li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'dashboard_products' %}">
+            <i data-feather="home" class="feather-icon"></i>
+            <span class="hide-menu">Product Dashboard</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'products_list' %}">
+            <i data-feather="package" class="feather-icon"></i>
+            <span class="hide-menu">Products List</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'orders_list' %}">
+            <i data-feather="shopping-cart" class="feather-icon"></i>
+            <span class="hide-menu">Orders List</span>
+          </a>
+        </li>
+
+        <li class="list-divider"></li>
+
+
+        <!-- DONATIONS -->
+        <li class="nav-small-cap"><span class="hide-menu">DONATIONS</span></li>
+
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'donation:back_index' %}">
+            <i data-feather="activity" class="feather-icon"></i>
+            <span class="hide-menu">Dashboard Donation</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'publication:publication_list' %}">
+            <i data-feather="file-text" class="feather-icon"></i>
+            <span class="hide-menu">Publications List</span>
+          </a>
+        </li>
+         <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'publication:publication_form' %}">
+            <i data-feather="plus-circle" class="feather-icon"></i>
+            <span class="hide-menu">New Publication</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="{% url 'donation:admin_donation_list' %}">
+            <i data-feather="heart" class="feather-icon"></i>
+            <span class="hide-menu">Donations List</span>
+          </a>
+        </li>
+
+        <li class="list-divider"></li>
+
+        <li class="nav-small-cap"><span class="hide-menu">LABO</span></li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'Labapp:back_analyse_list' %}" aria-expanded="false">
+            <i data-feather="calendar" class="feather-icon"></i>
+            <span class="hide-menu">List Analyses</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="{% url 'Labapp:back_recherche_list' %}">
+            <i data-feather="tag" class="feather-icon"></i>
+            <span class="hide-menu">recherche List</span>
+            </a>
+        </li>
+
+        <li class="list-divider"></li>
+        
+         <li class="nav-small-cap"><span class="hide-menu">STAGE</span></li>
+        <li class="sidebar-item">
+  <a class="sidebar-link" href="{% url 'stages:liste_stages' %}">
+    <i data-feather="award" class="feather-icon"></i>
+    <span class="hide-menu">Stages List</span>
+  </a>
+</li>
+
+        <li class="sidebar-item">
+  <a class="sidebar-link" href="{% url 'stages:ajouter_stage' %}">
+    <i data-feather="award" class="feather-icon"></i>
+    <span class="hide-menu">New Stage</span>
+  </a>
+</li>
+<li class="sidebar-item">
+  <a class="sidebar-link" href="{% url 'stagiaire:liste_stagiaires' %}">
+    <i data-feather="user-check" class="feather-icon"></i>
+    <span class="hide-menu">Stagiaires List</span>
+  </a>
+</li>
+
+        
+      </ul>
+    </nav>
+  </div>
+</aside>
+
+    <!-- Page wrapper -->
+    <div class="page-wrapper">
+      <!-- Content -->
+      <div class="container-fluid">
+        {% if messages %}
+          <div class="messages">
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+        
+        {% block page_title %}{% endblock %}
+        {% block content %}
+        {% endblock %}
+
+        <footer class="footer text-center text-muted mt-4">
+          Clinica+ Back • Freedash UI
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="{% static 'Back/src/assets/libs/jquery/dist/jquery.min.js' %}"></script>
+  <script src="{% static 'Back/src/assets/libs/popper.js/dist/umd/popper.min.js' %}"></script>
+  <script src="{% static 'Back/src/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'Back/src/dist/js/app-style-switcher.js' %}"></script>
+  <script src="{% static 'Back/src/dist/js/feather.min.js' %}"></script>
+  <script src="{% static 'Back/src/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js' %}"></script>
+  <script src="{% static 'Back/src/dist/js/sidebarmenu.js' %}"></script>
+  <script src="{% static 'Back/src/dist/js/custom.min.js' %}"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.feather) feather.replace();
+      
+      var modals = document.querySelectorAll('.modal');
+      modals.forEach(function(modal) {
+        modal.addEventListener('shown.bs.modal', function() {
+          if (window.feather) feather.replace();
+        });
+      });
+    });
+  </script>
+  
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,545 @@
+{% load static %}
+<!DOCTYPE html>
+<html dir="ltr" lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'Back/src/assets/images/favicon.png' %}">
+    <title>Clinique+ • Gestion des Stagiaires</title>
+    <link href="{% static 'Back/src/dist/css/style.min.css' %}" rel="stylesheet">
+    <style>
+        .btn-action {
+            padding: 5px 10px;
+            margin: 2px;
+            font-size: 12px;
+        }
+        .badge {
+            font-size: 11px;
+        }
+        .table-responsive {
+            overflow-x: auto;
+        }
+        .table thead th {
+            white-space: nowrap;
+        }
+        .table tbody td {
+            white-space: nowrap;
+        }
+        a.text-dark:hover {
+            color: var(--bs-primary) !important;
+        }
+        .profile-circle {
+            width: 45px;
+            height: 45px;
+            background-color: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+</head>
+
+<body>
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+
+    <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+        
+        <!-- Topbar -->
+        <header class="topbar" data-navbarbg="skin6">
+            <nav class="navbar top-navbar navbar-expand-lg">
+                <div class="navbar-header" data-logobg="skin6">
+                    <a class="nav-toggler d-block d-lg-none" href="javascript:void(0)"><i class="ti-menu ti-close"></i></a>
+                    <div class="navbar-brand">
+                        <a href="{% url 'stagiaire:liste_stagiaires' %}">
+                            <img src="{% static 'Front/assets/images/logo_site.png' %}" alt="logo" class="img-fluid" style="width: 120px; margin-top: 30px;">
+                        </a>
+                    </div>
+                    <a class="topbartoggler d-block d-lg-none" href="javascript:void(0)" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="ti-more"></i>
+                    </a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="navbar-nav float-end">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-bs-toggle="dropdown">
+                                <img src="{% static 'Back/src/assets/images/users/profile-pic.jpg' %}" alt="user" class="rounded-circle" width="40">
+                                <span class="ms-2 d-none d-lg-inline-block">
+                                    <span class="text-dark">{{ user.first_name|default:"Admin" }}</span>
+                                    <i data-feather="chevron-down" class="svg-icon"></i>
+                                </span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="#">
+                                    <i data-feather="power" class="svg-icon me-2"></i>Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="left-sidebar" data-sidebarbg="skin6">
+            <div class="scroll-sidebar" data-sidebarbg="skin6">
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li class="sidebar-item">
+                            <a class="sidebar-link sidebar-link" href="#">
+                                <i data-feather="home" class="feather-icon"></i><span class="hide-menu">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="list-divider"></li>
+                        <li class="nav-small-cap"><span class="hide-menu">GESTION DES STAGES</span></li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{% url 'stages:liste_stages' %}">
+                                <i data-feather="file-text" class="feather-icon"></i><span class="hide-menu">Liste des stages</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{% url 'stages:ajouter_stage' %}">
+                                <i data-feather="plus-circle" class="feather-icon"></i><span class="hide-menu">Nouveau stage</span>
+                            </a>
+                        </li>
+                        <li class="list-divider"></li>
+                        <li class="nav-small-cap"><span class="hide-menu">GESTION DES STAGIAIRES</span></li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link active" href="{% url 'stagiaire:liste_stagiaires' %}">
+                                <i data-feather="users" class="feather-icon"></i><span class="hide-menu">Liste des stagiaires</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <div class="page-wrapper">
+            <div class="page-breadcrumb">
+                <div class="row">
+                    <div class="col-7 align-self-center">
+                        <h3 class="page-title text-truncate text-dark font-weight-medium mb-1">Gestion des Stagiaires</h3>
+                        <div class="d-flex align-items-center">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb m-0 p-0">
+                                    <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                                    <li class="breadcrumb-item active">Stagiaires</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="col-5 align-self-center">
+                        <div class="customize-input float-end">
+                            <a href="#" class="btn btn-info text-white me-2">
+                                <i data-feather="download" class="feather-icon"></i> Exporter
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid">
+                <!-- Messages -->
+                {% if messages %}
+                <div class="row">
+                    <div class="col-12">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Cartes de statistiques -->
+                <div class="row">
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card border-end">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <h2 class="text-dark mb-1 font-weight-medium">{{ stagiaires|length }}</h2>
+                                        <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Total Stagiaires</h6>
+                                    </div>
+                                    <div class="ms-auto mt-md-3 mt-lg-0">
+                                        <span class="opacity-7 text-muted"><i data-feather="users"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card border-end">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <h2 class="text-dark mb-1 font-weight-medium">{{ stagiaires|length|default:0 }}</h2>
+                                        <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Inscrits</h6>
+                                    </div>
+                                    <div class="ms-auto mt-md-3 mt-lg-0">
+                                        <span class="opacity-7 text-warning"><i data-feather="user-plus"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card border-end">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <h2 class="text-dark mb-1 font-weight-medium">{{ stagiaires|length|default:0 }}</h2>
+                                        <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Universités</h6>
+                                    </div>
+                                    <div class="ms-auto mt-md-3 mt-lg-0">
+                                        <span class="opacity-7 text-success"><i data-feather="home"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <h2 class="text-dark mb-1 font-weight-medium">{{ stagiaires|length|default:0 }}</h2>
+                                        <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Candidatures</h6>
+                                    </div>
+                                    <div class="ms-auto mt-md-3 mt-lg-0">
+                                        <span class="opacity-7 text-info"><i data-feather="file-text"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tableau des stagiaires -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-4">
+                                    <h4 class="card-title">Liste des Stagiaires</h4>
+                                    <div class="ms-auto">
+                                        <div class="dropdown sub-dropdown d-inline-block">
+                                            <button class="btn btn-link text-muted dropdown-toggle" type="button"
+                                                id="dd1" data-bs-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false">
+                                                <i data-feather="more-vertical"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd1">
+                                                <a class="dropdown-item" href="#" onclick="exportTableToExcel('stagiairesTable', 'Liste_Stagiaires.xlsx')">
+                                                    Exporter Excel
+                                                </a>
+                                                <a class="dropdown-item" href="#">Imprimer</a>
+                                                <a class="dropdown-item" href="{% url 'stagiaire:liste_stagiaires' %}">Rafraîchir</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex mb-3 gap-2">
+                                    <!-- Filtre Université -->
+                                    <div class="input-group input-group-sm" style="width: 200px;">
+                                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                        <input type="text" id="universiteSearch" class="form-control form-control-sm" 
+                                               placeholder="Chercher par université...">
+                                    </div>
+                                    
+                                    <!-- Filtre Spécialité -->
+                                    <div class="input-group input-group-sm" style="width: 200px;">
+                                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                        <input type="text" id="specialiteSearch" class="form-control form-control-sm" 
+                                               placeholder="Chercher par spécialité...">
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table id="stagiairesTable" class="table no-wrap v-middle mb-0">
+                                        <thead>
+                                            <tr class="border-0">
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Profil</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">ID</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Nom & Prénom</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">CIN</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Téléphone</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Email</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Carte Étudiant</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Université</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Spécialité</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted">Stages Postulés</th>
+                                                <th class="border-0 font-14 font-weight-medium text-muted text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for stagiaire in stagiaires %}
+                                            <tr>
+                                                <!-- Photo/Initiales -->
+                                                <td class="border-top-0 px-2 py-4">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="profile-circle">
+                                                            {{ stagiaire.user.first_name|first|upper }}{{ stagiaire.user.last_name|first|upper }}
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                
+                                                <!-- ID -->
+                                                <td class="border-top-0 px-2 py-4">
+                                                    <span class="font-14 text-muted">{{ stagiaire.user.user_id }}</span>
+                                                </td>
+                                                
+                                                <!-- Nom & Prénom -->
+                                                <td class="border-top-0 px-2 py-4">
+                                                    <h6 class="text-dark mb-0 font-14">{{ stagiaire.user.first_name }} {{ stagiaire.user.last_name }}</h6>
+                                                    <small class="text-muted">Né le {{ stagiaire.user.birth_date|date:"d/m/Y"|default:"Date non spécifiée" }}</small>
+                                                </td>
+                                                
+                                                <!-- CIN -->
+                                                <td class="border-top-0 px-2 py-4">
+                                                    <span class="font-14 text-muted">{{ stagiaire.user.CIN }}</span>
+                                                </td>
+                                                
+                                                <!-- Téléphone -->
+                                                <td class="border-top-0 px-2 py-4">
+                                                    <span class="font-14 text-muted">{{ stagiaire.user.tel }}</span>
+                                                </td>
+                                                
+                                                <!-- Email -->
+                                                <td class="border-top-0 px-2 py-4">
+                                                    <span class="font-14 text-muted">{{ stagiaire.user.email }}</span>
+                                                </td>
+                                                
+                                                <!-- Carte Étudiant -->
+                                                <td class="border-top-0 px-2 py-4">
+                                                    <span class="badge bg-light text-dark">{{ stagiaire.numero_carte_etudiant }}</span>
+                                                </td>
+                                                
+                                                <!-- Université -->
+                                                <td class="border-top-0 px-2 py-4">
+                                                    <span class="font-14 text-muted">{{ stagiaire.universite }}</span>
+                                                </td>
+                                                
+                                                <!-- Spécialité -->
+                                                <td class="border-top-0 px-2 py-4">
+                                                    <span class="font-14 text-muted">{{ stagiaire.specialite|default:"Non spécifiée" }}</span>
+                                                </td>
+                                                
+                                                <!-- Stages Postulés -->
+                                                <td class="border-top-0 px-2 py-4">
+                                                    {% if stagiaire.stages.all %}
+                                                        <div class="d-flex flex-column">
+                                                            {% for stage in stagiaire.stages.all|slice:":2" %}
+                                                                <span class="badge bg-info text-white mb-1">{{ stage.intitule|truncatechars:20 }}</span>
+                                                            {% endfor %}
+                                                            {% if stagiaire.stages.all|length > 2 %}
+                                                                <small class="text-muted">+{{ stagiaire.stages.all|length|add:"-2" }} autres</small>
+                                                            {% endif %}
+                                                        </div>
+                                                    {% else %}
+                                                        <span class="text-muted font-14">Aucun stage</span>
+                                                    {% endif %}
+                                                </td>
+                                                
+                                                <!-- Actions -->
+                                                <td class="border-top-0 text-center px-2 py-4">
+                                                    <div class="btn-group-vertical btn-group-sm">
+                                                        <!-- Bouton Voir Détails -->
+                                                        <a href="#" 
+                                                           class="btn btn-info btn-action text-white"
+                                                           data-bs-toggle="tooltip" 
+                                                           title="Voir les détails">
+                                                            <i data-feather="eye" class="feather-icon" style="width: 12px; height: 12px;"></i>
+                                                            Détails
+                                                        </a>
+                                                        
+                                                        <!-- Bouton Valider -->
+                                                        <button type="button" 
+                                                                class="btn btn-success btn-action"
+                                                                data-bs-toggle="modal" 
+                                                                data-bs-target="#validateModal{{ stagiaire.user.user_id }}"
+                                                                data-bs-toggle="tooltip" 
+                                                                title="Valider le stagiaire">
+                                                            <i data-feather="check-circle" class="feather-icon" style="width: 12px; height: 12px;"></i>
+                                                            Valider
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <!-- Modal de validation pour chaque stagiaire -->
+                                            <div class="modal fade" id="validateModal{{ stagiaire.user.user_id }}" tabindex="-1">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header bg-success text-white">
+                                                            <h5 class="modal-title">
+                                                                <i data-feather="check-circle" class="feather-icon"></i>
+                                                                Valider le stagiaire
+                                                            </h5>
+                                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <div class="modal-body text-center">
+                                                            <div class="mb-3">
+                                                                <i data-feather="user-check" class="feather-icon text-success" style="width: 48px; height: 48px;"></i>
+                                                            </div>
+                                                            <h5>Valider {{ stagiaire.user.first_name }} {{ stagiaire.user.last_name }} ?</h5>
+                                                            <p class="text-muted">
+                                                                <strong>Informations :</strong><br>
+                                                                CIN: {{ stagiaire.user.CIN }}<br>
+                                                                Carte Étudiant: {{ stagiaire.numero_carte_etudiant }}<br>
+                                                                Université: {{ stagiaire.universite }}<br>
+                                                                Spécialité: {{ stagiaire.specialite|default:"Non spécifiée" }}
+                                                            </p>
+                                                            <p class="text-success small">
+                                                                <i data-feather="info" class="feather-icon"></i>
+                                                                Cette action confirme l'acceptation du stagiaire.
+                                                            </p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                            <button type="button" class="btn btn-success" onclick="validateStagiaire('{{ stagiaire.user.user_id }}')">
+                                                                <i data-feather="check-circle" class="feather-icon"></i>
+                                                                Valider
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% empty %}
+                                            <tr>
+                                                <td colspan="11" class="text-center py-4">
+                                                    <div class="text-muted">
+                                                        <i data-feather="users" class="feather-icon" style="width: 48px; height: 48px;"></i>
+                                                        <p class="mt-2">Aucun stagiaire trouvé</p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="footer text-center text-muted">
+                Clinique+ • Gestion des Stagiaires © 2024
+            </footer>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{% static 'Back/src/assets/libs/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'Back/src/assets/libs/popper.js/dist/umd/popper.min.js' %}"></script>
+    <script src="{% static 'Back/src/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'Back/src/dist/js/app-style-switcher.js' %}"></script>
+    <script src="{% static 'Back/src/dist/js/feather.min.js' %}"></script>
+    <script src="{% static 'Back/src/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js' %}"></script>
+    <script src="{% static 'Back/src/dist/js/sidebarmenu.js' %}"></script>
+    <script src="{% static 'Back/src/dist/js/custom.min.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    
+    <script>
+        // Initialiser Feather Icons
+        feather.replace();
+        
+        // Initialiser les tooltips Bootstrap
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+
+        // Fonction de validation du stagiaire (à adapter selon vos besoins)
+        function validateStagiaire(userId) {
+            alert('Validation du stagiaire avec ID: ' + userId);
+            // Ici, vous ajouterez votre logique AJAX pour valider le stagiaire
+            // Exemple:
+            // fetch(`/stagiaire/valider/${userId}/`, { method: 'POST' })
+            // .then(response => response.json())
+            // .then(data => {
+            //     if (data.success) {
+            //         location.reload();
+            //     }
+            // });
+        }
+
+        // Filtrage du tableau
+        const universiteInput = document.getElementById('universiteSearch');
+        const specialiteInput = document.getElementById('specialiteSearch');
+        const tableRows = document.querySelectorAll('#stagiairesTable tbody tr');
+
+        function filterTable() {
+            const universiteValue = universiteInput.value.toLowerCase();
+            const specialiteValue = specialiteInput.value.toLowerCase();
+
+            tableRows.forEach(row => {
+                const universiteText = row.cells[7].innerText.toLowerCase(); // Université (colonne 7)
+                const specialiteText = row.cells[8].innerText.toLowerCase(); // Spécialité (colonne 8)
+
+                if ((universiteValue === "" || universiteText.includes(universiteValue)) &&
+                    (specialiteValue === "" || specialiteText.includes(specialiteValue))) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+
+        universiteInput.addEventListener('keyup', filterTable);
+        specialiteInput.addEventListener('keyup', filterTable);
+
+        // Fonction d'export Excel
+        function exportTableToExcel(tableID, filename = ''){
+            const table = document.getElementById(tableID);
+            const wb = XLSX.utils.book_new();
+            
+            // Convertir le tableau en JSON mais ignorer la dernière colonne (Actions)
+            const ws_data = [];
+            const rows = table.querySelectorAll('tr');
+
+            rows.forEach((row, rowIndex) => {
+                const rowData = [];
+                row.querySelectorAll('td, th').forEach((cell, colIndex) => {
+                    // Ignorer la dernière colonne (Actions) et la première colonne (Photo)
+                    if(colIndex > 0 && colIndex < row.querySelectorAll('td, th').length - 1){
+                        rowData.push(cell.innerText);
+                    }
+                });
+                ws_data.push(rowData);
+            });
+
+            const ws = XLSX.utils.aoa_to_sheet(ws_data);
+            XLSX.utils.book_append_sheet(wb, ws, 'Stagiaires');
+            XLSX.writeFile(wb, filename || 'Liste_Stagiaires.xlsx');
+        }
+
+        // Lier le bouton d'export Excel
+        document.querySelector('a[onclick*="exportTableToExcel"]').addEventListener('click', function(e){
+            e.preventDefault();
+            exportTableToExcel('stagiairesTable', 'Liste_Stagiaires.xlsx');
+        });
+    </script>
+
+</body>
+</html>

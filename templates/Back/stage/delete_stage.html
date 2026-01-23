@@ -1,0 +1,1795 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html dir="ltr" lang="fr">
+
+<head>
+
+  <meta charset="utf-8">
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Clinique+ • Gestion des Stages</title>
+
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'Back/src/assets/images/favicon.png' %}">
+
+  <!-- Freedash core CSS -->
+
+  <link href="{% static 'Back/src/dist/css/style.min.css' %}" rel="stylesheet">
+
+  
+
+  <style>
+
+    /* Modern clean design */
+
+    :root {
+
+      --primary-blue: #4A90E2;
+
+      --success-green: #28a745;
+
+      --danger-red: #dc3545;
+
+      --warning-orange: #FF8C00;
+
+      --secondary-gray: #6c757d;
+
+    }
+
+    
+
+    body {
+
+      background-color: #f8f9fa;
+
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+    }
+
+    
+
+    /* Page header */
+
+    .page-header {
+
+      background: white;
+
+      padding: 24px 30px;
+
+      border-radius: 12px;
+
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+
+      margin-bottom: 24px;
+
+    }
+
+    
+
+    .page-title {
+
+      font-size: 1.75rem;
+
+      font-weight: 600;
+
+      color: #1a1a1a;
+
+      margin: 0;
+
+    }
+
+    
+
+    /* Add button - Blue gradient */
+
+    .btn-add {
+
+      background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+
+      border: none;
+
+      color: white;
+
+      padding: 10px 24px;
+
+      border-radius: 8px;
+
+      font-weight: 500;
+
+      transition: all 0.3s ease;
+
+      box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+
+    }
+
+    .btn-add:hover {
+
+      background: linear-gradient(135deg, #357ABD 0%, #2868A8 100%);
+
+      color: white;
+
+      transform: translateY(-2px);
+
+      box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
+
+    }
+
+    .btn-add i {
+
+      margin-right: 6px;
+
+    }
+
+    
+
+    /* Filter section */
+
+    .filter-section {
+
+      background: white;
+
+      padding: 24px;
+
+      border-radius: 12px;
+
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+
+      margin-bottom: 20px;
+
+    }
+
+    
+
+    .filter-section label {
+
+      font-weight: 500;
+
+      color: #495057;
+
+      margin-bottom: 8px;
+
+      font-size: 0.875rem;
+
+    }
+
+    
+
+    .filter-section .form-control,
+
+    .filter-section .form-select {
+
+      border: 1px solid #e0e0e0;
+
+      border-radius: 8px;
+
+      padding: 10px 14px;
+
+      transition: all 0.3s ease;
+
+      font-size: 0.875rem;
+
+    }
+
+    
+
+    .filter-section .form-control:focus,
+
+    .filter-section .form-select:focus {
+
+      border-color: var(--primary-blue);
+
+      box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+
+      outline: none;
+
+    }
+
+    
+
+    /* Card container */
+
+    .card {
+
+      border: none;
+
+      border-radius: 12px;
+
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+
+      background: white;
+
+    }
+
+    
+
+    .card-body {
+
+      padding: 0;
+
+    }
+
+    
+
+    /* Table */
+
+    .table-container {
+
+      overflow-x: auto;
+
+      padding: 20px;
+
+    }
+
+    
+
+    .table {
+
+      margin-bottom: 0;
+
+      font-size: 0.875rem;
+
+      width: 100%;
+
+    }
+
+    
+
+    .table thead th {
+
+      background-color: #f8f9fa;
+
+      border-bottom: 2px solid #e9ecef;
+
+      color: #495057;
+
+      font-weight: 600;
+
+      text-transform: uppercase;
+
+      font-size: 0.75rem;
+
+      letter-spacing: 0.5px;
+
+      padding: 16px 20px;
+
+      border-top: none;
+
+    }
+
+    
+
+    .table tbody tr {
+
+      transition: all 0.2s ease;
+
+      cursor: pointer;
+
+      border-bottom: 1px solid #f0f0f0;
+
+    }
+
+    
+
+    .table tbody tr:hover {
+
+      background-color: #f8f9fa;
+
+      transform: scale(1.005);
+
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+
+    }
+
+    
+
+    .table tbody tr:last-child {
+
+      border-bottom: none;
+
+    }
+
+    
+
+    .table tbody td {
+
+      padding: 16px 20px;
+
+      vertical-align: middle;
+
+      color: #495057;
+
+    }
+
+    
+
+    /* Stage title */
+
+    .stage-title {
+
+      font-weight: 600;
+
+      color: #1a1a1a;
+
+      margin-bottom: 4px;
+
+      font-size: 0.95rem;
+
+    }
+
+    
+
+    .stage-description {
+
+      color: #868e96;
+
+      font-size: 0.8rem;
+
+      max-width: 400px;
+
+      overflow: hidden;
+
+      text-overflow: ellipsis;
+
+      white-space: nowrap;
+
+    }
+
+    
+
+    /* Status badges */
+
+    .badge-propose {
+
+      background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+
+      color: white;
+
+      padding: 6px 14px;
+
+      border-radius: 20px;
+
+      font-weight: 600;
+
+      font-size: 0.8rem;
+
+      display: inline-block;
+
+      box-shadow: 0 2px 6px rgba(255, 193, 7, 0.3);
+
+    }
+
+    
+
+    .badge-valide {
+
+      background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+
+      color: white;
+
+      padding: 6px 14px;
+
+      border-radius: 20px;
+
+      font-weight: 600;
+
+      font-size: 0.8rem;
+
+      display: inline-block;
+
+      box-shadow: 0 2px 6px rgba(23, 162, 184, 0.3);
+
+    }
+
+    
+
+    .badge-en_cours {
+
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+
+      color: white;
+
+      padding: 6px 14px;
+
+      border-radius: 20px;
+
+      font-weight: 600;
+
+      font-size: 0.8rem;
+
+      display: inline-block;
+
+      box-shadow: 0 2px 6px rgba(40, 167, 69, 0.3);
+
+    }
+
+    
+
+    .badge-termine {
+
+      background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+
+      color: white;
+
+      padding: 6px 14px;
+
+      border-radius: 20px;
+
+      font-weight: 600;
+
+      font-size: 0.8rem;
+
+      display: inline-block;
+
+      box-shadow: 0 2px 6px rgba(108, 117, 125, 0.3);
+
+    }
+
+    
+
+    .badge-annule {
+
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+
+      color: white;
+
+      padding: 6px 14px;
+
+      border-radius: 20px;
+
+      font-weight: 600;
+
+      font-size: 0.8rem;
+
+      display: inline-block;
+
+      box-shadow: 0 2px 6px rgba(220, 53, 69, 0.3);
+
+    }
+
+    
+
+    .badge-interrompu {
+
+      background: linear-gradient(135deg, #FF8C00 0%, #FF6347 100%);
+
+      color: white;
+
+      padding: 6px 14px;
+
+      border-radius: 20px;
+
+      font-weight: 600;
+
+      font-size: 0.8rem;
+
+      display: inline-block;
+
+      box-shadow: 0 2px 6px rgba(255, 140, 0, 0.3);
+
+    }
+
+    
+
+    /* Date badge */
+
+    .badge-date {
+
+      background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+
+      color: white;
+
+      padding: 6px 14px;
+
+      border-radius: 20px;
+
+      font-weight: 600;
+
+      font-size: 0.8rem;
+
+      display: inline-block;
+
+      box-shadow: 0 2px 6px rgba(74, 144, 226, 0.3);
+
+    }
+
+    
+
+    /* Action buttons */
+
+    .btn-action-group {
+
+      display: flex;
+
+      gap: 8px;
+
+      align-items: center;
+
+      justify-content: center;
+
+    }
+
+    
+
+    .btn-edit {
+
+      background: var(--success-green);
+
+      border: none;
+
+      color: white;
+
+      padding: 8px 18px;
+
+      border-radius: 6px;
+
+      font-weight: 500;
+
+      font-size: 0.8rem;
+
+      transition: all 0.2s ease;
+
+      box-shadow: 0 2px 6px rgba(40, 167, 69, 0.25);
+
+    }
+
+    
+
+    .btn-edit:hover {
+
+      background: #218838;
+
+      color: white;
+
+      transform: translateY(-2px);
+
+      box-shadow: 0 4px 10px rgba(40, 167, 69, 0.35);
+
+    }
+
+    
+
+    .btn-danger-custom {
+
+      background: var(--danger-red);
+
+      border: none;
+
+      color: white;
+
+      padding: 8px 18px;
+
+      border-radius: 6px;
+
+      font-weight: 500;
+
+      font-size: 0.8rem;
+
+      transition: all 0.2s ease;
+
+      box-shadow: 0 2px 6px rgba(220, 53, 69, 0.25);
+
+    }
+
+    
+
+    .btn-danger-custom:hover {
+
+      background: #c82333;
+
+      color: white;
+
+      transform: translateY(-2px);
+
+      box-shadow: 0 4px 10px rgba(220, 53, 69, 0.35);
+
+    }
+
+    
+
+    .btn-edit i, .btn-detail i,
+
+    .btn-danger-custom i {
+
+      width: 14px;
+
+      height: 14px;
+
+      margin-right: 4px;
+
+    }
+
+    
+
+    /* Detail button - Cyan */
+
+    .btn-detail {
+
+      background: #17a2b8 !important;
+
+      border: none;
+
+      color: white;
+
+      padding: 8px 18px;
+
+      border-radius: 6px;
+
+      font-weight: 500;
+
+      font-size: 0.8rem;
+
+      transition: all 0.2s ease;
+
+      box-shadow: 0 2px 6px rgba(23, 162, 184, 0.25);
+
+    }
+
+    
+
+    .btn-detail:hover {
+
+      background: #138496 !important;
+
+      color: white !important;
+
+      transform: translateY(-2px);
+
+      box-shadow: 0 4px 10px rgba(23, 162, 184, 0.35);
+
+      text-decoration: none;
+
+    }
+
+    
+
+    .btn-detail:focus,
+
+    .btn-detail:active {
+
+      background: #138496 !important;
+
+      color: white !important;
+
+      outline: none;
+
+      box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.3);
+
+    }
+
+    
+
+    /* Modal improvements */
+
+    .modal-content {
+
+      border-radius: 16px;
+
+      border: none;
+
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+
+    }
+
+    
+
+    .modal-header {
+
+      border-radius: 16px 16px 0 0;
+
+      padding: 24px 30px;
+
+      background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+
+      color: white;
+
+      border-bottom: none;
+
+    }
+
+    
+
+    .modal-header.delete-header {
+
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+
+    }
+
+    
+
+    .modal-header .modal-title {
+
+      font-weight: 600;
+
+      font-size: 1.25rem;
+
+    }
+
+    
+
+    .modal-header .btn-close {
+
+      filter: brightness(0) invert(1);
+
+      opacity: 0.8;
+
+    }
+
+    
+
+    .modal-header .btn-close:hover {
+
+      opacity: 1;
+
+    }
+
+    
+
+    .modal-body {
+
+      padding: 30px;
+
+    }
+
+    
+
+    .modal-body.delete-modal-body {
+
+      text-align: center;
+
+      padding: 40px 30px;
+
+    }
+
+    
+
+    .modal-body .icon-wrapper {
+
+      width: 80px;
+
+      height: 80px;
+
+      margin: 0 auto 20px;
+
+      border-radius: 50%;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+    }
+
+    
+
+    .modal-body .icon-wrapper.delete-icon {
+
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+
+      color: white;
+
+      box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
+
+    }
+
+    
+
+    .modal-footer {
+
+      border-top: 1px solid #e9ecef;
+
+      padding: 20px 30px;
+
+      justify-content: center;
+
+      gap: 12px;
+
+    }
+
+    
+
+    .modal-footer .btn {
+
+      min-width: 120px;
+
+      padding: 10px 24px;
+
+      border-radius: 8px;
+
+      font-weight: 500;
+
+    }
+
+    
+
+    /* Info badge in detail modal */
+
+    .info-badge {
+
+      background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+
+      color: white;
+
+      padding: 6px 16px;
+
+      border-radius: 20px;
+
+      font-weight: 600;
+
+      font-size: 0.9rem;
+
+      display: inline-block;
+
+      box-shadow: 0 2px 6px rgba(23, 162, 184, 0.3);
+
+    }
+
+    
+
+    /* Empty state */
+
+    .empty-state {
+
+      text-align: center;
+
+      padding: 60px 20px;
+
+      color: #868e96;
+
+    }
+
+    
+
+    .empty-state i {
+
+      font-size: 48px;
+
+      margin-bottom: 16px;
+
+      opacity: 0.5;
+
+    }
+
+    
+
+    /* Responsive */
+
+    @media (max-width: 768px) {
+
+      .btn-action-group {
+
+        flex-direction: column;
+
+        gap: 6px;
+
+      }
+
+      
+
+      .btn-edit, .btn-detail, .btn-danger-custom {
+
+        width: 100%;
+
+        font-size: 0.75rem;
+
+        padding: 6px 12px;
+
+      }
+
+      
+
+      .page-header {
+
+        padding: 16px 20px;
+
+      }
+
+      
+
+      .page-title {
+
+        font-size: 1.4rem;
+
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+
+<body>
+
+  <!-- Preloader -->
+
+  <div class="preloader">
+
+    <div class="lds-ripple"><div class="lds-pos"></div><div class="lds-pos"></div></div>
+
+  </div>
+
+
+
+  <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6"
+
+       data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed"
+
+       data-boxed-layout="full">
+
+
+
+    <!-- Topbar -->
+
+    <header class="topbar" data-navbarbg="skin6">
+
+      <nav class="navbar top-navbar navbar-expand-lg">
+
+        <div class="navbar-header" data-logobg="skin6">
+
+          <a class="nav-toggler d-block d-lg-none" href="javascript:void(0)"><i class="ti-menu ti-close"></i></a>
+
+          <div class="navbar-brand">
+
+            <a href="#">
+
+              <img src="{% static 'Front/assets/images/logo_site.png' %}" alt="logo" class="img-fluid" style="width: 120px; margin-top: 30px;">
+
+            
+
+            </a>
+
+          </div>
+
+          <a class="topbartoggler d-block d-lg-none" href="javascript:void(0)"
+
+             data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+
+             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+
+             <i class="ti-more"></i>
+
+          </a>
+
+        </div>
+
+        <div class="navbar-collapse collapse">
+
+          <ul class="navbar-nav float-end">
+
+            <li class="nav-item dropdown">
+
+              <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-bs-toggle="dropdown">
+
+                <img src="{% static 'Back/src/assets/images/users/profile-pic.jpg' %}" alt="user" class="rounded-circle" width="40">
+
+                <span class="ms-2 d-none d-lg-inline-block">
+
+                  <span class="text-dark">{{ user.first_name|default:"Admin" }}</span>
+
+                  <i data-feather="chevron-down" class="svg-icon"></i>
+
+                </span>
+
+              </a>
+
+              <div class="dropdown-menu dropdown-menu-end">
+
+                <a class="dropdown-item" href="#">
+
+                  <i data-feather="power" class="svg-icon me-2"></i>Logout
+
+                </a>
+
+              </div>
+
+            </li>
+
+          </ul>
+
+        </div>
+
+      </nav>
+
+    </header>
+
+
+
+    <!-- Sidebar -->
+
+    <aside class="left-sidebar" data-sidebarbg="skin6">
+
+      <div class="scroll-sidebar" data-sidebarbg="skin6">
+
+        <nav class="sidebar-nav">
+
+          <ul id="sidebarnav">
+
+            <li class="sidebar-item">
+
+              <a class="sidebar-link sidebar-link" href="#">
+
+                <i data-feather="home" class="feather-icon"></i><span class="hide-menu">Dashboard</span>
+
+              </a>
+
+            </li>
+
+
+
+            <li class="list-divider"></li>
+
+            <li class="nav-small-cap"><span class="hide-menu">GESTION DES STAGES</span></li>
+
+
+
+            <li class="sidebar-item">
+
+              <a class="sidebar-link active" href="{% url 'stages:liste_stages' %}">
+
+                <i data-feather="file-text" class="feather-icon"></i><span class="hide-menu">La liste des stages</span>
+
+              </a>
+
+            </li>
+
+            <li class="sidebar-item">
+
+              <a class="sidebar-link" href="{% url 'stages:ajouter_stage' %}">
+
+                <i data-feather="plus-circle" class="feather-icon"></i><span class="hide-menu">Nouveau stage</span>
+
+              </a>
+
+            </li>
+
+          </ul>
+
+        </nav>
+
+      </div>
+
+    </aside>
+
+
+
+    <!-- Page wrapper -->
+
+    <div class="page-wrapper">
+
+      <!-- Content -->
+
+      <div class="container-fluid">
+
+        <!-- Page Header -->
+
+        <div class="page-header">
+
+          <div class="d-flex align-items-center justify-content-between">
+
+            <h2 class="page-title">Tous les Stages</h2>
+
+            <a href="{% url 'stages:ajouter_stage' %}" class="btn btn-add">
+
+              <i data-feather="plus"></i> Ajouter un Stage
+
+            </a>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- Filter Section -->
+
+        <div class="filter-section">
+
+          <form method="get" action="{% url 'stages:liste_stages' %}" id="filterForm" class="row g-3">
+
+            <div class="col-md-4">
+
+              <label for="search" class="form-label">Rechercher par Intitulé</label>
+
+              <input type="text" class="form-control" id="search" name="search" placeholder="Entrez l'intitulé du stage..." value="{{ search_query|default:'' }}">
+
+            </div>
+
+            <div class="col-md-3">
+
+              <label for="statut" class="form-label">Filtrer par Statut</label>
+
+              <select class="form-select" id="statut" name="statut">
+
+                <option value="">Tous les statuts</option>
+
+                <option value="propose" {% if statut_filter == 'propose' %}selected{% endif %}>Proposé</option>
+
+                <option value="valide" {% if statut_filter == 'valide' %}selected{% endif %}>Validé</option>
+
+                <option value="en_cours" {% if statut_filter == 'en_cours' %}selected{% endif %}>En Cours</option>
+
+                <option value="termine" {% if statut_filter == 'termine' %}selected{% endif %}>Terminé</option>
+
+                <option value="annule" {% if statut_filter == 'annule' %}selected{% endif %}>Annulé</option>
+
+                <option value="interrompu" {% if statut_filter == 'interrompu' %}selected{% endif %}>Interrompu</option>
+
+              </select>
+
+            </div>
+
+            <div class="col-md-2">
+
+              <label for="date_debut" class="form-label">Date Début</label>
+
+              <input type="date" class="form-control" id="date_debut" name="date_debut" value="{{ date_debut_filter|default:'' }}">
+
+            </div>
+
+            <div class="col-md-2">
+
+              <label for="date_fin" class="form-label">Date Fin</label>
+
+              <input type="date" class="form-control" id="date_fin" name="date_fin" value="{{ date_fin_filter|default:'' }}">
+
+            </div>
+
+            <div class="col-md-1 d-flex align-items-end pb-1">
+
+              <button type="submit" class="btn btn-add w-100" title="Rechercher" style="min-height: 38px; display: flex; align-items: center; justify-content: center; padding: 0;">
+
+                <i data-feather="search" style="width: 18px; height: 18px;"></i>
+
+              </button>
+
+            </div>
+
+          </form>
+
+        </div>
+
+
+
+        <!-- Messages -->
+
+        {% if messages %}
+
+        <div class="row">
+
+          <div class="col-12">
+
+            {% for message in messages %}
+
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+
+              {{ message }}
+
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+
+            </div>
+
+            {% endfor %}
+
+          </div>
+
+        </div>
+
+        {% endif %}
+
+
+
+        <!-- Table Card -->
+
+        <div class="card">
+
+          <div class="card-body">
+
+            <div class="table-container">
+
+              <table class="table">
+
+                <thead>
+
+                  <tr>
+
+                    <th style="width: 50px;">#</th>
+
+                    <th>Intitulé</th>
+
+                    <th style="width: 150px;">Stagiaire</th>
+
+                    <th style="width: 120px;">Type</th>
+
+                    <th style="width: 120px;">Service</th>
+
+                    <th style="width: 130px;">Date Début</th>
+
+                    <th style="width: 130px;">Date Fin</th>
+
+                    <th style="width: 100px;">Durée</th>
+
+                    <th style="width: 120px;">Statut</th>
+
+                    <th style="width: 180px;">Actions</th>
+
+                  </tr>
+
+                </thead>
+
+                <tbody>
+
+                  {% for stage in stages %}
+
+                  <tr data-bs-toggle="modal" data-bs-target="#stageDetailModal{{ stage.id }}">
+
+                    <td>{{ stage.id }}</td>
+
+                    <td>
+
+                      <div class="stage-title">{{ stage.intitule }}</div>
+
+                      <div class="stage-description">{{ stage.description|truncatewords:10 }}</div>
+
+                    </td>
+
+                   
+
+                    <td>{{ stage.get_type_stage_display }}</td>
+
+                    <td>{{ stage.get_service_display }}</td>
+
+                    <td>
+
+                      <span class="badge-date">
+
+                        {{ stage.date_debut|date:"M. d, Y" }}
+
+                      </span>
+
+                    </td>
+
+                    <td>
+
+                      <span class="badge-date">
+
+                        {{ stage.date_fin|date:"M. d, Y" }}
+
+                      </span>
+
+                    </td>
+
+                    <td>{{ stage.duree_semaines }} sem</td>
+
+                    <td>
+
+                      <span class="badge-{{ stage.statut }}">
+
+                        {{ stage.get_statut_display }}
+
+                      </span>
+
+                    </td>
+
+                    <td onclick="event.stopPropagation();">
+
+                      <div class="btn-action-group">
+
+                        <!-- Detail button - Cyan -->
+
+                        <a href="javascript:void(0);" class="btn btn-detail" 
+
+                           data-bs-toggle="modal" 
+
+                           data-bs-target="#stageDetailModal{{ stage.id }}"
+
+                           onclick="event.stopPropagation();">
+
+                          <i data-feather="eye"></i> Détail
+
+                        </a>
+
+                        
+
+                        <!-- Edit button - Green -->
+
+                        <a href="{% url 'stages:modifier_stage' stage.pk %}" 
+
+                           class="btn btn-edit" 
+
+                           onclick="event.stopPropagation();">
+
+                          <i data-feather="edit"></i> Modifier
+
+                        </a>
+
+                        
+
+                        <!-- Delete button - Red -->
+
+                        <button type="button" class="btn btn-danger-custom" 
+
+                                data-bs-toggle="modal" 
+
+                                data-bs-target="#deleteModal{{ stage.id }}"
+
+                                onclick="event.stopPropagation();">
+
+                          <i data-feather="trash-2"></i> Supprimer
+
+                        </button>
+
+                      </div>
+
+                    </td>
+
+                  </tr>
+
+                  {% empty %}
+
+                  <tr>
+
+                    <td colspan="10" style="padding: 60px 20px;">
+
+                      <div class="empty-state">
+
+                        <i data-feather="inbox" style="width: 64px; height: 64px;"></i>
+
+                        <h5 class="mt-3 mb-2" style="color: #495057; font-weight: 600;">Aucun stage trouvé</h5>
+
+                        <p class="mb-3" style="color: #868e96;">Il n'y a actuellement aucun stage dans la base de données.</p>
+
+                        <a href="{% url 'stages:ajouter_stage' %}" class="btn btn-add">
+
+                          <i data-feather="plus"></i> Ajouter le premier stage
+
+                        </a>
+
+                      </div>
+
+                    </td>
+
+                  </tr>
+
+                  {% endfor %}
+
+                </tbody>
+
+              </table>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <footer class="footer text-center text-muted mt-4">
+
+        Clinica+ Back • Freedash UI
+
+      </footer>
+
+    </div>
+
+  </div>
+
+
+
+<!-- Stage Detail Modals -->
+
+{% for stage in stages %}
+
+<div class="modal fade" id="stageDetailModal{{ stage.id }}" tabindex="-1">
+
+  <div class="modal-dialog modal-lg">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+
+        <h5 class="modal-title">{{ stage.intitule }}</h5>
+
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+      </div>
+
+      <div class="modal-body">
+
+        <div class="row">
+
+          <div class="col-md-12">
+
+            <h4 class="mb-3">{{ stage.intitule }}</h4>
+
+            <div class="mb-3">
+
+              <strong>Stagiaire:</strong> 
+
+              <span>{% if stage.stagiaire %}{{ stage.stagiaire.prenom }} {{ stage.stagiaire.nom }}{% else %}Non assigné{% endif %}</span>
+
+            </div>
+
+            <div class="mb-3">
+
+              <strong>Encadrant:</strong> 
+
+              <span>{% if stage.encadrant %}{{ stage.encadrant.first_name }} {{ stage.encadrant.last_name }}{% else %}Non assigné{% endif %}</span>
+
+            </div>
+
+            <div class="mb-3">
+
+              <strong>Type de Stage:</strong> 
+
+              <span class="info-badge">{{ stage.get_type_stage_display }}</span>
+
+            </div>
+
+            <div class="mb-3">
+
+              <strong>Service:</strong> 
+
+              <span class="info-badge">{{ stage.get_service_display }}</span>
+
+            </div>
+
+            <div class="mb-3">
+
+              <strong>Date de Début:</strong> 
+
+              <span class="info-badge">{{ stage.date_debut|date:"M. d, Y" }}</span>
+
+            </div>
+
+            <div class="mb-3">
+
+              <strong>Date de Fin:</strong> 
+
+              <span class="info-badge">{{ stage.date_fin|date:"M. d, Y" }}</span>
+
+            </div>
+
+            <div class="mb-3">
+
+              <strong>Durée:</strong> 
+
+              <span>{{ stage.duree_semaines }} semaines</span>
+
+            </div>
+
+            {% if stage.horaires_travail %}
+
+            <div class="mb-3">
+
+              <strong>Horaires de Travail:</strong> 
+
+              <span>{{ stage.horaires_travail }}</span>
+
+            </div>
+
+            {% endif %}
+
+            <div class="mb-3">
+
+              <strong>Statut:</strong> 
+
+              <span class="badge-{{ stage.statut }}">{{ stage.get_statut_display }}</span>
+
+            </div>
+
+            {% if stage.note_finale %}
+
+            <div class="mb-3">
+
+              <strong>Note Finale:</strong> 
+
+              <span class="info-badge">{{ stage.note_finale }}/20</span>
+
+            </div>
+
+            {% endif %}
+
+            <div class="mb-3">
+
+              <strong>Description:</strong>
+
+              <p style="line-height: 1.8; color: #666; margin-top: 10px;">{{ stage.description|linebreaks }}</p>
+
+            </div>
+
+            {% if stage.objectifs %}
+
+            <div class="mb-3">
+
+              <strong>Objectifs:</strong>
+
+              <p style="line-height: 1.8; color: #666; margin-top: 10px;">{{ stage.objectifs|linebreaks }}</p>
+
+            </div>
+
+            {% endif %}
+
+            {% if stage.appreciation %}
+
+            <div class="mb-3">
+
+              <strong>Appréciation:</strong>
+
+              <p style="line-height: 1.8; color: #666; margin-top: 10px;">{{ stage.appreciation|linebreaks }}</p>
+
+            </div>
+
+            {% endif %}
+
+            {% if stage.badge_acces %}
+
+            <div class="mb-3">
+
+              <strong>Badge d'Accès:</strong> 
+
+              <span>{{ stage.badge_acces }}</span>
+
+            </div>
+
+            {% endif %}
+
+            {% if stage.vestiaire_attribue %}
+
+            <div class="mb-3">
+
+              <strong>Vestiaire Attribué:</strong> 
+
+              <span>{{ stage.vestiaire_attribue }}</span>
+
+            </div>
+
+            {% endif %}
+
+            <div class="mb-3">
+
+              <strong>Accès Logiciel Médical:</strong> 
+
+              <span>{% if stage.acces_logiciel_medical %}Oui{% else %}Non{% endif %}</span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+
+        <a href="{% url 'stages:modifier_stage' stage.pk %}" class="btn btn-edit">
+
+          <i data-feather="edit"></i> Modifier le Stage
+
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+{% endfor %}
+
+
+
+<!-- Delete Modals -->
+
+{% for stage in stages %}
+
+<div class="modal fade" id="deleteModal{{ stage.id }}" tabindex="-1">
+
+  <div class="modal-dialog modal-dialog-centered">
+
+    <div class="modal-content">
+
+      <div class="modal-header delete-header">
+
+        <h5 class="modal-title">
+
+          <i data-feather="alert-triangle" style="width: 20px; height: 20px; margin-right: 8px;"></i>
+
+          Supprimer le Stage
+
+        </h5>
+
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+      </div>
+
+      <div class="modal-body delete-modal-body">
+
+        <div class="icon-wrapper delete-icon">
+
+          <i data-feather="trash-2" style="width: 40px; height: 40px;"></i>
+
+        </div>
+
+        <h4 class="mb-3">Êtes-vous sûr de vouloir supprimer ce stage ?</h4>
+
+        <div class="mb-3">
+
+          <p class="text-muted mb-2">
+
+            <strong>Stage:</strong> {{ stage.intitule }}<br>
+
+            <strong>Stagiaire:</strong> {% if stage.stagiaire %}{{ stage.stagiaire.prenom }} {{ stage.stagiaire.nom }}{% else %}Non assigné{% endif %}<br>
+
+            <strong>Période:</strong> {{ stage.date_debut|date:"d/m/Y" }} - {{ stage.date_fin|date:"d/m/Y" }}
+
+          </p>
+
+        </div>
+
+        <p class="text-danger small mt-3">
+
+          <i data-feather="alert-circle" style="width: 16px; height: 16px; vertical-align: middle;"></i>
+
+          Cette action est irréversible.
+
+        </p>
+
+      </div>
+
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+
+        <form method="post" action="{% url 'stages:supprimer_stage' stage.pk %}" style="display: inline;">
+
+          {% csrf_token %}
+
+          <button type="submit" class="btn btn-danger">
+
+            <i data-feather="trash-2" style="width: 16px; height: 16px; margin-right: 5px;"></i>
+
+            Supprimer
+
+          </button>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+{% endfor %}
+
+
+
+  <!-- JS -->
+
+  <script src="{% static 'Back/src/assets/libs/jquery/dist/jquery.min.js' %}"></script>
+
+  <script src="{% static 'Back/src/assets/libs/popper.js/dist/umd/popper.min.js' %}"></script>
+
+  <script src="{% static 'Back/src/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+
+  <script src="{% static 'Back/src/dist/js/app-style-switcher.js' %}"></script>
+
+  <script src="{% static 'Back/src/dist/js/feather.min.js' %}"></script>
+
+  <script src="{% static 'Back/src/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js' %}"></script>
+
+  <script src="{% static 'Back/src/dist/js/sidebarmenu.js' %}"></script>
+
+  <script src="{% static 'Back/src/dist/js/custom.min.js' %}"></script>
+
+  
+
+  <script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+      const filterForm = document.getElementById('filterForm');
+
+      const statutSelect = document.getElementById('statut');
+
+      const dateDebutInput = document.getElementById('date_debut');
+
+      const dateFinInput = document.getElementById('date_fin');
+
+      const searchInput = document.getElementById('search');
+
+      
+
+      if (statutSelect) {
+
+        statutSelect.addEventListener('change', function() {
+
+          filterForm.submit();
+
+        });
+
+      }
+
+      
+
+      if (dateDebutInput) {
+
+        dateDebutInput.addEventListener('change', function() {
+
+          filterForm.submit();
+
+        });
+
+      }
+
+      
+
+      if (dateFinInput) {
+
+        dateFinInput.addEventListener('change', function() {
+
+          filterForm.submit();
+
+        });
+
+      }
+
+      
+
+      if (searchInput) {
+
+        let searchTimeout;
+
+        searchInput.addEventListener('input', function() {
+
+          clearTimeout(searchTimeout);
+
+          searchTimeout = setTimeout(function() {
+
+            filterForm.submit();
+
+          }, 500);
+
+        });
+
+      }
+
+      
+
+      if (window.feather) feather.replace();
+
+      
+
+      var modals = document.querySelectorAll('.modal');
+
+      modals.forEach(function(modal) {
+
+        modal.addEventListener('shown.bs.modal', function() {
+
+          if (window.feather) feather.replace();
+
+        });
+
+      });
+
+    });
+
+  </script>
+
+</body>
+
+</html>
