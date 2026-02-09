@@ -27,7 +27,7 @@ This module implements a complete e-commerce solution for medical products with 
 
 ## 🎬 Demo (YouTube)
  
-**([YOUR_YOUTUBE_URL_HERE](https://youtu.be/2VLYOraU0jg?si=tvxAQtXO3HcGvEFp))**
+**([demo here](https://youtu.be/2VLYOraU0jg?si=tvxAQtXO3HcGvEFp))**
 ---
 
 ## ✨ Key Functionalities
