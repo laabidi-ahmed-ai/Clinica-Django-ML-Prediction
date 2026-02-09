@@ -26,8 +26,10 @@ This module implements a complete e-commerce solution for medical products with 
 - ✅ **Hybrid ML Approach:** Combined ML predictions with rule-based logic for reliability
 
 ## 🎬 Demo (YouTube)
+
  
 **([demo here](https://youtu.be/2VLYOraU0jg?si=tvxAQtXO3HcGvEFp))**
+
 ---
 
 ## ✨ Key Functionalities
