@@ -25,6 +25,9 @@ This module implements a complete e-commerce solution for medical products with 
 - ✅ **Cold Start Solution:** Solved data sparsity problem with intelligent synthetic data generation
 - ✅ **Hybrid ML Approach:** Combined ML predictions with rule-based logic for reliability
 
+## 🎬 Demo (YouTube)
+ 
+👉 **[Your YouTube demo link]([YOUR_YOUTUBE_URL_HERE](https://youtu.be/2VLYOraU0jg?si=tvxAQtXO3HcGvEFp))**
 ---
 
 ## ✨ Key Functionalities
